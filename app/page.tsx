@@ -191,8 +191,8 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 gap-4">
               <div>
-                <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">Selected Works</h2>
-                <p className={`text-base md:text-lg font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Kumpulan proyek dan desain terbaik saya.</p>
+                <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">My Works</h2>
+                <p className={`text-base md:text-lg font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Kumpulan proyek dan desain saya.</p>
               </div>
               <span className={`text-4xl md:text-5xl font-black ${isDark ? 'text-white/10' : 'text-slate-200'}`}>/ 0{portfolios.length}</span>
             </div>
@@ -231,8 +231,8 @@ export default function LandingPage() {
         {services.length > 0 && (
           <section id="services" className="py-24 md:py-32 px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto">
             <div className="mb-12 md:mb-20">
-              <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">Services</h2>
-              <p className={`text-base md:text-lg font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Layanan profesional untuk membantu proyek Anda.</p>
+              <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">Produk</h2>
+              <p className={`text-base md:text-lg font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Seluruh Penawaran saya.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               {services.map((s, index) => (
@@ -247,7 +247,7 @@ export default function LandingPage() {
                   <div>
                     <h3 className="text-xl md:text-2xl font-bold mb-1 md:mb-2">{s.title}</h3>
                     <div className={`flex items-center gap-2 text-xs md:text-sm font-bold opacity-70 group-hover:opacity-100 transition-opacity ${isDark ? 'text-cyan-400' : 'text-teal-600'}`}>
-                      Mari Diskusi <ArrowRight size={14} />
+                      Kunjungi <ArrowRight size={14} />
                     </div>
                   </div>
                 </motion.a>
@@ -262,7 +262,7 @@ export default function LandingPage() {
           <a href="/admin" className={`inline-block px-8 py-3 md:px-10 md:py-4 rounded-full font-bold text-sm transition-all shadow-xl border ${isDark ? 'bg-white text-black hover:bg-cyan-400 border-white' : 'bg-slate-900 text-white hover:bg-teal-600 border-slate-900'}`}>
             Login
           </a>
-          <p className="mt-20 text-xs md:text-sm font-bold tracking-widest uppercase opacity-40">© {new Date().getFullYear()} — Dibuat dengan presisi oleh Nafis</p>
+          <p className="mt-20 text-xs md:text-sm font-bold tracking-widest uppercase opacity-40">© {new Date().getFullYear()} — Dibuat dengan cinta oleh Nafis</p>
         </footer>
 
       </div>
