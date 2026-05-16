@@ -20,6 +20,15 @@ export default function LandingPage() {
     fetchPublicData();
   }, []);
 
+  // Mencegah scroll saat menu hamburger terbuka
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isMenuOpen]);
+
   async function fetchPublicData() {
     try {
       const [aboutRes, socialRes, portRes, servRes] = await Promise.all([
@@ -45,7 +54,9 @@ export default function LandingPage() {
 
   const scrollToSection = (id: string) => {
     setIsMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }, 100); // Sedikit delay agar menu menutup mulus sebelum scroll
   };
 
   if (loading) return (
@@ -66,67 +77,99 @@ export default function LandingPage() {
 
       {/* --- STICKY HEADER & NAVIGATION --- */}
       <nav className={`fixed top-0 w-full z-40 transition-all duration-300 backdrop-blur-md border-b ${isDark ? 'bg-black/20 border-white/5' : 'bg-white/30 border-white/50'}`}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-24 py-4 flex justify-between items-center">
-          <span className="font-black text-xl tracking-tighter">NAFIS<span className={isDark ? "text-cyan-400" : "text-teal-600"}>.</span></span>
-          <div className="flex items-center gap-4">
-            <button onClick={() => setIsDark(!isDark)} className={`p-2 rounded-full backdrop-blur-md border transition-all ${isDark ? 'bg-white/10 border-white/10 text-yellow-300' : 'bg-white/50 border-white/50 text-slate-600'}`}>
-              {isDark ? <Sun size={20} /> : <Moon size={20} />}
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-24 py-4 flex justify-between items-center">
+          <span className="font-black text-2xl tracking-tighter cursor-pointer" onClick={() => scrollToSection('home')}>
+            NAFIS<span className={isDark ? "text-cyan-400" : "text-teal-600"}>.</span>
+          </span>
+          <div className="flex items-center gap-3 md:gap-4">
+            <button onClick={() => setIsDark(!isDark)} className={`p-2.5 md:p-3 rounded-full backdrop-blur-md border transition-all ${isDark ? 'bg-white/10 border-white/10 text-yellow-300' : 'bg-white/50 border-white/50 text-slate-600 hover:bg-white'}`}>
+              {isDark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
-            <button onClick={() => setIsMenuOpen(true)} className={`p-2 rounded-full backdrop-blur-md border transition-all ${isDark ? 'bg-white/10 border-white/10' : 'bg-white/50 border-white/50'}`}>
-              <Menu size={20} />
+            <button onClick={() => setIsMenuOpen(true)} className={`p-2.5 md:p-3 rounded-full backdrop-blur-md border transition-all ${isDark ? 'bg-white/10 border-white/10 hover:bg-white/20' : 'bg-white/50 border-white/50 hover:bg-white'}`}>
+              <Menu size={18} />
             </button>
           </div>
         </div>
       </nav>
 
-      {/* --- FULLSCREEN OVERLAY MENU --- */}
+      {/* --- FULLSCREEN OVERLAY MENU (PREMIUM GLASSMORPHISM) --- */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className={`fixed inset-0 z-50 flex flex-col justify-center items-center backdrop-blur-2xl ${isDark ? 'bg-[#0B0C10]/90' : 'bg-white/90'}`}>
-            <button onClick={() => setIsMenuOpen(false)} className="absolute top-6 right-6 lg:right-24 p-3 rounded-full bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all">
+          <motion.div 
+            initial={{ opacity: 0, backdropFilter: "blur(0px)" }} 
+            animate={{ opacity: 1, backdropFilter: "blur(24px)" }} 
+            exit={{ opacity: 0, backdropFilter: "blur(0px)" }} 
+            className={`fixed inset-0 z-50 flex flex-col justify-center items-center ${isDark ? 'bg-[#0B0C10]/80' : 'bg-white/80'}`}
+          >
+            <button 
+              onClick={() => setIsMenuOpen(false)} 
+              className={`absolute top-6 right-6 lg:right-12 xl:right-24 p-4 rounded-full border transition-all ${isDark ? 'border-white/10 hover:bg-white/10 text-slate-400 hover:text-white' : 'border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-900'}`}
+            >
               <X size={24} />
             </button>
-            <div className="flex flex-col gap-8 text-center text-3xl font-black tracking-tight">
-              <button onClick={() => scrollToSection('home')} className="hover:text-teal-500 transition-colors">01. Profil</button>
-              <button onClick={() => scrollToSection('portfolio')} className="hover:text-teal-500 transition-colors">02. Selected Works</button>
-              {services.length > 0 && <button onClick={() => scrollToSection('services')} className="hover:text-teal-500 transition-colors">03. Services</button>}
-              <a href="/admin" className="text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-teal-500 mt-10">Admin Console</a>
+            <div className="flex flex-col gap-6 md:gap-8 text-center font-black tracking-tight w-full px-6">
+              {[
+                { id: 'home', label: '01. Profil Utama' },
+                { id: 'portfolio', label: '02. Selected Works' },
+                ...(services.length > 0 ? [{ id: 'services', label: '03. Services' }] : [])
+              ].map((item, i) => (
+                <motion.button 
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  onClick={() => scrollToSection(item.id)} 
+                  className={`text-4xl md:text-6xl hover:-translate-y-1 transition-all ${isDark ? 'hover:text-cyan-400' : 'hover:text-teal-600'}`}
+                >
+                  {item.label}
+                </motion.button>
+              ))}
+              <motion.a 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                href="/admin" 
+                className="text-xs md:text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-teal-500 mt-12"
+              >
+                — Masuk Console Admin —
+              </motion.a>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* KONTEN UTAMA DENGAN Z-INDEX AGAR BERADA DI ATAS BACKGROUND */}
+      {/* KONTEN UTAMA DENGAN Z-INDEX */}
       <div className="relative z-10">
         
         {/* --- HERO SECTION --- */}
-        <section id="home" className="min-h-screen flex flex-col justify-center px-6 lg:px-24 max-w-7xl mx-auto py-20 pt-32">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
-              <span className={`inline-block px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6 border backdrop-blur-sm ${isDark ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' : 'bg-teal-500/10 text-teal-600 border-teal-500/20'}`}>
+        <section id="home" className="min-h-screen flex flex-col justify-center px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto py-20 pt-32">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="order-2 lg:order-1">
+              <span className={`inline-block px-4 py-1.5 md:py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 border backdrop-blur-sm ${isDark ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' : 'bg-teal-500/10 text-teal-600 border-teal-500/20'}`}>
                 Available for Projects
               </span>
-              <h1 className="text-6xl lg:text-8xl font-black tracking-tighter leading-none mb-8">
-                {about?.headline || "Creative Developer"}
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[1.1] mb-6 md:mb-8">
+                {about?.headline || "Membangun Visi Digital Anda"}
               </h1>
-              <p className={`text-xl leading-relaxed max-w-lg mb-10 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-                {about?.description || "Selamat datang di portofolio saya."}
+              <p className={`text-lg md:text-xl leading-relaxed max-w-lg mb-8 md:mb-10 font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                {about?.description || "Saya merancang dan mengembangkan antarmuka website premium untuk membantu skala bisnis Anda."}
               </p>
               <div className="flex gap-4 items-center">
                 {socials.map((s) => (
-                  <a key={s.id} href={s.url} target="_blank" rel="noreferrer" className={`p-4 rounded-2xl backdrop-blur-md border shadow-lg hover:-translate-y-1 transition-all duration-300 ${isDark ? 'bg-white/5 border-white/10 hover:bg-white/10 text-white' : 'bg-white/60 border-white/40 hover:bg-white text-slate-800'}`}>
+                  <a key={s.id} href={s.url} target="_blank" rel="noreferrer" className={`p-3 md:p-4 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${isDark ? 'bg-white/5 border-white/10 hover:bg-white/10 text-white' : 'bg-white/60 border-white/40 hover:bg-white text-slate-800'}`}>
                     <ExternalLink size={20} />
                   </a>
                 ))}
               </div>
             </motion.div>
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.2 }}>
-              <div className={`aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl border backdrop-blur-xl p-2 ${isDark ? 'bg-white/5 border-white/10' : 'bg-white/40 border-white/50'}`}>
-                <div className="w-full h-full rounded-[2rem] overflow-hidden bg-slate-200/50">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.2 }} className="order-1 lg:order-2">
+              {/* PENYESUAIAN RADIUS: rounded-3xl di mobile, rounded-[2.5rem] di desktop */}
+              <div className={`aspect-square md:aspect-[4/5] rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl border backdrop-blur-xl p-2 ${isDark ? 'bg-white/5 border-white/10' : 'bg-white/40 border-white/50'}`}>
+                <div className="w-full h-full rounded-2xl md:rounded-[2rem] overflow-hidden bg-slate-200/50">
                   {about?.banner_url ? (
                     <img src={formatMediaUrl(about.banner_url)} alt="Profile Banner" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-400 italic">No Banner Image</div>
+                    <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm md:text-base font-medium">No Banner Image</div>
                   )}
                 </div>
               </div>
@@ -134,37 +177,39 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* --- PORTFOLIO SECTION (GLASSMORPHISM) --- */}
-        <section id="portfolio" className="py-32 px-6 lg:px-24">
+        {/* --- PORTFOLIO SECTION --- */}
+        <section id="portfolio" className="py-24 md:py-32 px-6 lg:px-12 xl:px-24">
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-20">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 gap-4">
               <div>
-                <h2 className="text-4xl font-black tracking-tight mb-4">Selected Works</h2>
-                <p className={isDark ? 'text-slate-400' : 'text-slate-500'}>Kumpulan proyek dan desain terbaik saya.</p>
+                <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">Selected Works</h2>
+                <p className={`text-base md:text-lg font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Kumpulan proyek dan desain terbaik saya.</p>
               </div>
-              <span className={`text-5xl font-black ${isDark ? 'text-white/10' : 'text-slate-200'}`}>/ 0{portfolios.length}</span>
+              <span className={`text-4xl md:text-5xl font-black ${isDark ? 'text-white/10' : 'text-slate-200'}`}>/ 0{portfolios.length}</span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
               {portfolios.map((p, index) => (
-                <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className={`group p-4 rounded-[2.5rem] border backdrop-blur-md shadow-xl transition-all duration-500 ${isDark ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white/50 border-white/60 hover:bg-white/80'}`}>
-                  <div className="relative aspect-video rounded-[2rem] overflow-hidden mb-6">
+                // PENYESUAIAN RADIUS KARTU PORTFOLIO
+                <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ delay: index * 0.1 }} className={`group p-3 md:p-4 rounded-3xl md:rounded-[2.5rem] border backdrop-blur-md shadow-xl transition-all duration-500 ${isDark ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white/50 border-white/60 hover:bg-white/80'}`}>
+                  <div className="relative aspect-video rounded-2xl md:rounded-[2rem] overflow-hidden mb-4 md:mb-6">
                     {p.media_type === "video" ? (
                       <iframe src={`https://drive.google.com/file/d/${p.media_url}/preview`} className="w-full h-full border-0" allow="autoplay" />
                     ) : (
                       <div className="w-full h-full relative">
                         <img src={formatMediaUrl(p.media_url)} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500 flex items-center justify-center">
-                          <ArrowUpRight className="text-white opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-500" size={32} />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-center justify-center">
+                          <ArrowUpRight className="text-white opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-500 shadow-xl" size={40} />
                         </div>
                       </div>
                     )}
                   </div>
-                  <div className="flex justify-between items-start px-4 pb-2">
+                  <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 px-2 md:px-4 pb-2">
                     <div>
-                      <h3 className="text-2xl font-bold mb-2">{p.title}</h3>
-                      <p className={`line-clamp-1 max-w-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{p.description}</p>
+                      <h3 className="text-xl md:text-2xl font-bold mb-1 md:mb-2">{p.title}</h3>
+                      <p className={`line-clamp-2 max-w-sm text-sm md:text-base font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{p.description}</p>
                     </div>
-                    <span className={`px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white/50 border-slate-200'}`}>
+                    <span className={`self-start px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider border whitespace-nowrap ${isDark ? 'bg-white/5 border-white/10' : 'bg-white/50 border-slate-200'}`}>
                       {p.tags}
                     </span>
                   </div>
@@ -176,25 +221,25 @@ export default function LandingPage() {
 
         {/* --- SERVICES SECTION --- */}
         {services.length > 0 && (
-          <section id="services" className="py-32 px-6 lg:px-24 max-w-7xl mx-auto">
-            <div className="mb-20">
-              <h2 className="text-4xl font-black tracking-tight mb-4">Services</h2>
-              <p className={isDark ? 'text-slate-400' : 'text-slate-500'}>Layanan profesional untuk membantu proyek Anda.</p>
+          <section id="services" className="py-24 md:py-32 px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto">
+            <div className="mb-12 md:mb-20">
+              <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">Services</h2>
+              <p className={`text-base md:text-lg font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Layanan profesional untuk membantu proyek Anda.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               {services.map((s, index) => (
-                <motion.a key={s.id} href={s.target_url} target="_blank" rel="noreferrer" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className={`p-8 rounded-[2.5rem] border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group h-64 ${isDark ? 'bg-white/5 border-white/10 hover:border-cyan-500 hover:bg-white/10' : 'bg-white/50 border-white/60 hover:border-teal-500 hover:bg-white'}`}>
-                  <div className={`w-14 h-14 rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${isDark ? 'bg-black/50 border-white/10 group-hover:bg-cyan-900/30' : 'bg-white border-slate-100 group-hover:bg-teal-50'}`}>
+                <motion.a key={s.id} href={s.target_url} target="_blank" rel="noreferrer" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ delay: index * 0.1 }} className={`p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:h-64 ${isDark ? 'bg-white/5 border-white/10 hover:border-cyan-500 hover:bg-white/10' : 'bg-white/50 border-white/60 hover:border-teal-500 hover:bg-white'}`}>
+                  <div className={`w-12 h-12 md:w-14 md:h-14 mb-6 md:mb-0 rounded-xl md:rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${isDark ? 'bg-black/50 border-white/10 group-hover:bg-cyan-900/30' : 'bg-white border-slate-100 group-hover:bg-teal-50'}`}>
                     {s.image_url ? (
-                      <img src={formatMediaUrl(s.image_url)} alt="Icon" className="w-full h-full object-cover" />
+                      <img src={formatMediaUrl(s.image_url)} alt="Icon" className="w-full h-full object-cover p-2" />
                     ) : (
-                      <ArrowRight className={isDark ? 'text-slate-400 group-hover:text-cyan-400' : 'text-slate-400 group-hover:text-teal-600'} size={24} />
+                      <ArrowRight className={isDark ? 'text-slate-400 group-hover:text-cyan-400' : 'text-slate-400 group-hover:text-teal-600'} size={20} />
                     )}
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold mb-2">{s.title}</h3>
-                    <div className={`flex items-center gap-2 text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity ${isDark ? 'text-cyan-400' : 'text-teal-600'}`}>
-                      Let's Talk <ArrowRight size={14} />
+                    <h3 className="text-xl md:text-2xl font-bold mb-1 md:mb-2">{s.title}</h3>
+                    <div className={`flex items-center gap-2 text-xs md:text-sm font-bold opacity-70 group-hover:opacity-100 transition-opacity ${isDark ? 'text-cyan-400' : 'text-teal-600'}`}>
+                      Mari Diskusi <ArrowRight size={14} />
                     </div>
                   </div>
                 </motion.a>
@@ -204,9 +249,12 @@ export default function LandingPage() {
         )}
 
         {/* --- FOOTER --- */}
-        <footer className={`py-32 px-6 text-center border-t backdrop-blur-sm ${isDark ? 'border-white/5 bg-black/20' : 'border-white/50 bg-white/10'}`}>
-          <h2 className="text-4xl lg:text-6xl font-black tracking-tight mb-10">Mari kita kolaborasi.</h2>
-          <p className="mt-20 text-sm font-medium tracking-widest uppercase opacity-40">© {new Date().getFullYear()} — Dibuat oleh Nafis</p>
+        <footer className={`py-24 md:py-32 px-6 text-center border-t backdrop-blur-sm ${isDark ? 'border-white/5 bg-black/20' : 'border-white/50 bg-white/10'}`}>
+          <h2 className="text-3xl md:text-4xl lg:text-6xl font-black tracking-tight mb-8 md:mb-10">Mari mulai proyek baru.</h2>
+          <a href="/admin" className={`inline-block px-8 py-3 md:px-10 md:py-4 rounded-full font-bold text-sm transition-all shadow-xl border ${isDark ? 'bg-white text-black hover:bg-cyan-400 border-white' : 'bg-slate-900 text-white hover:bg-teal-600 border-slate-900'}`}>
+            Hubungi Saya
+          </a>
+          <p className="mt-20 text-xs md:text-sm font-bold tracking-widest uppercase opacity-40">© {new Date().getFullYear()} — Dibuat dengan presisi oleh Nafis</p>
         </footer>
 
       </div>

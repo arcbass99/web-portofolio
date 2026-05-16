@@ -5,13 +5,14 @@ import { supabase } from "../../lib/supabase";
 import { useRouter } from "next/navigation";
 import { 
   LogOut, User, Image as ImageIcon, Briefcase, 
-  Plus, Trash2, Link as LinkIcon, Loader2, Wrench, Globe, Film
+  Plus, Trash2, Link as LinkIcon, Loader2, Wrench, Globe, Film, Menu, X, ChevronRight
 } from "lucide-react";
 
 export default function AdminDashboard() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("about");
   const [loading, setLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State untuk Mobile Sidebar
   
   // States Data
   const [headline, setHeadline] = useState("");
@@ -49,27 +50,27 @@ export default function AdminDashboard() {
 
   async function fetchAllData() {
     setLoading(true);
-    const { data: aboutData } = await supabase.from("about_me").select("*").single();
-    if (aboutData) {
-      setHeadline(aboutData.headline || "");
-      setDescription(aboutData.description || "");
-      setBannerUrl(aboutData.banner_url || "");
+    try {
+      const { data: aboutData } = await supabase.from("about_me").select("*").single();
+      if (aboutData) {
+        setHeadline(aboutData.headline || "");
+        setDescription(aboutData.description || "");
+        setBannerUrl(aboutData.banner_url || "");
+      }
+      const { data: socialData } = await supabase.from("social_links").select("*");
+      if (socialData) setSocials(socialData);
+      const { data: portData } = await supabase.from("portfolio").select("*").order('created_at', { ascending: false });
+      if (portData) setPortfolios(portData);
+      const { data: servData } = await supabase.from("services").select("*");
+      if (servData) setServices(servData);
+    } finally {
+      setLoading(false);
     }
-    const { data: socialData } = await supabase.from("social_links").select("*");
-    if (socialData) setSocials(socialData);
-    const { data: portData } = await supabase.from("portfolio").select("*").order('created_at', { ascending: false });
-    if (portData) setPortfolios(portData);
-    const { data: servData } = await supabase.from("services").select("*");
-    if (servData) setServices(servData);
-    setLoading(false);
   }
 
-  // Fungsi pintar untuk pratinjau gambar Google Drive atau Link Langsung (ImgBB / Postimages)
   const formatMediaUrl = (idOrUrl: string) => {
     if (!idOrUrl) return "";
-    if (idOrUrl.startsWith("http://") || idOrUrl.startsWith("https://")) {
-      return idOrUrl;
-    }
+    if (idOrUrl.startsWith("http://") || idOrUrl.startsWith("https://")) return idOrUrl;
     return `https://drive.google.com/thumbnail?sz=w600&id=${idOrUrl}`;
   };
 
@@ -83,11 +84,11 @@ export default function AdminDashboard() {
       await supabase.from("about_me").insert([payload]);
     }
     setSaving(false);
-    alert("Profil berhasil diperbarui!");
+    alert("Profil diperbarui!");
   }
 
   async function handleAddPortfolio() {
-    if (!pTitle || !pDriveId) return alert("Judul dan Media URL/ID wajib diisi!");
+    if (!pTitle || !pDriveId) return alert("Wajib isi Judul & ID Media!");
     setSaving(true);
     const { data } = await supabase.from("portfolio").insert([
       { title: pTitle, description: pDesc, tags: pTags, media_url: pDriveId, media_type: pMediaType }
@@ -95,13 +96,12 @@ export default function AdminDashboard() {
     if (data) { 
       setPortfolios([data[0], ...portfolios]); 
       setPTitle(""); setPDesc(""); setPTags(""); setPDriveId(""); 
-      alert("Portfolio disimpan!"); 
     }
     setSaving(false);
   }
 
   async function handleAddService() {
-    if (!sTitle || !sTargetUrl) return alert("Judul Layanan dan Link Tujuan wajib diisi!");
+    if (!sTitle || !sTargetUrl) return alert("Wajib isi Judul & Link!");
     setSaving(true);
     const { data } = await supabase.from("services").insert([
       { title: sTitle, image_url: sDriveId, target_url: sTargetUrl }
@@ -109,167 +109,216 @@ export default function AdminDashboard() {
     if (data) { 
       setServices([...services, data[0]]); 
       setSTitle(""); setSDriveId(""); setSTargetUrl(""); 
-      alert("Layanan berhasil ditambahkan!"); 
     }
     setSaving(false);
   }
 
   async function deleteItem(table: string, id: number, state: any[], setState: any) {
-    if (!confirm("Yakin ingin menghapus data ini?")) return;
+    if (!confirm("Hapus data ini?")) return;
     const { error } = await supabase.from(table).delete().eq("id", id);
     if (!error) setState(state.filter(item => item.id !== id));
   }
 
-  if (loading) return <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50"><Loader2 className="animate-spin text-indigo-600 mb-4" size={40} /><p className="text-slate-500 font-medium">Sinkronisasi Konsol...</p></div>;
+  const menuItems = [
+    { id: "about", label: "Profil", icon: <User size={20} /> },
+    { id: "socials", label: "Socials", icon: <LinkIcon size={20} /> },
+    { id: "portfolio", label: "Karya", icon: <Briefcase size={20} /> },
+    { id: "services", label: "Layanan", icon: <Wrench size={20} /> },
+  ];
+
+  if (loading) return <div className="min-h-screen flex flex-col items-center justify-center bg-slate-900 text-white"><Loader2 className="animate-spin text-cyan-400 mb-4" size={40} /><p className="font-bold tracking-widest text-xs uppercase opacity-50">Menyiapkan Console...</p></div>;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen bg-[#0F172A] text-slate-200 font-sans">
       
-      {/* SIDEBAR */}
-      <aside className="w-72 bg-slate-900 text-white p-8 flex flex-col sticky h-screen top-0">
-        <div className="flex items-center gap-3 mb-10">
-          <div className="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center font-bold text-2xl shadow-lg">N</div>
-          <h2 className="text-xl font-bold tracking-tight">Console Admin</h2>
+      {/* MOBILE TOP BAR */}
+      <header className="lg:hidden fixed top-0 w-full bg-slate-900/80 backdrop-blur-md border-b border-white/5 z-50 px-6 py-4 flex justify-between items-center">
+        <div className="flex items-center gap-3">
+          <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-slate-400"><Menu size={24} /></button>
+          <h2 className="font-black tracking-tighter text-lg">NAFIS<span className="text-cyan-400">.</span>ADMIN</h2>
         </div>
-        <nav className="space-y-2 flex-1">
-          <button onClick={() => setActiveTab("about")} className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all ${activeTab === "about" ? "bg-white/10 text-white" : "text-slate-400 hover:text-white"}`}><User size={20} /> <span className="font-medium">Profil Utama</span></button>
-          <button onClick={() => setActiveTab("socials")} className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all ${activeTab === "socials" ? "bg-white/10 text-white" : "text-slate-400 hover:text-white"}`}><LinkIcon size={20} /> <span className="font-medium">Media Sosial</span></button>
-          <button onClick={() => setActiveTab("portfolio")} className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all ${activeTab === "portfolio" ? "bg-white/10 text-white" : "text-slate-400 hover:text-white"}`}><Briefcase size={20} /> <span className="font-medium">Portfolio</span></button>
-          <button onClick={() => setActiveTab("services")} className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all ${activeTab === "services" ? "bg-white/10 text-white" : "text-slate-400 hover:text-white"}`}><Wrench size={20} /> <span className="font-medium">Layanan / Jasa</span></button>
-        </nav>
-        <button onClick={() => { supabase.auth.signOut(); router.push("/admin/login"); }} className="flex items-center gap-3 text-red-400 hover:text-red-300 p-4 mt-auto transition"><LogOut size={20} /> <span className="font-medium">Logout</span></button>
-      </aside>
+        <button onClick={() => { supabase.auth.signOut(); router.push("/admin/login"); }} className="text-red-400"><LogOut size={20}/></button>
+      </header>
 
-      {/* KONTEN UTAMA */}
-      <main className="flex-1 p-12 overflow-y-auto">
-        
-        {/* TAB ABOUT ME */}
-        {activeTab === "about" && (
-          <div className="max-w-4xl animate-in fade-in duration-300">
-            <h1 className="text-4xl font-black text-slate-800 mb-2">Profil Utama</h1>
-            <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm mt-8 space-y-8">
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase mb-2">ID Google Drive / Link Langsung Foto Banner</label>
-                <input value={bannerUrl} onChange={(e) => setBannerUrl(e.target.value)} className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none" placeholder="Masukkan ID Drive atau Link Gambar langsung" />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase mb-2">Headline</label>
-                <input value={headline} onChange={(e) => setHeadline(e.target.value)} className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none" placeholder="Headline" />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase mb-2">Deskripsi Bio</label>
-                <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl h-44 outline-none" placeholder="Bio..." />
-              </div>
-              <button onClick={handleSaveAbout} className="bg-indigo-600 text-white px-10 py-4 rounded-2xl font-bold hover:bg-indigo-700 transition">SIMPAN PERUBAHAN</button>
-            </div>
+      {/* OVERLAY SIDEBAR (MOBILE) & FIXED SIDEBAR (DESKTOP) */}
+      <div className={`fixed inset-y-0 left-0 z-[60] w-72 bg-slate-900 border-r border-white/5 transform transition-transform duration-300 lg:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="p-8 flex flex-col h-full">
+          <div className="flex items-center justify-between mb-10">
+            <h2 className="text-xl font-black tracking-tighter">CONSOLE<span className="text-cyan-400">.</span></h2>
+            <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden p-2 text-slate-500"><X size={20}/></button>
           </div>
-        )}
+          
+          <nav className="space-y-1.5 flex-1">
+            {menuItems.map((item) => (
+              <button 
+                key={item.id}
+                onClick={() => { setActiveTab(item.id); setIsSidebarOpen(false); }} 
+                className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all group ${activeTab === item.id ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/20" : "text-slate-400 hover:bg-white/5 hover:text-white"}`}
+              >
+                <div className="flex items-center gap-3">{item.icon} <span className="font-bold text-sm">{item.label}</span></div>
+                <ChevronRight size={16} className={`opacity-0 group-hover:opacity-100 transition-opacity ${activeTab === item.id ? "opacity-100" : ""}`} />
+              </button>
+            ))}
+          </nav>
 
-        {/* TAB SOCIALS */}
-        {activeTab === "socials" && (
-          <div className="max-w-4xl animate-in fade-in duration-300">
-            <h1 className="text-4xl font-black text-slate-800 mb-10">Media Sosial</h1>
-            <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
-              <div className="grid grid-cols-5 gap-4 mb-10">
-                <input value={newSocialTitle} onChange={(e) => setNewSocialTitle(e.target.value)} placeholder="Nama (ex: GitHub)" className="col-span-2 p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none" />
-                <input value={newSocialUrl} onChange={(e) => setNewSocialUrl(e.target.value)} placeholder="URL Lengkap" className="col-span-2 p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none" />
-                <button onClick={async () => {
-                  const { data } = await supabase.from("social_links").insert([{ title: newSocialTitle, url: newSocialUrl }]).select();
-                  if (data) { setSocials([...socials, data[0]]); setNewSocialTitle(""); setNewSocialUrl(""); }
-                }} className="bg-slate-900 text-white rounded-2xl flex items-center justify-center"><Plus /></button>
-              </div>
-              <div className="space-y-3">
-                {socials.map(s => (
-                  <div key={s.id} className="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                    <span className="font-bold text-slate-800">{s.title} — <span className="font-normal text-slate-400">{s.url}</span></span>
-                    <button onClick={() => deleteItem('social_links', s.id, socials, setSocials)} className="text-red-400 p-2"><Trash2 size={20}/></button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+          <button onClick={() => { supabase.auth.signOut(); router.push("/admin/login"); }} className="flex items-center gap-3 text-slate-500 hover:text-red-400 p-4 mt-auto transition font-bold text-sm">
+            <LogOut size={20} /> Logout
+          </button>
+        </div>
+      </div>
 
-        {/* TAB PORTFOLIO */}
-        {activeTab === "portfolio" && (
-          <div className="max-w-6xl animate-in fade-in duration-300">
-            <h1 className="text-4xl font-black text-slate-800 mb-10">Portfolio</h1>
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
-              <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm h-fit space-y-4">
-                <h3 className="font-bold text-slate-800 mb-2 flex items-center gap-2"><Plus size={18} /> Tambah Karya</h3>
-                <select value={pMediaType} onChange={(e) => setPMediaType(e.target.value)} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm">
-                  <option value="image">Gambar / Desain</option>
-                  <option value="video">Video / Motion</option>
-                </select>
-                <input value={pDriveId} onChange={(e) => setPDriveId(e.target.value)} placeholder="ID Google Drive / Link Gambar Langsung" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm" />
-                <input value={pTitle} onChange={(e) => setPTitle(e.target.value)} placeholder="Judul Karya" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm" />
-                <textarea value={pDesc} onChange={(e) => setPDesc(e.target.value)} placeholder="Deskripsi" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm h-24" />
-                <input value={pTags} onChange={(e) => setPTags(e.target.value)} placeholder="Tags (Web, Design)" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm" />
-                <button onClick={handleAddPortfolio} className="w-full bg-indigo-600 text-white p-4 rounded-2xl font-bold shadow-lg">SIMPAN KARYA</button>
-              </div>
+      {/* MAIN CONTENT AREA */}
+      <main className="lg:ml-72 min-h-screen p-6 md:p-12 pt-24 lg:pt-12">
+        <div className="max-w-5xl mx-auto pb-20 lg:pb-0">
+          
+          {/* TAB: ABOUT ME */}
+          {activeTab === "about" && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <h1 className="text-3xl md:text-4xl font-black mb-2 text-white">Profil Utama</h1>
+              <p className="text-slate-500 text-sm md:text-base mb-8">Kelola identitas dan teks utama di landing page.</p>
               
-              <div className="xl:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                {portfolios.map(p => (
-                  <div key={p.id} className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm flex flex-col justify-between">
-                    <div className="h-48 bg-slate-900 flex items-center justify-center overflow-hidden relative">
-                      {p.media_type === 'video' ? (
-                        <Film className="text-white/40" size={40} />
-                      ) : (
-                        <img src={formatMediaUrl(p.media_url)} alt={p.title} className="w-full h-full object-cover" />
-                      )}
+              <div className="bg-slate-900/50 border border-white/5 rounded-[2rem] p-6 md:p-10 space-y-8 backdrop-blur-xl">
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 gap-6">
+                    <div>
+                      <label className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block">ID Google Drive Banner</label>
+                      <input value={bannerUrl} onChange={(e) => setBannerUrl(e.target.value)} className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus:border-cyan-500 transition-all text-sm" placeholder="Paste ID Drive..." />
                     </div>
-                    <div className="p-6 flex-1">
-                      <p className="text-xs font-bold text-indigo-500 mb-1 uppercase">{p.tags} ({p.media_type})</p>
-                      <h4 className="font-bold text-slate-800 text-lg">{p.title}</h4>
-                    </div>
-                    <div className="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
-                      <button onClick={() => deleteItem('portfolio', p.id, portfolios, setPortfolios)} className="text-red-500 hover:text-red-700"><Trash2 size={18}/></button>
+                    <div>
+                      <label className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block">Headline Utama</label>
+                      <input value={headline} onChange={(e) => setHeadline(e.target.value)} className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus:border-cyan-500 transition-all text-sm" />
                     </div>
                   </div>
-                ))}
+                  <div>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block">Deskripsi Bio</label>
+                    <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus:border-cyan-500 transition-all h-40 text-sm leading-relaxed" />
+                  </div>
+                </div>
+                <button onClick={handleSaveAbout} disabled={saving} className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all disabled:opacity-50">
+                  {saving ? "Menyimpan..." : "Update Profil"}
+                </button>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* TAB SERVICES */}
-        {activeTab === "services" && (
-          <div className="max-w-6xl animate-in fade-in duration-300">
-            <h1 className="text-4xl font-black text-slate-800 mb-10">Layanan / Jasa</h1>
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
-              <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm h-fit space-y-4">
-                <h3 className="font-bold text-slate-800 mb-2 flex items-center gap-2"><Plus size={18} /> Tambah Layanan</h3>
-                <input value={sTitle} onChange={(e) => setSTitle(e.target.value)} placeholder="Nama Jasa (ex: UI/UX Design)" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm" />
-                <input value={sDriveId} onChange={(e) => setSDriveId(e.target.value)} placeholder="ID Drive / Link Langsung Ikon" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm" />
-                <input value={sTargetUrl} onChange={(e) => setSTargetUrl(e.target.value)} placeholder="Link Order (ex: Link WhatsApp)" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm" />
-                <button onClick={handleAddService} className="w-full bg-indigo-600 text-white p-4 rounded-2xl font-bold shadow-lg">TAMBAH LAYANAN</button>
-              </div>
-
-              <div className="xl:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                {services.map(s => (
-                  <div key={s.id} className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 overflow-hidden">
-                        {s.image_url ? (
-                          <img src={formatMediaUrl(s.image_url)} alt="Icon" className="w-full h-full object-cover" />
-                        ) : (
-                          <Globe size={24} />
-                        )}
-                      </div>
+          {/* TAB: SOCIALS */}
+          {activeTab === "socials" && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <h1 className="text-3xl md:text-4xl font-black mb-8 text-white">Media Sosial</h1>
+              <div className="grid grid-cols-1 gap-8">
+                <div className="bg-slate-900/50 border border-white/5 rounded-3xl p-6">
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <input value={newSocialTitle} onChange={(e) => setNewSocialTitle(e.target.value)} placeholder="Nama (ex: GitHub)" className="flex-1 bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none text-sm" />
+                    <input value={newSocialUrl} onChange={(e) => setNewSocialUrl(e.target.value)} placeholder="Link URL" className="flex-[2] bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none text-sm" />
+                    <button onClick={async () => {
+                      const { data } = await supabase.from("social_links").insert([{ title: newSocialTitle, url: newSocialUrl }]).select();
+                      if (data) { setSocials([...socials, data[0]]); setNewSocialTitle(""); setNewSocialUrl(""); }
+                    }} className="bg-white text-slate-900 px-6 py-4 rounded-2xl font-black text-xs uppercase"><Plus size={18} /></button>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  {socials.map(s => (
+                    <div key={s.id} className="flex items-center justify-between p-5 bg-slate-900/30 border border-white/5 rounded-2xl backdrop-blur-sm">
                       <div>
-                        <h4 className="font-bold text-slate-800 text-lg">{s.title}</h4>
-                        <p className="text-xs text-slate-400 truncate max-w-xs">{s.target_url}</p>
+                        <p className="font-bold text-white text-sm">{s.title}</p>
+                        <p className="text-xs text-slate-500 truncate max-w-[200px] md:max-w-md">{s.url}</p>
                       </div>
+                      <button onClick={() => deleteItem('social_links', s.id, socials, setSocials)} className="text-slate-600 hover:text-red-400 p-2 transition-colors"><Trash2 size={18}/></button>
                     </div>
-                    <button onClick={() => deleteItem('services', s.id, services, setServices)} className="text-red-400 hover:text-red-600"><Trash2 size={18}/></button>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        )}
-        
+          )}
+
+          {/* TAB: PORTFOLIO (RESPONSIVE GRID) */}
+          {activeTab === "portfolio" && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <h1 className="text-3xl md:text-4xl font-black mb-8 text-white">Portfolio</h1>
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+                <div className="xl:col-span-4 space-y-4">
+                  <div className="bg-slate-900 border border-white/5 p-6 rounded-3xl sticky top-24">
+                    <h3 className="font-black text-[10px] uppercase tracking-widest text-cyan-500 mb-6">Tambah Karya</h3>
+                    <div className="space-y-4">
+                      <select value={pMediaType} onChange={(e) => setPMediaType(e.target.value)} className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none">
+                        <option value="image">Gambar</option>
+                        <option value="video">Video</option>
+                      </select>
+                      <input value={pDriveId} onChange={(e) => setPDriveId(e.target.value)} placeholder="ID Drive / Link Gambar" className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none" />
+                      <input value={pTitle} onChange={(e) => setPTitle(e.target.value)} placeholder="Judul Karya" className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none" />
+                      <textarea value={pDesc} onChange={(e) => setPDesc(e.target.value)} placeholder="Deskripsi Singkat" className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none h-24" />
+                      <input value={pTags} onChange={(e) => setPTags(e.target.value)} placeholder="Tags (ex: Web, UI/UX)" className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none" />
+                      <button onClick={handleAddPortfolio} className="w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase tracking-widest">Simpan Karya</button>
+                    </div>
+                  </div>
+                </div>
+                <div className="xl:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {portfolios.map(p => (
+                    <div key={p.id} className="bg-slate-900/50 border border-white/5 rounded-3xl overflow-hidden group">
+                      <div className="aspect-video bg-slate-800 relative overflow-hidden">
+                        {p.media_type === 'video' ? <Film className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/20" size={32} /> : <img src={formatMediaUrl(p.media_url)} className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity" />}
+                      </div>
+                      <div className="p-5 flex justify-between items-center">
+                        <div>
+                          <h4 className="font-bold text-white text-sm">{p.title}</h4>
+                          <p className="text-[10px] uppercase font-black text-cyan-500 tracking-tighter">{p.tags}</p>
+                        </div>
+                        <button onClick={() => deleteItem('portfolio', p.id, portfolios, setPortfolios)} className="text-slate-600 hover:text-red-400 transition-colors"><Trash2 size={16}/></button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB: SERVICES */}
+          {activeTab === "services" && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <h1 className="text-3xl md:text-4xl font-black mb-8 text-white">Layanan</h1>
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+                <div className="xl:col-span-4">
+                  <div className="bg-slate-900 border border-white/5 p-6 rounded-3xl space-y-4">
+                    <input value={sTitle} onChange={(e) => setSTitle(e.target.value)} placeholder="Nama Jasa" className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none" />
+                    <input value={sDriveId} onChange={(e) => setSDriveId(e.target.value)} placeholder="ID Drive Ikon" className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none" />
+                    <input value={sTargetUrl} onChange={(e) => setSTargetUrl(e.target.value)} placeholder="Link WhatsApp/Order" className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none" />
+                    <button onClick={handleAddService} className="w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase">Tambah Jasa</button>
+                  </div>
+                </div>
+                <div className="xl:col-span-8 space-y-3">
+                  {services.map(s => (
+                    <div key={s.id} className="bg-slate-900/50 border border-white/5 p-5 rounded-2xl flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center overflow-hidden">
+                          {s.image_url ? <img src={formatMediaUrl(s.image_url)} className="w-full h-full object-cover" /> : <Globe size={20} />}
+                        </div>
+                        <h4 className="font-bold text-sm text-white">{s.title}</h4>
+                      </div>
+                      <button onClick={() => deleteItem('services', s.id, services, setServices)} className="text-slate-600 hover:text-red-400 transition-colors"><Trash2 size={18}/></button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+          
+        </div>
       </main>
+
+      {/* MOBILE BOTTOM NAVIGATION (INSTAGRAM STYLE) */}
+      <nav className="lg:hidden fixed bottom-0 w-full bg-slate-900/90 backdrop-blur-xl border-t border-white/5 z-50 px-2 py-2 flex justify-around items-center">
+        {menuItems.map((item) => (
+          <button 
+            key={item.id}
+            onClick={() => setActiveTab(item.id)}
+            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all ${activeTab === item.id ? "text-cyan-400" : "text-slate-500"}`}
+          >
+            {item.icon}
+            <span className="text-[10px] font-black uppercase tracking-tighter">{item.label}</span>
+          </button>
+        ))}
+      </nav>
+
     </div>
   );
 }
