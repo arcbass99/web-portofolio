@@ -110,8 +110,8 @@ export default function LandingPage() {
             <div className="flex flex-col gap-6 md:gap-8 text-center font-black tracking-tight w-full px-6">
               {[
                 { id: 'home', label: 'Profil Utama' },
-                { id: 'portfolio', label: 'My Works' },
-                ...(services.length > 0 ? [{ id: 'services', label: 'Services' }] : [])
+                { id: 'portfolio', label: 'Selected Works' },
+                ...(services.length > 0 ? [{ id: 'services', label: 'Produk' }] : [])
               ].map((item, i) => (
                 <motion.button 
                   key={item.id}
@@ -191,7 +191,7 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 gap-4">
               <div>
-                <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">My Works</h2>
+                <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">Selected Works</h2>
                 <p className={`text-base md:text-lg font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Kumpulan proyek dan desain saya.</p>
               </div>
               <span className={`text-4xl md:text-5xl font-black ${isDark ? 'text-white/10' : 'text-slate-200'}`}>/ 0{portfolios.length}</span>
@@ -205,7 +205,8 @@ export default function LandingPage() {
                       <iframe src={`https://drive.google.com/file/d/${p.media_url}/preview`} className="w-full h-full border-0" allow="autoplay" />
                     ) : (
                       <div className="w-full h-full relative">
-                        <img src={formatMediaUrl(s.image_url)} alt="Icon" className="w-full h-full object-contain p-2" />
+                        {/* BUG FIX: Mengembalikan variabel penunjuk ke 'p.media_url' dan menggunakan 'object-cover' agar portfolio utama tetap tampil penuh dan megah */}
+                        <img src={formatMediaUrl(p.media_url)} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-center justify-center">
                           <ArrowUpRight className="text-white opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-500 shadow-xl" size={40} />
                         </div>
@@ -238,7 +239,7 @@ export default function LandingPage() {
               {services.map((s, index) => (
                 <motion.a key={s.id} href={s.target_url} target="_blank" rel="noreferrer" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ delay: index * 0.1 }} className={`p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:h-64 ${isDark ? 'bg-white/5 border-white/10 hover:border-cyan-500 hover:bg-white/10' : 'bg-white/50 border-white/60 hover:border-teal-500 hover:bg-white'}`}>
                   
-                  {/* --- INI BAGIAN YANG DIPERBESAR DAN DIHAPUS PADDINGNYA --- */}
+                  {/* BOX LAYANAN PRODUK YANG SUDAH DIPERBESAR DAN BEBAS PADDING */}
                   <div className={`w-16 h-16 md:w-24 md:h-24 mb-6 md:mb-0 rounded-xl md:rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${isDark ? 'bg-black/50 border-white/10 group-hover:bg-cyan-900/30' : 'bg-white border-slate-100 group-hover:bg-teal-50'}`}>
                     {s.image_url ? (
                       <img src={formatMediaUrl(s.image_url)} alt="Icon" className="w-full h-full object-contain" />
@@ -265,7 +266,7 @@ export default function LandingPage() {
           <a href="/admin" className={`inline-block px-8 py-3 md:px-10 md:py-4 rounded-full font-bold text-sm transition-all shadow-xl border ${isDark ? 'bg-white text-black hover:bg-cyan-400 border-white' : 'bg-slate-900 text-white hover:bg-teal-600 border-slate-900'}`}>
             Login
           </a>
-          <p className="mt-20 text-xs md:text-sm font-bold tracking-widest uppercase opacity-40">© {new Date().getFullYear()} — Dibuat dengan cinta oleh Nafis</p>
+          <p className="mt-20 text-xs md:text-sm font-bold tracking-widest uppercase opacity-40">© {new Date().getFullYear()} — Dibuat dengan presisi oleh Nafis</p>
         </footer>
 
       </div>
