@@ -109,9 +109,9 @@ export default function LandingPage() {
             </button>
             <div className="flex flex-col gap-6 md:gap-8 text-center font-black tracking-tight w-full px-6">
               {[
-                { id: 'home', label: '01. Profil Utama' },
-                { id: 'portfolio', label: '02. Selected Works' },
-                ...(services.length > 0 ? [{ id: 'services', label: '03. Services' }] : [])
+                { id: 'home', label: 'Profil Utama' },
+                { id: 'portfolio', label: 'Selected Works' },
+                ...(services.length > 0 ? [{ id: 'services', label: 'Services' }] : [])
               ].map((item, i) => (
                 <motion.button 
                   key={item.id}
@@ -237,13 +237,16 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               {services.map((s, index) => (
                 <motion.a key={s.id} href={s.target_url} target="_blank" rel="noreferrer" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ delay: index * 0.1 }} className={`p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:h-64 ${isDark ? 'bg-white/5 border-white/10 hover:border-cyan-500 hover:bg-white/10' : 'bg-white/50 border-white/60 hover:border-teal-500 hover:bg-white'}`}>
-                  <div className={`w-12 h-12 md:w-14 md:h-14 mb-6 md:mb-0 rounded-xl md:rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${isDark ? 'bg-black/50 border-white/10 group-hover:bg-cyan-900/30' : 'bg-white border-slate-100 group-hover:bg-teal-50'}`}>
+                  
+                  {/* --- INI BAGIAN YANG DIPERBESAR DAN DIHAPUS PADDINGNYA --- */}
+                  <div className={`w-16 h-16 md:w-24 md:h-24 mb-6 md:mb-0 rounded-xl md:rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${isDark ? 'bg-black/50 border-white/10 group-hover:bg-cyan-900/30' : 'bg-white border-slate-100 group-hover:bg-teal-50'}`}>
                     {s.image_url ? (
-                      <img src={formatMediaUrl(s.image_url)} alt="Icon" className="w-full h-full object-cover p-2" />
+                      <img src={formatMediaUrl(s.image_url)} alt="Icon" className="w-full h-full object-contain" />
                     ) : (
                       <ArrowRight className={isDark ? 'text-slate-400 group-hover:text-cyan-400' : 'text-slate-400 group-hover:text-teal-600'} size={20} />
                     )}
                   </div>
+
                   <div>
                     <h3 className="text-xl md:text-2xl font-bold mb-1 md:mb-2">{s.title}</h3>
                     <div className={`flex items-center gap-2 text-xs md:text-sm font-bold opacity-70 group-hover:opacity-100 transition-opacity ${isDark ? 'text-cyan-400' : 'text-teal-600'}`}>
