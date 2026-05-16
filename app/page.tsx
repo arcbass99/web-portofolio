@@ -205,7 +205,7 @@ export default function LandingPage() {
                       <iframe src={`https://drive.google.com/file/d/${p.media_url}/preview`} className="w-full h-full border-0" allow="autoplay" />
                     ) : (
                       <div className="w-full h-full relative">
-                        <img src={formatMediaUrl(p.media_url)} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                        <img src={formatMediaUrl(s.image_url)} alt="Icon" className="w-full h-full object-contain p-2" />
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-center justify-center">
                           <ArrowUpRight className="text-white opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-500 shadow-xl" size={40} />
                         </div>
