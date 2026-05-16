@@ -154,10 +154,17 @@ export default function LandingPage() {
               <p className={`text-lg md:text-xl leading-relaxed max-w-lg mb-8 md:mb-10 font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
                 {about?.description || "Saya merancang dan mengembangkan antarmuka website premium untuk membantu skala bisnis Anda."}
               </p>
-              <div className="flex gap-4 items-center">
+              <div className="flex gap-3 md:gap-4 items-center flex-wrap">
                 {socials.map((s) => (
-                  <a key={s.id} href={s.url} target="_blank" rel="noreferrer" className={`p-3 md:p-4 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${isDark ? 'bg-white/5 border-white/10 hover:bg-white/10 text-white' : 'bg-white/60 border-white/40 hover:bg-white text-slate-800'}`}>
-                    <ExternalLink size={20} />
+                  <a 
+                    key={s.id} 
+                    href={s.url} 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    className={`flex items-center gap-2 px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${isDark ? 'bg-white/5 border-white/10 hover:bg-white/10 text-white' : 'bg-white/60 border-white/40 hover:bg-white text-slate-800'}`}
+                  >
+                    <span className="text-xs md:text-sm font-bold tracking-wide">{s.title}</span>
+                    <ExternalLink size={16} className="opacity-70" />
                   </a>
                 ))}
               </div>
