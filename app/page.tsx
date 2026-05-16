@@ -154,6 +154,8 @@ export default function LandingPage() {
               <p className={`text-lg md:text-xl leading-relaxed max-w-lg mb-8 md:mb-10 font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
                 {about?.description || "Saya merancang dan mengembangkan antarmuka website premium untuk membantu skala bisnis Anda."}
               </p>
+              
+              {/* TOMBOL SOSIAL MEDIA BARU (TEKS + IKON) */}
               <div className="flex gap-3 md:gap-4 items-center flex-wrap">
                 {socials.map((s) => (
                   <a 
@@ -168,9 +170,9 @@ export default function LandingPage() {
                   </a>
                 ))}
               </div>
+
             </motion.div>
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.2 }} className="order-1 lg:order-2">
-              {/* PENYESUAIAN RADIUS: rounded-3xl di mobile, rounded-[2.5rem] di desktop */}
               <div className={`aspect-square md:aspect-[4/5] rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl border backdrop-blur-xl p-2 ${isDark ? 'bg-white/5 border-white/10' : 'bg-white/40 border-white/50'}`}>
                 <div className="w-full h-full rounded-2xl md:rounded-[2rem] overflow-hidden bg-slate-200/50">
                   {about?.banner_url ? (
@@ -189,7 +191,7 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 gap-4">
               <div>
-                <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">Portofolio</h2>
+                <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">Selected Works</h2>
                 <p className={`text-base md:text-lg font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Kumpulan proyek dan desain terbaik saya.</p>
               </div>
               <span className={`text-4xl md:text-5xl font-black ${isDark ? 'text-white/10' : 'text-slate-200'}`}>/ 0{portfolios.length}</span>
@@ -197,7 +199,6 @@ export default function LandingPage() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
               {portfolios.map((p, index) => (
-                // PENYESUAIAN RADIUS KARTU PORTFOLIO
                 <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ delay: index * 0.1 }} className={`group p-3 md:p-4 rounded-3xl md:rounded-[2.5rem] border backdrop-blur-md shadow-xl transition-all duration-500 ${isDark ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white/50 border-white/60 hover:bg-white/80'}`}>
                   <div className="relative aspect-video rounded-2xl md:rounded-[2rem] overflow-hidden mb-4 md:mb-6">
                     {p.media_type === "video" ? (
@@ -261,7 +262,7 @@ export default function LandingPage() {
           <a href="/admin" className={`inline-block px-8 py-3 md:px-10 md:py-4 rounded-full font-bold text-sm transition-all shadow-xl border ${isDark ? 'bg-white text-black hover:bg-cyan-400 border-white' : 'bg-slate-900 text-white hover:bg-teal-600 border-slate-900'}`}>
             Login
           </a>
-          <p className="mt-20 text-xs md:text-sm font-bold tracking-widest uppercase opacity-40">© {new Date().getFullYear()} — Dibuat dengan cinta oleh Nafis</p>
+          <p className="mt-20 text-xs md:text-sm font-bold tracking-widest uppercase opacity-40">© {new Date().getFullYear()} — Dibuat dengan presisi oleh Nafis</p>
         </footer>
 
       </div>
