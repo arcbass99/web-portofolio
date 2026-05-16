@@ -110,7 +110,7 @@ export default function LandingPage() {
             <div className="flex flex-col gap-6 md:gap-8 text-center font-black tracking-tight w-full px-6">
               {[
                 { id: 'home', label: 'Profil Utama' },
-                { id: 'portfolio', label: 'Selected Works' },
+                { id: 'portfolio', label: 'My Works' },
                 ...(services.length > 0 ? [{ id: 'services', label: 'Services' }] : [])
               ].map((item, i) => (
                 <motion.button 
