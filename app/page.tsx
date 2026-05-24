@@ -40,6 +40,7 @@ type PortfolioItem = {
 type ServiceItem = {
   id: number;
   title: string | null;
+  description: string | null;
   image_url: string | null;
   target_url: string | null;
 };
@@ -456,7 +457,7 @@ export default function LandingPage() {
                   isDark ? "text-slate-400" : "text-slate-500"
                 }`}
               >
-                Seluruh penawaran saya.
+                Produk, layanan, dan penawaran digital yang bisa kamu akses.
               </p>
             </div>
 
@@ -467,54 +468,65 @@ export default function LandingPage() {
                   href={service.target_url || "#"}
                   target="_blank"
                   rel="noreferrer"
+                  aria-label={`Kunjungi ${service.title || "produk"}`}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ delay: index * 0.1 }}
-                  className={`p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:h-64 ${
+                  className={`p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:min-h-[18rem] ${
                     isDark
                       ? "bg-white/5 border-white/10 hover:border-cyan-500 hover:bg-white/10"
                       : "bg-white/50 border-white/60 hover:border-teal-500 hover:bg-white"
                   }`}
                 >
-                  <div
-                    className={`relative w-16 h-16 md:w-24 md:h-24 mb-6 md:mb-0 rounded-xl md:rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${
-                      isDark
-                        ? "bg-black/50 border-white/10 group-hover:bg-cyan-900/30"
-                        : "bg-white border-slate-100 group-hover:bg-teal-50"
-                    }`}
-                  >
-                    {service.image_url ? (
-                      <Image
-                        src={formatMediaUrl(service.image_url)}
-                        alt={service.title || "Service icon"}
-                        fill
-                        sizes="(max-width: 768px) 64px, 96px"
-                        className="object-contain"
-                      />
-                    ) : (
-                      <ArrowRight
-                        className={
-                          isDark
-                            ? "text-slate-400 group-hover:text-cyan-400"
-                            : "text-slate-400 group-hover:text-teal-600"
-                        }
-                        size={20}
-                      />
-                    )}
-                  </div>
-
                   <div>
-                    <h3 className="text-xl md:text-2xl font-bold mb-1 md:mb-2">
-                      {service.title || "Produk"}
-                    </h3>
                     <div
-                      className={`flex items-center gap-2 text-xs md:text-sm font-bold opacity-70 group-hover:opacity-100 transition-opacity ${
-                        isDark ? "text-cyan-400" : "text-teal-600"
+                      className={`relative w-16 h-16 md:w-24 md:h-24 mb-6 rounded-xl md:rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${
+                        isDark
+                          ? "bg-black/50 border-white/10 group-hover:bg-cyan-900/30"
+                          : "bg-white border-slate-100 group-hover:bg-teal-50"
                       }`}
                     >
-                      Kunjungi <ArrowRight size={14} />
+                      {service.image_url ? (
+                        <Image
+                          src={formatMediaUrl(service.image_url)}
+                          alt={service.title || "Service icon"}
+                          fill
+                          sizes="(max-width: 768px) 64px, 96px"
+                          className="object-contain"
+                        />
+                      ) : (
+                        <ArrowRight
+                          className={
+                            isDark
+                              ? "text-slate-400 group-hover:text-cyan-400"
+                              : "text-slate-400 group-hover:text-teal-600"
+                          }
+                          size={20}
+                        />
+                      )}
                     </div>
+
+                    <h3 className="text-xl md:text-2xl font-bold mb-3">
+                      {service.title || "Produk"}
+                    </h3>
+
+                    <p
+                      className={`text-sm md:text-base leading-relaxed line-clamp-3 font-medium ${
+                        isDark ? "text-slate-400" : "text-slate-500"
+                      }`}
+                    >
+                      {service.description ||
+                        "Klik untuk melihat detail penawaran ini."}
+                    </p>
+                  </div>
+
+                  <div
+                    className={`mt-6 flex items-center gap-2 text-xs md:text-sm font-bold opacity-70 group-hover:opacity-100 transition-opacity ${
+                      isDark ? "text-cyan-400" : "text-teal-600"
+                    }`}
+                  >
+                    Kunjungi <ArrowRight size={14} />
                   </div>
                 </motion.a>
               ))}

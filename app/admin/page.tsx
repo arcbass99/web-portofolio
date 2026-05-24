@@ -27,6 +27,7 @@ import {
   Menu,
   X,
   ChevronRight,
+  Pencil,
 } from "lucide-react";
 
 type ActiveTab = "about" | "socials" | "portfolio" | "services";
@@ -58,6 +59,7 @@ type PortfolioItem = {
 type ServiceItem = {
   id: number;
   title: string | null;
+  description: string | null;
   image_url: string | null;
   target_url: string | null;
 };
@@ -88,16 +90,22 @@ export default function AdminDashboard() {
 
   const [newSocialTitle, setNewSocialTitle] = useState("");
   const [newSocialUrl, setNewSocialUrl] = useState("");
+  const [editingSocialId, setEditingSocialId] = useState<number | null>(null);
 
   const [pTitle, setPTitle] = useState("");
   const [pDesc, setPDesc] = useState("");
   const [pTags, setPTags] = useState("");
   const [pDriveId, setPDriveId] = useState("");
   const [pMediaType, setPMediaType] = useState<PortfolioMediaType>("image");
+  const [editingPortfolioId, setEditingPortfolioId] = useState<number | null>(
+    null,
+  );
 
   const [sTitle, setSTitle] = useState("");
+  const [sDescription, setSDescription] = useState("");
   const [sDriveId, setSDriveId] = useState("");
   const [sTargetUrl, setSTargetUrl] = useState("");
+  const [editingServiceId, setEditingServiceId] = useState<number | null>(null);
 
   const [saving, setSaving] = useState(false);
 
@@ -167,6 +175,29 @@ export default function AdminDashboard() {
     return `https://drive.google.com/thumbnail?sz=w600&id=${idOrUrl}`;
   };
 
+  const resetSocialForm = () => {
+    setNewSocialTitle("");
+    setNewSocialUrl("");
+    setEditingSocialId(null);
+  };
+
+  const resetPortfolioForm = () => {
+    setPTitle("");
+    setPDesc("");
+    setPTags("");
+    setPDriveId("");
+    setPMediaType("image");
+    setEditingPortfolioId(null);
+  };
+
+  const resetServiceForm = () => {
+    setSTitle("");
+    setSDescription("");
+    setSDriveId("");
+    setSTargetUrl("");
+    setEditingServiceId(null);
+  };
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     router.push("/admin/login");
@@ -199,100 +230,180 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleAddSocial = async () => {
+  const handleSaveSocial = async () => {
     if (!newSocialTitle || !newSocialUrl) {
       alert("Wajib isi nama dan link sosial media!");
       return;
     }
 
+    const payload = {
+      title: newSocialTitle,
+      url: newSocialUrl,
+    };
+
     setSaving(true);
 
     try {
+      if (editingSocialId !== null) {
+        const { data } = await supabase
+          .from("social_links")
+          .update(payload)
+          .eq("id", editingSocialId)
+          .select()
+          .single();
+
+        const updatedSocial = data as SocialLink | null;
+
+        if (updatedSocial) {
+          setSocials((current) =>
+            current.map((social) =>
+              social.id === updatedSocial.id ? updatedSocial : social,
+            ),
+          );
+          resetSocialForm();
+        }
+
+        return;
+      }
+
       const { data } = await supabase
         .from("social_links")
-        .insert([{ title: newSocialTitle, url: newSocialUrl }])
+        .insert([payload])
         .select();
 
       const newSocial = data?.[0] as SocialLink | undefined;
 
       if (newSocial) {
         setSocials((current) => [...current, newSocial]);
-        setNewSocialTitle("");
-        setNewSocialUrl("");
+        resetSocialForm();
       }
     } finally {
       setSaving(false);
     }
   };
 
-  const handleAddPortfolio = async () => {
+  const handleEditSocial = (social: SocialLink) => {
+    setEditingSocialId(social.id);
+    setNewSocialTitle(social.title || "");
+    setNewSocialUrl(social.url || "");
+  };
+
+  const handleSavePortfolio = async () => {
     if (!pTitle || !pDriveId) {
       alert("Wajib isi Judul & ID Media!");
       return;
     }
 
+    const payload = {
+      title: pTitle,
+      description: pDesc,
+      tags: pTags,
+      media_url: pDriveId,
+      media_type: pMediaType,
+    };
+
     setSaving(true);
 
     try {
-      const { data } = await supabase
-        .from("portfolio")
-        .insert([
-          {
-            title: pTitle,
-            description: pDesc,
-            tags: pTags,
-            media_url: pDriveId,
-            media_type: pMediaType,
-          },
-        ])
-        .select();
+      if (editingPortfolioId !== null) {
+        const { data } = await supabase
+          .from("portfolio")
+          .update(payload)
+          .eq("id", editingPortfolioId)
+          .select()
+          .single();
 
+        const updatedPortfolio = data as PortfolioItem | null;
+
+        if (updatedPortfolio) {
+          setPortfolios((current) =>
+            current.map((portfolio) =>
+              portfolio.id === updatedPortfolio.id ? updatedPortfolio : portfolio,
+            ),
+          );
+          resetPortfolioForm();
+        }
+
+        return;
+      }
+
+      const { data } = await supabase.from("portfolio").insert([payload]).select();
       const newPortfolio = data?.[0] as PortfolioItem | undefined;
 
       if (newPortfolio) {
         setPortfolios((current) => [newPortfolio, ...current]);
-        setPTitle("");
-        setPDesc("");
-        setPTags("");
-        setPDriveId("");
-        setPMediaType("image");
+        resetPortfolioForm();
       }
     } finally {
       setSaving(false);
     }
   };
 
-  const handleAddService = async () => {
+  const handleEditPortfolio = (portfolio: PortfolioItem) => {
+    setEditingPortfolioId(portfolio.id);
+    setPTitle(portfolio.title || "");
+    setPDesc(portfolio.description || "");
+    setPTags(portfolio.tags || "");
+    setPDriveId(portfolio.media_url || "");
+    setPMediaType(portfolio.media_type === "video" ? "video" : "image");
+  };
+
+  const handleSaveService = async () => {
     if (!sTitle || !sTargetUrl) {
       alert("Wajib isi Judul & Link!");
       return;
     }
 
+    const payload = {
+      title: sTitle,
+      description: sDescription,
+      image_url: sDriveId,
+      target_url: sTargetUrl,
+    };
+
     setSaving(true);
 
     try {
-      const { data } = await supabase
-        .from("services")
-        .insert([
-          {
-            title: sTitle,
-            image_url: sDriveId,
-            target_url: sTargetUrl,
-          },
-        ])
-        .select();
+      if (editingServiceId !== null) {
+        const { data } = await supabase
+          .from("services")
+          .update(payload)
+          .eq("id", editingServiceId)
+          .select()
+          .single();
 
+        const updatedService = data as ServiceItem | null;
+
+        if (updatedService) {
+          setServices((current) =>
+            current.map((service) =>
+              service.id === updatedService.id ? updatedService : service,
+            ),
+          );
+          resetServiceForm();
+        }
+
+        return;
+      }
+
+      const { data } = await supabase.from("services").insert([payload]).select();
       const newService = data?.[0] as ServiceItem | undefined;
 
       if (newService) {
         setServices((current) => [...current, newService]);
-        setSTitle("");
-        setSDriveId("");
-        setSTargetUrl("");
+        resetServiceForm();
       }
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleEditService = (service: ServiceItem) => {
+    setEditingServiceId(service.id);
+    setSTitle(service.title || "");
+    setSDescription(service.description || "");
+    setSDriveId(service.image_url || "");
+    setSTargetUrl(service.target_url || "");
   };
 
   const deleteItem = async <T extends ItemWithId>(
@@ -491,6 +602,17 @@ export default function AdminDashboard() {
 
               <div className="grid grid-cols-1 gap-8">
                 <div className="bg-slate-900/50 border border-white/5 rounded-3xl p-6">
+                  {editingSocialId !== null && (
+                    <div className="mb-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4">
+                      <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">
+                        Mode Edit Social
+                      </p>
+                      <p className="mt-1 text-xs text-slate-400">
+                        Kamu sedang mengubah link sosial yang sudah tersimpan.
+                      </p>
+                    </div>
+                  )}
+
                   <div className="flex flex-col md:flex-row gap-4">
                     <input
                       value={newSocialTitle}
@@ -508,23 +630,38 @@ export default function AdminDashboard() {
                     />
                     <button
                       type="button"
-                      onClick={handleAddSocial}
+                      onClick={handleSaveSocial}
                       disabled={saving}
                       className="bg-white text-slate-900 px-6 py-4 rounded-2xl font-black text-xs uppercase disabled:opacity-50"
-                      aria-label="Tambah sosial media"
+                      aria-label={
+                        editingSocialId !== null
+                          ? "Simpan perubahan sosial media"
+                          : "Tambah sosial media"
+                      }
                     >
-                      <Plus size={18} />
+                      {editingSocialId !== null ? "Simpan" : <Plus size={18} />}
                     </button>
                   </div>
+
+                  {editingSocialId !== null && (
+                    <button
+                      type="button"
+                      onClick={resetSocialForm}
+                      disabled={saving}
+                      className="mt-4 w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50"
+                    >
+                      Batal Edit
+                    </button>
+                  )}
                 </div>
 
                 <div className="space-y-3">
                   {socials.map((social) => (
                     <div
                       key={social.id}
-                      className="flex items-center justify-between p-5 bg-slate-900/30 border border-white/5 rounded-2xl backdrop-blur-sm"
+                      className="flex items-center justify-between gap-4 p-5 bg-slate-900/30 border border-white/5 rounded-2xl backdrop-blur-sm"
                     >
-                      <div>
+                      <div className="min-w-0">
                         <p className="font-bold text-white text-sm">
                           {social.title || "Untitled Social"}
                         </p>
@@ -533,20 +670,31 @@ export default function AdminDashboard() {
                         </p>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() =>
-                          deleteItem<SocialLink>(
-                            "social_links",
-                            social.id,
-                            setSocials,
-                          )
-                        }
-                        className="text-slate-600 hover:text-red-400 p-2 transition-colors"
-                        aria-label={`Hapus ${social.title || "social link"}`}
-                      >
-                        <Trash2 size={18} />
-                      </button>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => handleEditSocial(social)}
+                          className="text-slate-500 hover:text-cyan-400 transition-colors p-2"
+                          aria-label={`Edit ${social.title || "social link"}`}
+                        >
+                          <Pencil size={16} />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            deleteItem<SocialLink>(
+                              "social_links",
+                              social.id,
+                              setSocials,
+                            )
+                          }
+                          className="text-slate-600 hover:text-red-400 p-2 transition-colors"
+                          aria-label={`Hapus ${social.title || "social link"}`}
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -564,8 +712,21 @@ export default function AdminDashboard() {
                 <div className="xl:col-span-4 space-y-4">
                   <div className="bg-slate-900 border border-white/5 p-6 rounded-3xl sticky top-24">
                     <h3 className="font-black text-[10px] uppercase tracking-widest text-cyan-500 mb-6">
-                      Tambah Karya
+                      {editingPortfolioId !== null
+                        ? "Edit Karya"
+                        : "Tambah Karya"}
                     </h3>
+
+                    {editingPortfolioId !== null && (
+                      <div className="mb-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4">
+                        <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">
+                          Mode Edit Karya
+                        </p>
+                        <p className="mt-1 text-xs text-slate-400">
+                          Kamu sedang mengubah data karya yang sudah tersimpan.
+                        </p>
+                      </div>
+                    )}
 
                     <div className="space-y-4">
                       <select
@@ -607,14 +768,28 @@ export default function AdminDashboard() {
                         placeholder="Tags (ex: Web, UI/UX)"
                         className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
                       />
+
                       <button
                         type="button"
-                        onClick={handleAddPortfolio}
+                        onClick={handleSavePortfolio}
                         disabled={saving}
                         className="w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase tracking-widest disabled:opacity-50"
                       >
-                        Simpan Karya
+                        {editingPortfolioId !== null
+                          ? "Simpan Perubahan"
+                          : "Simpan Karya"}
                       </button>
+
+                      {editingPortfolioId !== null && (
+                        <button
+                          type="button"
+                          onClick={resetPortfolioForm}
+                          disabled={saving}
+                          className="w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50"
+                        >
+                          Batal Edit
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -640,32 +815,45 @@ export default function AdminDashboard() {
                         )}
                       </div>
 
-                      <div className="p-5 flex justify-between items-center">
-                        <div>
-                          <h4 className="font-bold text-white text-sm">
+                      <div className="p-5 flex justify-between items-center gap-4">
+                        <div className="min-w-0">
+                          <h4 className="font-bold text-white text-sm truncate">
                             {portfolio.title || "Untitled Project"}
                           </h4>
-                          <p className="text-[10px] uppercase font-black text-cyan-500 tracking-tighter">
+                          <p className="text-[10px] uppercase font-black text-cyan-500 tracking-tighter truncate">
                             {portfolio.tags || "Project"}
                           </p>
                         </div>
 
-                        <button
-                          type="button"
-                          onClick={() =>
-                            deleteItem<PortfolioItem>(
-                              "portfolio",
-                              portfolio.id,
-                              setPortfolios,
-                            )
-                          }
-                          className="text-slate-600 hover:text-red-400 transition-colors"
-                          aria-label={`Hapus ${
-                            portfolio.title || "portfolio"
-                          }`}
-                        >
-                          <Trash2 size={16} />
-                        </button>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => handleEditPortfolio(portfolio)}
+                            className="text-slate-500 hover:text-cyan-400 transition-colors p-2"
+                            aria-label={`Edit ${
+                              portfolio.title || "portfolio"
+                            }`}
+                          >
+                            <Pencil size={16} />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              deleteItem<PortfolioItem>(
+                                "portfolio",
+                                portfolio.id,
+                                setPortfolios,
+                              )
+                            }
+                            className="text-slate-600 hover:text-red-400 transition-colors p-2"
+                            aria-label={`Hapus ${
+                              portfolio.title || "portfolio"
+                            }`}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -683,11 +871,28 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
                 <div className="xl:col-span-4">
                   <div className="bg-slate-900 border border-white/5 p-6 rounded-3xl space-y-4">
+                    {editingServiceId !== null && (
+                      <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4">
+                        <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">
+                          Mode Edit Layanan
+                        </p>
+                        <p className="mt-1 text-xs text-slate-400">
+                          Kamu sedang mengubah data layanan yang sudah tersimpan.
+                        </p>
+                      </div>
+                    )}
+
                     <input
                       value={sTitle}
                       onChange={(event) => setSTitle(event.target.value)}
                       placeholder="Nama Jasa"
                       className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                    />
+                    <textarea
+                      value={sDescription}
+                      onChange={(event) => setSDescription(event.target.value)}
+                      placeholder="Deskripsi singkat layanan"
+                      className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none h-28 resize-none"
                     />
                     <input
                       value={sDriveId}
@@ -701,14 +906,30 @@ export default function AdminDashboard() {
                       placeholder="Link WhatsApp/Order"
                       className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
                     />
-                    <button
-                      type="button"
-                      onClick={handleAddService}
-                      disabled={saving}
-                      className="w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase disabled:opacity-50"
-                    >
-                      Tambah Jasa
-                    </button>
+
+                    <div className="flex flex-col gap-3">
+                      <button
+                        type="button"
+                        onClick={handleSaveService}
+                        disabled={saving}
+                        className="w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase disabled:opacity-50"
+                      >
+                        {editingServiceId !== null
+                          ? "Simpan Perubahan"
+                          : "Tambah Jasa"}
+                      </button>
+
+                      {editingServiceId !== null && (
+                        <button
+                          type="button"
+                          onClick={resetServiceForm}
+                          disabled={saving}
+                          className="w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50"
+                        >
+                          Batal Edit
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -716,10 +937,10 @@ export default function AdminDashboard() {
                   {services.map((service) => (
                     <div
                       key={service.id}
-                      className="bg-slate-900/50 border border-white/5 p-5 rounded-2xl flex items-center justify-between"
+                      className="bg-slate-900/50 border border-white/5 p-5 rounded-2xl flex items-center justify-between gap-4"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center overflow-hidden">
+                      <div className="flex items-center gap-4 min-w-0">
+                        <div className="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center overflow-hidden shrink-0">
                           {service.image_url ? (
                             <img
                               src={formatMediaUrl(service.image_url)}
@@ -731,25 +952,41 @@ export default function AdminDashboard() {
                           )}
                         </div>
 
-                        <h4 className="font-bold text-sm text-white">
-                          {service.title || "Untitled Service"}
-                        </h4>
+                        <div className="min-w-0">
+                          <h4 className="font-bold text-sm text-white">
+                            {service.title || "Untitled Service"}
+                          </h4>
+                          <p className="text-xs text-slate-500 line-clamp-2 max-w-xl">
+                            {service.description || "Belum ada deskripsi."}
+                          </p>
+                        </div>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() =>
-                          deleteItem<ServiceItem>(
-                            "services",
-                            service.id,
-                            setServices,
-                          )
-                        }
-                        className="text-slate-600 hover:text-red-400 transition-colors"
-                        aria-label={`Hapus ${service.title || "layanan"}`}
-                      >
-                        <Trash2 size={18} />
-                      </button>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => handleEditService(service)}
+                          className="text-slate-500 hover:text-cyan-400 transition-colors p-2"
+                          aria-label={`Edit ${service.title || "layanan"}`}
+                        >
+                          <Pencil size={16} />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            deleteItem<ServiceItem>(
+                              "services",
+                              service.id,
+                              setServices,
+                            )
+                          }
+                          className="text-slate-600 hover:text-red-400 transition-colors p-2"
+                          aria-label={`Hapus ${service.title || "layanan"}`}
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
