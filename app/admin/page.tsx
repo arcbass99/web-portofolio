@@ -199,7 +199,19 @@ export default function AdminDashboard() {
   };
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    const confirmed = confirm(
+      "Logout dari semua perangkat? Kamu perlu login ulang di semua browser/perangkat yang sedang aktif.",
+    );
+
+    if (!confirmed) return;
+
+    const { error } = await supabase.auth.signOut({ scope: "global" });
+
+    if (error) {
+      alert("Gagal logout. Coba ulangi beberapa saat lagi.");
+      return;
+    }
+
     router.push("/admin/login");
   };
 
@@ -453,7 +465,8 @@ export default function AdminDashboard() {
           type="button"
           onClick={handleSignOut}
           className="text-red-400"
-          aria-label="Logout dari admin"
+          aria-label="Logout dari semua perangkat"
+          title="Logout dari semua perangkat"
         >
           <LogOut size={20} />
         </button>
@@ -515,7 +528,7 @@ export default function AdminDashboard() {
             onClick={handleSignOut}
             className="flex items-center gap-3 text-slate-500 hover:text-red-400 p-4 mt-auto transition font-bold text-sm"
           >
-            <LogOut size={20} /> Logout
+            <LogOut size={20} /> Logout Semua Perangkat
           </button>
         </div>
       </div>
