@@ -33,6 +33,16 @@ import {
 type ActiveTab = "about" | "socials" | "portfolio" | "services";
 type PortfolioMediaType = "image" | "video";
 type EditableTable = "social_links" | "portfolio" | "services";
+type NoticeType = "success" | "error";
+
+type Notice = {
+  type: NoticeType;
+  message: string;
+} | null;
+
+type ErrorWithMessage = {
+  message: string;
+};
 
 type AboutMe = {
   id: number;
@@ -74,12 +84,54 @@ type MenuItem = {
   icon: ReactNode;
 };
 
+const hasMessage = (error: unknown): error is ErrorWithMessage => {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    typeof (error as { message?: unknown }).message === "string"
+  );
+};
+
+const getErrorMessage = (error: unknown) => {
+  if (hasMessage(error)) {
+    return error.message;
+  }
+
+  return "Terjadi kesalahan yang tidak diketahui.";
+};
+
+const normalizeExternalUrl = (url: string) => {
+  const trimmedUrl = url.trim();
+
+  if (!trimmedUrl) return "";
+
+  if (
+    trimmedUrl.startsWith("http://") ||
+    trimmedUrl.startsWith("https://")
+  ) {
+    return trimmedUrl;
+  }
+
+  return `https://${trimmedUrl}`;
+};
+
+const isValidExternalUrl = (url: string) => {
+  try {
+    const parsedUrl = new URL(url);
+    return parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:";
+  } catch {
+    return false;
+  }
+};
+
 export default function AdminDashboard() {
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState<ActiveTab>("about");
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [notice, setNotice] = useState<Notice>(null);
 
   const [headline, setHeadline] = useState("");
   const [description, setDescription] = useState("");
@@ -109,6 +161,10 @@ export default function AdminDashboard() {
 
   const [saving, setSaving] = useState(false);
 
+  const showNotice = useCallback((type: NoticeType, message: string) => {
+    setNotice({ type, message });
+  }, []);
+
   const checkUser = useCallback(async () => {
     const {
       data: { session },
@@ -122,7 +178,7 @@ export default function AdminDashboard() {
   const fetchAllData = useCallback(async () => {
     try {
       const [aboutRes, socialRes, portRes, servRes] = await Promise.all([
-        supabase.from("about_me").select("*").single(),
+        supabase.from("about_me").select("*").maybeSingle(),
         supabase.from("social_links").select("*"),
         supabase
           .from("portfolio")
@@ -130,6 +186,11 @@ export default function AdminDashboard() {
           .order("created_at", { ascending: false }),
         supabase.from("services").select("*"),
       ]);
+
+      if (aboutRes.error) throw aboutRes.error;
+      if (socialRes.error) throw socialRes.error;
+      if (portRes.error) throw portRes.error;
+      if (servRes.error) throw servRes.error;
 
       const aboutData = aboutRes.data as AboutMe | null;
       const socialData = (socialRes.data || []) as SocialLink[];
@@ -145,14 +206,24 @@ export default function AdminDashboard() {
       setSocials(socialData);
       setPortfolios(portfolioData);
       setServices(serviceData);
+    } catch (error) {
+      showNotice(
+        "error",
+        `Gagal memuat data admin: ${getErrorMessage(error)}`,
+      );
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [showNotice]);
 
   useEffect(() => {
-    checkUser();
-    fetchAllData();
+    void checkUser();
+
+    const fetchTimer = window.setTimeout(() => {
+      void fetchAllData();
+    }, 0);
+
+    return () => window.clearTimeout(fetchTimer);
   }, [checkUser, fetchAllData]);
 
   const menuItems = useMemo<MenuItem[]>(
@@ -208,7 +279,7 @@ export default function AdminDashboard() {
     const { error } = await supabase.auth.signOut({ scope: "global" });
 
     if (error) {
-      alert("Gagal logout. Coba ulangi beberapa saat lagi.");
+      showNotice("error", "Gagal logout. Coba ulangi beberapa saat lagi.");
       return;
     }
 
@@ -216,79 +287,113 @@ export default function AdminDashboard() {
   };
 
   const handleSaveAbout = async () => {
+    if (!headline.trim() || !description.trim()) {
+      showNotice("error", "Headline dan deskripsi bio wajib diisi.");
+      return;
+    }
+
     setSaving(true);
 
     try {
-      const { data: existing } = await supabase
+      const { data: existing, error: selectError } = await supabase
         .from("about_me")
         .select("id")
-        .single();
+        .maybeSingle();
+
+      if (selectError) throw selectError;
 
       const payload = {
-        headline,
-        description,
-        banner_url: bannerUrl,
+        headline: headline.trim(),
+        description: description.trim(),
+        banner_url: bannerUrl.trim(),
       };
 
       if (existing) {
-        await supabase.from("about_me").update(payload).eq("id", existing.id);
+        const { error } = await supabase
+          .from("about_me")
+          .update(payload)
+          .eq("id", existing.id);
+
+        if (error) throw error;
       } else {
-        await supabase.from("about_me").insert([payload]);
+        const { error } = await supabase.from("about_me").insert([payload]);
+
+        if (error) throw error;
       }
 
-      alert("Profil diperbarui!");
+      showNotice("success", "Profil berhasil diperbarui.");
+    } catch (error) {
+      showNotice("error", `Gagal menyimpan profil: ${getErrorMessage(error)}`);
     } finally {
       setSaving(false);
     }
   };
 
   const handleSaveSocial = async () => {
-    if (!newSocialTitle || !newSocialUrl) {
-      alert("Wajib isi nama dan link sosial media!");
+    if (!newSocialTitle.trim() || !newSocialUrl.trim()) {
+      showNotice("error", "Nama dan link sosial media wajib diisi.");
+      return;
+    }
+
+    const normalizedUrl = normalizeExternalUrl(newSocialUrl);
+
+    if (!isValidExternalUrl(normalizedUrl)) {
+      showNotice("error", "Link sosial media harus berupa URL yang valid.");
       return;
     }
 
     const payload = {
-      title: newSocialTitle,
-      url: newSocialUrl,
+      title: newSocialTitle.trim(),
+      url: normalizedUrl,
     };
 
     setSaving(true);
 
     try {
       if (editingSocialId !== null) {
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from("social_links")
           .update(payload)
           .eq("id", editingSocialId)
           .select()
           .single();
 
+        if (error) throw error;
+
         const updatedSocial = data as SocialLink | null;
 
-        if (updatedSocial) {
-          setSocials((current) =>
-            current.map((social) =>
-              social.id === updatedSocial.id ? updatedSocial : social,
-            ),
-          );
-          resetSocialForm();
+        if (!updatedSocial) {
+          throw new Error("Data social yang diperbarui tidak ditemukan.");
         }
 
+        setSocials((current) =>
+          current.map((social) =>
+            social.id === updatedSocial.id ? updatedSocial : social,
+          ),
+        );
+        resetSocialForm();
+        showNotice("success", "Social berhasil diperbarui.");
         return;
       }
 
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("social_links")
         .insert([payload])
         .select();
 
+      if (error) throw error;
+
       const newSocial = data?.[0] as SocialLink | undefined;
 
-      if (newSocial) {
-        setSocials((current) => [...current, newSocial]);
-        resetSocialForm();
+      if (!newSocial) {
+        throw new Error("Data social baru tidak berhasil dikembalikan.");
       }
+
+      setSocials((current) => [...current, newSocial]);
+      resetSocialForm();
+      showNotice("success", "Social berhasil ditambahkan.");
+    } catch (error) {
+      showNotice("error", `Gagal menyimpan social: ${getErrorMessage(error)}`);
     } finally {
       setSaving(false);
     }
@@ -298,19 +403,20 @@ export default function AdminDashboard() {
     setEditingSocialId(social.id);
     setNewSocialTitle(social.title || "");
     setNewSocialUrl(social.url || "");
+    setNotice(null);
   };
 
   const handleSavePortfolio = async () => {
-    if (!pTitle || !pDriveId) {
-      alert("Wajib isi Judul & ID Media!");
+    if (!pTitle.trim() || !pDriveId.trim()) {
+      showNotice("error", "Judul karya dan ID media wajib diisi.");
       return;
     }
 
     const payload = {
-      title: pTitle,
-      description: pDesc,
-      tags: pTags,
-      media_url: pDriveId,
+      title: pTitle.trim(),
+      description: pDesc.trim(),
+      tags: pTags.trim(),
+      media_url: pDriveId.trim(),
       media_type: pMediaType,
     };
 
@@ -318,34 +424,49 @@ export default function AdminDashboard() {
 
     try {
       if (editingPortfolioId !== null) {
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from("portfolio")
           .update(payload)
           .eq("id", editingPortfolioId)
           .select()
           .single();
 
+        if (error) throw error;
+
         const updatedPortfolio = data as PortfolioItem | null;
 
-        if (updatedPortfolio) {
-          setPortfolios((current) =>
-            current.map((portfolio) =>
-              portfolio.id === updatedPortfolio.id ? updatedPortfolio : portfolio,
-            ),
-          );
-          resetPortfolioForm();
+        if (!updatedPortfolio) {
+          throw new Error("Data karya yang diperbarui tidak ditemukan.");
         }
 
+        setPortfolios((current) =>
+          current.map((portfolio) =>
+            portfolio.id === updatedPortfolio.id ? updatedPortfolio : portfolio,
+          ),
+        );
+        resetPortfolioForm();
+        showNotice("success", "Karya berhasil diperbarui.");
         return;
       }
 
-      const { data } = await supabase.from("portfolio").insert([payload]).select();
+      const { data, error } = await supabase
+        .from("portfolio")
+        .insert([payload])
+        .select();
+
+      if (error) throw error;
+
       const newPortfolio = data?.[0] as PortfolioItem | undefined;
 
-      if (newPortfolio) {
-        setPortfolios((current) => [newPortfolio, ...current]);
-        resetPortfolioForm();
+      if (!newPortfolio) {
+        throw new Error("Data karya baru tidak berhasil dikembalikan.");
       }
+
+      setPortfolios((current) => [newPortfolio, ...current]);
+      resetPortfolioForm();
+      showNotice("success", "Karya berhasil ditambahkan.");
+    } catch (error) {
+      showNotice("error", `Gagal menyimpan karya: ${getErrorMessage(error)}`);
     } finally {
       setSaving(false);
     }
@@ -358,53 +479,76 @@ export default function AdminDashboard() {
     setPTags(portfolio.tags || "");
     setPDriveId(portfolio.media_url || "");
     setPMediaType(portfolio.media_type === "video" ? "video" : "image");
+    setNotice(null);
   };
 
   const handleSaveService = async () => {
-    if (!sTitle || !sTargetUrl) {
-      alert("Wajib isi Judul & Link!");
+    if (!sTitle.trim() || !sTargetUrl.trim()) {
+      showNotice("error", "Judul layanan dan link target wajib diisi.");
+      return;
+    }
+
+    const normalizedUrl = normalizeExternalUrl(sTargetUrl);
+
+    if (!isValidExternalUrl(normalizedUrl)) {
+      showNotice("error", "Link target layanan harus berupa URL yang valid.");
       return;
     }
 
     const payload = {
-      title: sTitle,
-      description: sDescription,
-      image_url: sDriveId,
-      target_url: sTargetUrl,
+      title: sTitle.trim(),
+      description: sDescription.trim(),
+      image_url: sDriveId.trim(),
+      target_url: normalizedUrl,
     };
 
     setSaving(true);
 
     try {
       if (editingServiceId !== null) {
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from("services")
           .update(payload)
           .eq("id", editingServiceId)
           .select()
           .single();
 
+        if (error) throw error;
+
         const updatedService = data as ServiceItem | null;
 
-        if (updatedService) {
-          setServices((current) =>
-            current.map((service) =>
-              service.id === updatedService.id ? updatedService : service,
-            ),
-          );
-          resetServiceForm();
+        if (!updatedService) {
+          throw new Error("Data layanan yang diperbarui tidak ditemukan.");
         }
 
+        setServices((current) =>
+          current.map((service) =>
+            service.id === updatedService.id ? updatedService : service,
+          ),
+        );
+        resetServiceForm();
+        showNotice("success", "Layanan berhasil diperbarui.");
         return;
       }
 
-      const { data } = await supabase.from("services").insert([payload]).select();
+      const { data, error } = await supabase
+        .from("services")
+        .insert([payload])
+        .select();
+
+      if (error) throw error;
+
       const newService = data?.[0] as ServiceItem | undefined;
 
-      if (newService) {
-        setServices((current) => [...current, newService]);
-        resetServiceForm();
+      if (!newService) {
+        throw new Error("Data layanan baru tidak berhasil dikembalikan.");
       }
+
+      setServices((current) => [...current, newService]);
+      resetServiceForm();
+      showNotice("success", "Layanan berhasil ditambahkan.");
+    } catch (error) {
+      showNotice("error", `Gagal menyimpan layanan: ${getErrorMessage(error)}`);
     } finally {
       setSaving(false);
     }
@@ -416,6 +560,7 @@ export default function AdminDashboard() {
     setSDescription(service.description || "");
     setSDriveId(service.image_url || "");
     setSTargetUrl(service.target_url || "");
+    setNotice(null);
   };
 
   const deleteItem = async <T extends ItemWithId>(
@@ -425,10 +570,19 @@ export default function AdminDashboard() {
   ) => {
     if (!confirm("Hapus data ini?")) return;
 
-    const { error } = await supabase.from(table).delete().eq("id", id);
+    setSaving(true);
 
-    if (!error) {
+    try {
+      const { error } = await supabase.from(table).delete().eq("id", id);
+
+      if (error) throw error;
+
       setState((current) => current.filter((item) => item.id !== id));
+      showNotice("success", "Data berhasil dihapus.");
+    } catch (error) {
+      showNotice("error", `Gagal menghapus data: ${getErrorMessage(error)}`);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -535,6 +689,32 @@ export default function AdminDashboard() {
 
       <main className="lg:ml-72 min-h-screen p-6 md:p-12 pt-24 lg:pt-12">
         <div className="max-w-5xl mx-auto pb-20 lg:pb-0">
+          {notice && (
+            <div
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              className={`mb-8 flex items-start justify-between gap-4 rounded-3xl border p-5 ${
+                notice.type === "error"
+                  ? "border-red-500/20 bg-red-500/10 text-red-200"
+                  : "border-cyan-500/20 bg-cyan-500/10 text-cyan-100"
+              }`}
+            >
+              <p className="text-sm font-semibold leading-relaxed">
+                {notice.message}
+              </p>
+
+              <button
+                type="button"
+                onClick={() => setNotice(null)}
+                className="shrink-0 opacity-70 hover:opacity-100 transition"
+                aria-label="Tutup notifikasi"
+              >
+                <X size={18} />
+              </button>
+            </div>
+          )}
+
           {activeTab === "about" && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               <h1 className="text-3xl md:text-4xl font-black mb-2 text-white">
@@ -788,9 +968,11 @@ export default function AdminDashboard() {
                         disabled={saving}
                         className="w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase tracking-widest disabled:opacity-50"
                       >
-                        {editingPortfolioId !== null
-                          ? "Simpan Perubahan"
-                          : "Simpan Karya"}
+                        {saving
+                          ? "Menyimpan..."
+                          : editingPortfolioId !== null
+                            ? "Simpan Perubahan"
+                            : "Simpan Karya"}
                       </button>
 
                       {editingPortfolioId !== null && (
@@ -927,9 +1109,11 @@ export default function AdminDashboard() {
                         disabled={saving}
                         className="w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase disabled:opacity-50"
                       >
-                        {editingServiceId !== null
-                          ? "Simpan Perubahan"
-                          : "Tambah Jasa"}
+                        {saving
+                          ? "Menyimpan..."
+                          : editingServiceId !== null
+                            ? "Simpan Perubahan"
+                            : "Tambah Jasa"}
                       </button>
 
                       {editingServiceId !== null && (
