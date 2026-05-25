@@ -51,14 +51,17 @@ export default function LandingPage() {
   const [socials, setSocials] = useState<SocialLink[]>([]);
   const [portfolios, setPortfolios] = useState<PortfolioItem[]>([]);
   const [services, setServices] = useState<ServiceItem[]>([]);
+  const [publicError, setPublicError] = useState<string | null>(null);
 
   const [isDark, setIsDark] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const fetchPublicData = useCallback(async () => {
     try {
+      setPublicError(null);
+
       const [aboutRes, socialRes, portRes, servRes] = await Promise.all([
-        supabase.from("about_me").select("*").single(),
+        supabase.from("about_me").select("*").maybeSingle(),
         supabase.from("social_links").select("*"),
         supabase
           .from("portfolio")
@@ -67,17 +70,33 @@ export default function LandingPage() {
         supabase.from("services").select("*"),
       ]);
 
+      if (aboutRes.error) throw aboutRes.error;
+      if (socialRes.error) throw socialRes.error;
+      if (portRes.error) throw portRes.error;
+      if (servRes.error) throw servRes.error;
+
       setAbout(aboutRes.data as AboutMe | null);
       setSocials((socialRes.data || []) as SocialLink[]);
       setPortfolios((portRes.data || []) as PortfolioItem[]);
       setServices((servRes.data || []) as ServiceItem[]);
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Data belum berhasil dimuat sepenuhnya.";
+
+      setPublicError(message);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchPublicData();
+    const fetchTimer = window.setTimeout(() => {
+      void fetchPublicData();
+    }, 0);
+
+    return () => window.clearTimeout(fetchTimer);
   }, [fetchPublicData]);
 
   useEffect(() => {
@@ -115,13 +134,20 @@ export default function LandingPage() {
     socials[0] ||
     null;
 
-  const contactHref = primaryContact?.url || "#home";
+  const contactHref = primaryContact?.url || "#portfolio";
   const isExternalContact = Boolean(primaryContact?.url);
+  const contactLabel = primaryContact ? "Hubungi Saya" : "Lihat Karya";
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
-        <Loader2 className="animate-spin text-teal-500" size={40} />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#F8FAFC] px-6 text-center">
+        <Loader2 className="animate-spin text-teal-500 mb-5" size={40} />
+        <p className="text-sm font-black uppercase tracking-[0.3em] text-teal-600">
+          Memuat Portfolio
+        </p>
+        <p className="mt-3 max-w-sm text-sm font-medium leading-relaxed text-slate-500">
+          Menyiapkan profil, karya, dan produk digital Nafis.
+        </p>
       </div>
     );
   }
@@ -261,6 +287,23 @@ export default function LandingPage() {
       </AnimatePresence>
 
       <div className="relative z-10">
+        {publicError && (
+          <div className="mx-auto max-w-7xl px-6 pt-28 lg:px-12 xl:px-24">
+            <div
+              role="status"
+              aria-live="polite"
+              className={`rounded-3xl border p-5 text-sm font-semibold leading-relaxed shadow-sm backdrop-blur-md ${
+                isDark
+                  ? "border-amber-400/20 bg-amber-400/10 text-amber-100"
+                  : "border-amber-200 bg-amber-50 text-amber-900"
+              }`}
+            >
+              Beberapa data belum berhasil dimuat. Halaman tetap ditampilkan
+              dengan fallback sementara. Detail: {publicError}
+            </div>
+          </div>
+        )}
+
         <section
           id="home"
           className="min-h-screen flex flex-col justify-center px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto py-20 pt-32"
@@ -296,12 +339,29 @@ export default function LandingPage() {
               </p>
 
               <div className="flex gap-3 md:gap-4 items-center flex-wrap">
-                {socials.map((social) => (
-                  <a
-                    key={social.id}
-                    href={social.url || "#"}
-                    target="_blank"
-                    rel="noreferrer"
+                {socials.length > 0 ? (
+                  socials.map((social) => (
+                    <a
+                      key={social.id}
+                      href={social.url || "#"}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`flex items-center gap-2 px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${
+                        isDark
+                          ? "bg-white/5 border-white/10 hover:bg-white/10 text-white"
+                          : "bg-white/60 border-white/40 hover:bg-white text-slate-800"
+                      }`}
+                    >
+                      <span className="text-xs md:text-sm font-bold tracking-wide">
+                        {social.title || "Link"}
+                      </span>
+                      <ExternalLink size={16} className="opacity-70" />
+                    </a>
+                  ))
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection("portfolio")}
                     className={`flex items-center gap-2 px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${
                       isDark
                         ? "bg-white/5 border-white/10 hover:bg-white/10 text-white"
@@ -309,11 +369,11 @@ export default function LandingPage() {
                     }`}
                   >
                     <span className="text-xs md:text-sm font-bold tracking-wide">
-                      {social.title || "Link"}
+                      Lihat Karya
                     </span>
-                    <ExternalLink size={16} className="opacity-70" />
-                  </a>
-                ))}
+                    <ArrowRight size={16} className="opacity-70" />
+                  </button>
+                )}
               </div>
             </motion.div>
 
@@ -341,8 +401,13 @@ export default function LandingPage() {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm md:text-base font-medium">
-                      No Banner Image
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-slate-900 text-center text-white">
+                      <p className="text-4xl md:text-6xl font-black tracking-tighter">
+                        NAFIS<span className="text-teal-400">.</span>
+                      </p>
+                      <p className="mt-3 text-xs md:text-sm font-bold uppercase tracking-[0.25em] text-slate-400">
+                        Personal Portfolio
+                      </p>
                     </div>
                   )}
                 </div>
@@ -376,78 +441,99 @@ export default function LandingPage() {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-              {portfolios.map((portfolio, index) => (
-                <motion.div
-                  key={portfolio.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`group p-3 md:p-4 rounded-3xl md:rounded-[2.5rem] border backdrop-blur-md shadow-xl transition-all duration-500 ${
-                    isDark
-                      ? "bg-white/5 border-white/10 hover:bg-white/10"
-                      : "bg-white/50 border-white/60 hover:bg-white/80"
-                  }`}
-                >
-                  <div className="relative aspect-video rounded-2xl md:rounded-[2rem] overflow-hidden mb-4 md:mb-6">
-                    {portfolio.media_type === "video" && portfolio.media_url ? (
-                      <iframe
-                        src={`https://drive.google.com/file/d/${portfolio.media_url}/preview`}
-                        title={portfolio.title || "Portfolio video preview"}
-                        className="w-full h-full border-0"
-                        allow="autoplay"
-                      />
-                    ) : portfolio.media_url ? (
-                      <div className="relative w-full h-full">
-                        <Image
-                          src={formatMediaUrl(portfolio.media_url)}
-                          alt={portfolio.title || "Portfolio image"}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                          className="object-cover group-hover:scale-105 transition-transform duration-700"
+            {portfolios.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+                {portfolios.map((portfolio, index) => (
+                  <motion.div
+                    key={portfolio.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ delay: index * 0.1 }}
+                    className={`group p-3 md:p-4 rounded-3xl md:rounded-[2.5rem] border backdrop-blur-md shadow-xl transition-all duration-500 ${
+                      isDark
+                        ? "bg-white/5 border-white/10 hover:bg-white/10"
+                        : "bg-white/50 border-white/60 hover:bg-white/80"
+                    }`}
+                  >
+                    <div className="relative aspect-video rounded-2xl md:rounded-[2rem] overflow-hidden mb-4 md:mb-6">
+                      {portfolio.media_type === "video" && portfolio.media_url ? (
+                        <iframe
+                          src={`https://drive.google.com/file/d/${portfolio.media_url}/preview`}
+                          title={portfolio.title || "Portfolio video preview"}
+                          className="w-full h-full border-0"
+                          allow="autoplay"
                         />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-center justify-center">
-                          <ArrowUpRight
-                            className="text-white opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-500 shadow-xl"
-                            size={40}
+                      ) : portfolio.media_url ? (
+                        <div className="relative w-full h-full">
+                          <Image
+                            src={formatMediaUrl(portfolio.media_url)}
+                            alt={portfolio.title || "Portfolio image"}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover group-hover:scale-105 transition-transform duration-700"
                           />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-center justify-center">
+                            <ArrowUpRight
+                              className="text-white opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-500 shadow-xl"
+                              size={40}
+                            />
+                          </div>
                         </div>
-                      </div>
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-slate-200/50 text-slate-400 text-sm font-bold">
-                        No Portfolio Image
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 px-2 md:px-4 pb-2">
-                    <div>
-                      <h3 className="text-xl md:text-2xl font-bold mb-1 md:mb-2">
-                        {portfolio.title || "Untitled Project"}
-                      </h3>
-                      <p
-                        className={`line-clamp-2 max-w-sm text-sm md:text-base font-medium ${
-                          isDark ? "text-slate-400" : "text-slate-500"
-                        }`}
-                      >
-                        {portfolio.description || "Belum ada deskripsi."}
-                      </p>
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-slate-200/50 px-6 text-center text-slate-400">
+                          <ArrowUpRight size={28} className="mb-3 opacity-60" />
+                          <p className="text-sm font-bold">
+                            Media karya belum tersedia
+                          </p>
+                        </div>
+                      )}
                     </div>
 
-                    <span
-                      className={`self-start px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider border whitespace-nowrap ${
-                        isDark
-                          ? "bg-white/5 border-white/10"
-                          : "bg-white/50 border-slate-200"
-                      }`}
-                    >
-                      {portfolio.tags || "Project"}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                    <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 px-2 md:px-4 pb-2">
+                      <div>
+                        <h3 className="text-xl md:text-2xl font-bold mb-1 md:mb-2">
+                          {portfolio.title || "Untitled Project"}
+                        </h3>
+                        <p
+                          className={`line-clamp-2 max-w-sm text-sm md:text-base font-medium ${
+                            isDark ? "text-slate-400" : "text-slate-500"
+                          }`}
+                        >
+                          {portfolio.description || "Belum ada deskripsi."}
+                        </p>
+                      </div>
+
+                      <span
+                        className={`self-start px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider border whitespace-nowrap ${
+                          isDark
+                            ? "bg-white/5 border-white/10"
+                            : "bg-white/50 border-slate-200"
+                        }`}
+                      >
+                        {portfolio.tags || "Project"}
+                      </span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div
+                className={`rounded-3xl md:rounded-[2.5rem] border p-8 md:p-12 text-center backdrop-blur-md ${
+                  isDark
+                    ? "bg-white/5 border-white/10 text-slate-400"
+                    : "bg-white/50 border-white/60 text-slate-500"
+                }`}
+              >
+                <p className="text-xl md:text-2xl font-black text-inherit">
+                  Karya pilihan sedang disiapkan.
+                </p>
+                <p className="mt-3 text-sm md:text-base font-medium leading-relaxed">
+                  Portfolio akan tampil di sini setelah data karya ditambahkan
+                  dari console admin.
+                </p>
+              </div>
+            )}
           </div>
         </section>
 
@@ -555,13 +641,14 @@ export default function LandingPage() {
             href={contactHref}
             target={isExternalContact ? "_blank" : undefined}
             rel={isExternalContact ? "noreferrer" : undefined}
+            aria-label={contactLabel}
             className={`inline-flex items-center gap-2 px-8 py-3 md:px-10 md:py-4 rounded-full font-bold text-sm transition-all shadow-xl border ${
               isDark
                 ? "bg-white text-black hover:bg-cyan-400 border-white"
                 : "bg-slate-900 text-white hover:bg-teal-600 border-slate-900"
             }`}
           >
-            Hubungi Saya
+            {contactLabel}
             <ArrowRight size={16} />
           </a>
 
