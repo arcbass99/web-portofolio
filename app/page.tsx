@@ -110,6 +110,14 @@ export default function LandingPage() {
     }, 100);
   };
 
+  const primaryContact =
+    socials.find((social) => social.title?.toLowerCase().includes("instagram")) ||
+    socials[0] ||
+    null;
+
+  const contactHref = primaryContact?.url || "#home";
+  const isExternalContact = Boolean(primaryContact?.url);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
@@ -544,14 +552,17 @@ export default function LandingPage() {
           </h2>
 
           <a
-            href="/admin"
-            className={`inline-block px-8 py-3 md:px-10 md:py-4 rounded-full font-bold text-sm transition-all shadow-xl border ${
+            href={contactHref}
+            target={isExternalContact ? "_blank" : undefined}
+            rel={isExternalContact ? "noreferrer" : undefined}
+            className={`inline-flex items-center gap-2 px-8 py-3 md:px-10 md:py-4 rounded-full font-bold text-sm transition-all shadow-xl border ${
               isDark
                 ? "bg-white text-black hover:bg-cyan-400 border-white"
                 : "bg-slate-900 text-white hover:bg-teal-600 border-slate-900"
             }`}
           >
-            Login
+            Hubungi Saya
+            <ArrowRight size={16} />
           </a>
 
           <p className="mt-20 text-xs md:text-sm font-bold tracking-widest uppercase opacity-40">
