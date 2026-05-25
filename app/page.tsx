@@ -111,14 +111,14 @@ export default function LandingPage() {
     };
   }, [isMenuOpen]);
 
-  const formatMediaUrl = (idOrUrl?: string | null) => {
+  const formatMediaUrl = (idOrUrl?: string | null, width = 1200) => {
     if (!idOrUrl) return "";
 
     if (idOrUrl.startsWith("http://") || idOrUrl.startsWith("https://")) {
       return idOrUrl;
     }
 
-    return `https://drive.google.com/thumbnail?sz=w1200&id=${idOrUrl}`;
+    return `https://drive.google.com/thumbnail?sz=w${width}&id=${idOrUrl}`;
   };
 
   const scrollToSection = (id: string) => {
@@ -393,11 +393,13 @@ export default function LandingPage() {
                 <div className="relative w-full h-full rounded-2xl md:rounded-[2rem] overflow-hidden bg-slate-200/50">
                   {about?.banner_url ? (
                     <Image
-                      src={formatMediaUrl(about.banner_url)}
+                      src={formatMediaUrl(about.banner_url, 900)}
                       alt="Profile Banner"
                       fill
                       priority
-                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      fetchPriority="high"
+                      sizes="(max-width: 768px) 92vw, (max-width: 1024px) 80vw, 44vw"
+                      quality={82}
                       className="object-cover"
                     />
                   ) : (
@@ -467,10 +469,11 @@ export default function LandingPage() {
                       ) : portfolio.media_url ? (
                         <div className="relative w-full h-full">
                           <Image
-                            src={formatMediaUrl(portfolio.media_url)}
+                            src={formatMediaUrl(portfolio.media_url, 900)}
                             alt={portfolio.title || "Portfolio image"}
                             fill
-                            sizes="(max-width: 768px) 100vw, 50vw"
+                            sizes="(max-width: 768px) 92vw, (max-width: 1024px) 44vw, 40vw"
+                            quality={78}
                             className="object-cover group-hover:scale-105 transition-transform duration-700"
                           />
                           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-center justify-center">
@@ -583,10 +586,11 @@ export default function LandingPage() {
                     >
                       {service.image_url ? (
                         <Image
-                          src={formatMediaUrl(service.image_url)}
+                          src={formatMediaUrl(service.image_url, 256)}
                           alt={service.title || "Service icon"}
                           fill
                           sizes="(max-width: 768px) 64px, 96px"
+                          quality={72}
                           className="object-contain"
                         />
                       ) : (
