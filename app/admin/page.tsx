@@ -807,32 +807,55 @@ export default function AdminDashboard() {
                   )}
 
                   <div className="flex flex-col md:flex-row gap-4">
-                    <input
-                      value={newSocialTitle}
-                      onChange={(event) =>
-                        setNewSocialTitle(event.target.value)
-                      }
-                      placeholder="Nama (ex: GitHub)"
-                      className="flex-1 bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none text-sm"
-                    />
-                    <input
-                      value={newSocialUrl}
-                      onChange={(event) => setNewSocialUrl(event.target.value)}
-                      placeholder="Link URL"
-                      className="flex-[2] bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none text-sm"
-                    />
+                    <div className="flex-1">
+                      <label
+                        htmlFor="socialTitle"
+                        className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
+                      >
+                        Nama Social
+                      </label>
+                      <input
+                        id="socialTitle"
+                        value={newSocialTitle}
+                        onChange={(event) =>
+                          setNewSocialTitle(event.target.value)
+                        }
+                        placeholder="Ex: GitHub"
+                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none text-sm"
+                      />
+                    </div>
+
+                    <div className="flex-[2]">
+                      <label
+                        htmlFor="socialUrl"
+                        className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
+                      >
+                        Link URL
+                      </label>
+                      <input
+                        id="socialUrl"
+                        value={newSocialUrl}
+                        onChange={(event) => setNewSocialUrl(event.target.value)}
+                        placeholder="https://..."
+                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none text-sm"
+                      />
+                    </div>
+
                     <button
                       type="button"
                       onClick={handleSaveSocial}
                       disabled={saving}
-                      className="bg-white text-slate-900 px-6 py-4 rounded-2xl font-black text-xs uppercase disabled:opacity-50"
-                      aria-label={
-                        editingSocialId !== null
-                          ? "Simpan perubahan sosial media"
-                          : "Tambah sosial media"
-                      }
+                      className="w-full md:w-auto md:self-end bg-white text-slate-900 px-6 py-4 rounded-2xl font-black text-xs uppercase disabled:opacity-50 flex items-center justify-center gap-2"
                     >
-                      {editingSocialId !== null ? "Simpan" : <Plus size={18} />}
+                      {saving ? (
+                        "Menyimpan..."
+                      ) : editingSocialId !== null ? (
+                        "Simpan Perubahan"
+                      ) : (
+                        <>
+                          <Plus size={16} /> Tambah Social
+                        </>
+                      )}
                     </button>
                   </div>
 
@@ -849,6 +872,17 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="space-y-3">
+                  {socials.length === 0 && (
+                    <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-6 text-center">
+                      <p className="text-sm font-bold text-slate-300">
+                        Belum ada social link.
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Tambahkan link agar pengunjung bisa menemukan profilmu.
+                      </p>
+                    </div>
+                  )}
+
                   {socials.map((social) => (
                     <div
                       key={social.id}
@@ -922,45 +956,93 @@ export default function AdminDashboard() {
                     )}
 
                     <div className="space-y-4">
-                      <select
-                        value={pMediaType}
-                        onChange={(event) =>
-                          setPMediaType(
-                            event.target.value as PortfolioMediaType,
-                          )
-                        }
-                        aria-label="Pilih tipe media portfolio"
-                        title="Pilih tipe media portfolio"
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
-                      >
-                        <option value="image">Gambar</option>
-                        <option value="video">Video</option>
-                      </select>
+                      <div>
+                        <label
+                          htmlFor="portfolioMediaType"
+                          className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
+                        >
+                          Tipe Media
+                        </label>
+                        <select
+                          id="portfolioMediaType"
+                          value={pMediaType}
+                          onChange={(event) =>
+                            setPMediaType(
+                              event.target.value as PortfolioMediaType,
+                            )
+                          }
+                          aria-label="Pilih tipe media portfolio"
+                          title="Pilih tipe media portfolio"
+                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                        >
+                          <option value="image">Gambar</option>
+                          <option value="video">Video</option>
+                        </select>
+                      </div>
 
-                      <input
-                        value={pDriveId}
-                        onChange={(event) => setPDriveId(event.target.value)}
-                        placeholder="ID Drive / Link Gambar"
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
-                      />
-                      <input
-                        value={pTitle}
-                        onChange={(event) => setPTitle(event.target.value)}
-                        placeholder="Judul Karya"
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
-                      />
-                      <textarea
-                        value={pDesc}
-                        onChange={(event) => setPDesc(event.target.value)}
-                        placeholder="Deskripsi Singkat"
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none h-24"
-                      />
-                      <input
-                        value={pTags}
-                        onChange={(event) => setPTags(event.target.value)}
-                        placeholder="Tags (ex: Web, UI/UX)"
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
-                      />
+                      <div>
+                        <label
+                          htmlFor="portfolioMedia"
+                          className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
+                        >
+                          ID Drive / Link Media
+                        </label>
+                        <input
+                          id="portfolioMedia"
+                          value={pDriveId}
+                          onChange={(event) => setPDriveId(event.target.value)}
+                          placeholder="ID Drive / Link Gambar"
+                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          htmlFor="portfolioTitle"
+                          className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
+                        >
+                          Judul Karya
+                        </label>
+                        <input
+                          id="portfolioTitle"
+                          value={pTitle}
+                          onChange={(event) => setPTitle(event.target.value)}
+                          placeholder="Judul Karya"
+                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          htmlFor="portfolioDescription"
+                          className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
+                        >
+                          Deskripsi Singkat
+                        </label>
+                        <textarea
+                          id="portfolioDescription"
+                          value={pDesc}
+                          onChange={(event) => setPDesc(event.target.value)}
+                          placeholder="Deskripsi Singkat"
+                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none h-24 resize-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          htmlFor="portfolioTags"
+                          className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
+                        >
+                          Tags
+                        </label>
+                        <input
+                          id="portfolioTags"
+                          value={pTags}
+                          onChange={(event) => setPTags(event.target.value)}
+                          placeholder="Ex: Web, UI/UX"
+                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                        />
+                      </div>
 
                       <button
                         type="button"
@@ -990,6 +1072,17 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="xl:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {portfolios.length === 0 && (
+                    <div className="md:col-span-2 rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-8 text-center">
+                      <p className="text-sm font-bold text-slate-300">
+                        Belum ada karya.
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Tambahkan karya pertama agar section portfolio tidak kosong.
+                      </p>
+                    </div>
+                  )}
+
                   {portfolios.map((portfolio) => (
                     <div
                       key={portfolio.id}
@@ -1077,30 +1170,69 @@ export default function AdminDashboard() {
                       </div>
                     )}
 
-                    <input
-                      value={sTitle}
-                      onChange={(event) => setSTitle(event.target.value)}
-                      placeholder="Nama Jasa"
-                      className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
-                    />
-                    <textarea
-                      value={sDescription}
-                      onChange={(event) => setSDescription(event.target.value)}
-                      placeholder="Deskripsi singkat layanan"
-                      className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none h-28 resize-none"
-                    />
-                    <input
-                      value={sDriveId}
-                      onChange={(event) => setSDriveId(event.target.value)}
-                      placeholder="ID Drive Ikon"
-                      className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
-                    />
-                    <input
-                      value={sTargetUrl}
-                      onChange={(event) => setSTargetUrl(event.target.value)}
-                      placeholder="Link WhatsApp/Order"
-                      className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
-                    />
+                    <div>
+                      <label
+                        htmlFor="serviceTitle"
+                        className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
+                      >
+                        Nama Jasa
+                      </label>
+                      <input
+                        id="serviceTitle"
+                        value={sTitle}
+                        onChange={(event) => setSTitle(event.target.value)}
+                        placeholder="Nama Jasa"
+                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="serviceDescription"
+                        className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
+                      >
+                        Deskripsi Singkat
+                      </label>
+                      <textarea
+                        id="serviceDescription"
+                        value={sDescription}
+                        onChange={(event) => setSDescription(event.target.value)}
+                        placeholder="Deskripsi singkat layanan"
+                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none h-28 resize-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="serviceIcon"
+                        className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
+                      >
+                        ID Drive Ikon
+                      </label>
+                      <input
+                        id="serviceIcon"
+                        value={sDriveId}
+                        onChange={(event) => setSDriveId(event.target.value)}
+                        placeholder="ID Drive Ikon"
+                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="serviceTargetUrl"
+                        className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
+                      >
+                        Link WhatsApp / Order
+                      </label>
+                      <input
+                        id="serviceTargetUrl"
+                        value={sTargetUrl}
+                        onChange={(event) => setSTargetUrl(event.target.value)}
+                        placeholder="https://..."
+                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                      />
+                    </div>
 
                     <div className="flex flex-col gap-3">
                       <button
@@ -1131,6 +1263,17 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="xl:col-span-8 space-y-3">
+                  {services.length === 0 && (
+                    <div className="rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-8 text-center">
+                      <p className="text-sm font-bold text-slate-300">
+                        Belum ada layanan.
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Tambahkan layanan agar section produk bisa tampil di homepage.
+                      </p>
+                    </div>
+                  )}
+
                   {services.map((service) => (
                     <div
                       key={service.id}
