@@ -100,14 +100,22 @@ export default function LandingPage() {
   }, [fetchPublicData]);
 
   useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+      }
+    };
+
     if (isMenuOpen) {
       document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
     } else {
       document.body.style.overflow = "unset";
     }
 
     return () => {
       document.body.style.overflow = "unset";
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isMenuOpen]);
 
@@ -137,6 +145,8 @@ export default function LandingPage() {
   const contactHref = primaryContact?.url || "#portfolio";
   const isExternalContact = Boolean(primaryContact?.url);
   const contactLabel = primaryContact ? "Hubungi Saya" : "Lihat Karya";
+  const focusRing =
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
 
   if (loading) {
     return (
@@ -177,6 +187,7 @@ export default function LandingPage() {
       </div>
 
       <nav
+        aria-label="Navigasi utama"
         className={`fixed top-0 w-full z-40 transition-all duration-300 backdrop-blur-md border-b ${
           isDark
             ? "bg-black/20 border-white/5"
@@ -186,7 +197,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-24 py-4 flex justify-between items-center">
           <button
             type="button"
-            className="font-black text-2xl tracking-tighter cursor-pointer"
+            className={`font-black text-2xl tracking-tighter cursor-pointer rounded-lg ${focusRing}`}
             onClick={() => scrollToSection("home")}
             aria-label="Kembali ke bagian profil utama"
           >
@@ -201,7 +212,7 @@ export default function LandingPage() {
               type="button"
               onClick={() => setIsDark((current) => !current)}
               aria-label={isDark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
-              className={`p-2.5 md:p-3 rounded-full backdrop-blur-md border transition-all ${
+              className={`p-2.5 md:p-3 rounded-full backdrop-blur-md border transition-all ${focusRing} ${
                 isDark
                   ? "bg-white/10 border-white/10 text-yellow-300"
                   : "bg-white/50 border-white/50 text-slate-600 hover:bg-white"
@@ -214,7 +225,7 @@ export default function LandingPage() {
               type="button"
               onClick={() => setIsMenuOpen(true)}
               aria-label="Buka menu navigasi"
-              className={`p-2.5 md:p-3 rounded-full backdrop-blur-md border transition-all ${
+              className={`p-2.5 md:p-3 rounded-full backdrop-blur-md border transition-all ${focusRing} ${
                 isDark
                   ? "bg-white/10 border-white/10 hover:bg-white/20"
                   : "bg-white/50 border-white/50 hover:bg-white"
@@ -229,6 +240,9 @@ export default function LandingPage() {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu navigasi"
             initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
             animate={{ opacity: 1, backdropFilter: "blur(24px)" }}
             exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
@@ -240,7 +254,8 @@ export default function LandingPage() {
               type="button"
               onClick={() => setIsMenuOpen(false)}
               aria-label="Tutup menu navigasi"
-              className={`absolute top-6 right-6 lg:right-12 xl:right-24 p-4 rounded-full border transition-all ${
+              autoFocus
+              className={`absolute top-6 right-6 lg:right-12 xl:right-24 p-4 rounded-full border transition-all ${focusRing} ${
                 isDark
                   ? "border-white/10 hover:bg-white/10 text-slate-400 hover:text-white"
                   : "border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-900"
@@ -264,7 +279,8 @@ export default function LandingPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   onClick={() => scrollToSection(item.id)}
-                  className={`text-4xl md:text-6xl hover:-translate-y-1 transition-all ${
+                  aria-label={`Buka bagian ${item.label}`}
+                  className={`text-4xl md:text-6xl rounded-2xl hover:-translate-y-1 transition-all ${focusRing} ${
                     isDark ? "hover:text-cyan-400" : "hover:text-teal-600"
                   }`}
                 >
@@ -277,7 +293,8 @@ export default function LandingPage() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
                 href="/admin"
-                className="text-xs md:text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-teal-500 mt-12"
+                aria-label="Masuk ke console admin"
+                className={`text-xs md:text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-teal-500 mt-12 rounded-lg ${focusRing}`}
               >
                 — Masuk Console Admin —
               </motion.a>
@@ -346,7 +363,8 @@ export default function LandingPage() {
                       href={social.url || "#"}
                       target="_blank"
                       rel="noreferrer"
-                      className={`flex items-center gap-2 px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${
+                      aria-label={`Buka ${social.title || "link social"} di tab baru`}
+                      className={`flex items-center gap-2 px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${focusRing} ${
                         isDark
                           ? "bg-white/5 border-white/10 hover:bg-white/10 text-white"
                           : "bg-white/60 border-white/40 hover:bg-white text-slate-800"
@@ -362,7 +380,7 @@ export default function LandingPage() {
                   <button
                     type="button"
                     onClick={() => scrollToSection("portfolio")}
-                    className={`flex items-center gap-2 px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${
+                    className={`flex items-center gap-2 px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${focusRing} ${
                       isDark
                         ? "bg-white/5 border-white/10 hover:bg-white/10 text-white"
                         : "bg-white/60 border-white/40 hover:bg-white text-slate-800"
@@ -570,7 +588,7 @@ export default function LandingPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ delay: index * 0.1 }}
-                  className={`p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:min-h-[18rem] ${
+                  className={`p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:min-h-[18rem] ${focusRing} ${
                     isDark
                       ? "bg-white/5 border-white/10 hover:border-cyan-500 hover:bg-white/10"
                       : "bg-white/50 border-white/60 hover:border-teal-500 hover:bg-white"
@@ -646,7 +664,7 @@ export default function LandingPage() {
             target={isExternalContact ? "_blank" : undefined}
             rel={isExternalContact ? "noreferrer" : undefined}
             aria-label={contactLabel}
-            className={`inline-flex items-center gap-2 px-8 py-3 md:px-10 md:py-4 rounded-full font-bold text-sm transition-all shadow-xl border ${
+            className={`inline-flex items-center gap-2 px-8 py-3 md:px-10 md:py-4 rounded-full font-bold text-sm transition-all shadow-xl border ${focusRing} ${
               isDark
                 ? "bg-white text-black hover:bg-cyan-400 border-white"
                 : "bg-slate-900 text-white hover:bg-teal-600 border-slate-900"

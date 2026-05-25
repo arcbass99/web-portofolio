@@ -160,6 +160,8 @@ export default function AdminDashboard() {
   const [editingServiceId, setEditingServiceId] = useState<number | null>(null);
 
   const [saving, setSaving] = useState(false);
+  const focusRing =
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900";
 
   const showNotice = useCallback((type: NoticeType, message: string) => {
     setNotice({ type, message });
@@ -225,6 +227,20 @@ export default function AdminDashboard() {
 
     return () => window.clearTimeout(fetchTimer);
   }, [checkUser, fetchAllData]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    if (!isSidebarOpen) return undefined;
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isSidebarOpen]);
 
   const menuItems = useMemo<MenuItem[]>(
     () => [
@@ -604,8 +620,9 @@ export default function AdminDashboard() {
           <button
             type="button"
             onClick={() => setIsSidebarOpen(true)}
-            className="p-2 -ml-2 text-slate-400"
+            className="p-2 -ml-2 text-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded-xl"
             aria-label="Buka sidebar admin"
+            aria-controls="admin-sidebar"
           >
             <Menu size={24} />
           </button>
@@ -618,7 +635,7 @@ export default function AdminDashboard() {
         <button
           type="button"
           onClick={handleSignOut}
-          className="text-red-400"
+          className={`p-2 -mr-2 rounded-xl text-red-400 ${focusRing}`}
           aria-label="Logout dari semua perangkat"
           title="Logout dari semua perangkat"
         >
@@ -627,6 +644,7 @@ export default function AdminDashboard() {
       </header>
 
       <div
+        id="admin-sidebar"
         className={`fixed inset-y-0 left-0 z-[60] w-72 bg-slate-900 border-r border-white/5 transform transition-transform duration-300 lg:translate-x-0 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
@@ -640,14 +658,14 @@ export default function AdminDashboard() {
             <button
               type="button"
               onClick={() => setIsSidebarOpen(false)}
-              className="lg:hidden p-2 text-slate-500"
+              className={`lg:hidden p-2 rounded-xl text-slate-500 ${focusRing}`}
               aria-label="Tutup sidebar admin"
             >
               <X size={20} />
             </button>
           </div>
 
-          <nav className="space-y-1.5 flex-1">
+          <nav className="space-y-1.5 flex-1" aria-label="Navigasi admin">
             {menuItems.map((item) => (
               <button
                 type="button"
@@ -656,7 +674,8 @@ export default function AdminDashboard() {
                   setActiveTab(item.id);
                   setIsSidebarOpen(false);
                 }}
-                className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all group ${
+                aria-current={activeTab === item.id ? "page" : undefined}
+                className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all group ${focusRing} ${
                   activeTab === item.id
                     ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/20"
                     : "text-slate-400 hover:bg-white/5 hover:text-white"
@@ -680,7 +699,7 @@ export default function AdminDashboard() {
           <button
             type="button"
             onClick={handleSignOut}
-            className="flex items-center gap-3 text-slate-500 hover:text-red-400 p-4 mt-auto transition font-bold text-sm"
+            className={`flex items-center gap-3 rounded-2xl text-slate-500 hover:text-red-400 p-4 mt-auto transition font-bold text-sm ${focusRing}`}
           >
             <LogOut size={20} /> Logout Semua Perangkat
           </button>
@@ -707,7 +726,7 @@ export default function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setNotice(null)}
-                className="shrink-0 opacity-70 hover:opacity-100 transition"
+                className={`shrink-0 rounded-xl p-1 opacity-70 hover:opacity-100 transition ${focusRing}`}
                 aria-label="Tutup notifikasi"
               >
                 <X size={18} />
@@ -738,7 +757,7 @@ export default function AdminDashboard() {
                         id="bannerUrl"
                         value={bannerUrl}
                         onChange={(event) => setBannerUrl(event.target.value)}
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus:border-cyan-500 transition-all text-sm"
+                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm"
                         placeholder="Paste ID Drive..."
                       />
                     </div>
@@ -754,7 +773,7 @@ export default function AdminDashboard() {
                         id="headline"
                         value={headline}
                         onChange={(event) => setHeadline(event.target.value)}
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus:border-cyan-500 transition-all text-sm"
+                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm"
                       />
                     </div>
                   </div>
@@ -770,7 +789,7 @@ export default function AdminDashboard() {
                       id="description"
                       value={description}
                       onChange={(event) => setDescription(event.target.value)}
-                      className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus:border-cyan-500 transition-all h-40 text-sm leading-relaxed"
+                      className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all h-40 text-sm leading-relaxed"
                     />
                   </div>
                 </div>
@@ -779,7 +798,7 @@ export default function AdminDashboard() {
                   type="button"
                   onClick={handleSaveAbout}
                   disabled={saving}
-                  className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all disabled:opacity-50"
+                  className={`bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all disabled:opacity-50 ${focusRing}`}
                 >
                   {saving ? "Menyimpan..." : "Update Profil"}
                 </button>
@@ -821,7 +840,7 @@ export default function AdminDashboard() {
                           setNewSocialTitle(event.target.value)
                         }
                         placeholder="Ex: GitHub"
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none text-sm"
+                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 text-sm"
                       />
                     </div>
 
@@ -837,7 +856,7 @@ export default function AdminDashboard() {
                         value={newSocialUrl}
                         onChange={(event) => setNewSocialUrl(event.target.value)}
                         placeholder="https://..."
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none text-sm"
+                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 text-sm"
                       />
                     </div>
 
@@ -845,7 +864,7 @@ export default function AdminDashboard() {
                       type="button"
                       onClick={handleSaveSocial}
                       disabled={saving}
-                      className="w-full md:w-auto md:self-end bg-white text-slate-900 px-6 py-4 rounded-2xl font-black text-xs uppercase disabled:opacity-50 flex items-center justify-center gap-2"
+                      className={`w-full md:w-auto md:self-end bg-white text-slate-900 px-6 py-4 rounded-2xl font-black text-xs uppercase disabled:opacity-50 flex items-center justify-center gap-2 ${focusRing}`}
                     >
                       {saving ? (
                         "Menyimpan..."
@@ -864,7 +883,7 @@ export default function AdminDashboard() {
                       type="button"
                       onClick={resetSocialForm}
                       disabled={saving}
-                      className="mt-4 w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50"
+                      className={`mt-4 w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50 ${focusRing}`}
                     >
                       Batal Edit
                     </button>
@@ -901,7 +920,7 @@ export default function AdminDashboard() {
                         <button
                           type="button"
                           onClick={() => handleEditSocial(social)}
-                          className="text-slate-500 hover:text-cyan-400 transition-colors p-2"
+                          className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors p-2 ${focusRing}`}
                           aria-label={`Edit ${social.title || "social link"}`}
                         >
                           <Pencil size={16} />
@@ -916,7 +935,7 @@ export default function AdminDashboard() {
                               setSocials,
                             )
                           }
-                          className="text-slate-600 hover:text-red-400 p-2 transition-colors"
+                          className={`rounded-xl text-slate-600 hover:text-red-400 p-2 transition-colors ${focusRing}`}
                           aria-label={`Hapus ${social.title || "social link"}`}
                         >
                           <Trash2 size={18} />
@@ -973,7 +992,7 @@ export default function AdminDashboard() {
                           }
                           aria-label="Pilih tipe media portfolio"
                           title="Pilih tipe media portfolio"
-                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                         >
                           <option value="image">Gambar</option>
                           <option value="video">Video</option>
@@ -992,7 +1011,7 @@ export default function AdminDashboard() {
                           value={pDriveId}
                           onChange={(event) => setPDriveId(event.target.value)}
                           placeholder="ID Drive / Link Gambar"
-                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                         />
                       </div>
 
@@ -1008,7 +1027,7 @@ export default function AdminDashboard() {
                           value={pTitle}
                           onChange={(event) => setPTitle(event.target.value)}
                           placeholder="Judul Karya"
-                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                         />
                       </div>
 
@@ -1024,7 +1043,7 @@ export default function AdminDashboard() {
                           value={pDesc}
                           onChange={(event) => setPDesc(event.target.value)}
                           placeholder="Deskripsi Singkat"
-                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none h-24 resize-none"
+                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 h-24 resize-none"
                         />
                       </div>
 
@@ -1040,7 +1059,7 @@ export default function AdminDashboard() {
                           value={pTags}
                           onChange={(event) => setPTags(event.target.value)}
                           placeholder="Ex: Web, UI/UX"
-                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                         />
                       </div>
 
@@ -1048,7 +1067,7 @@ export default function AdminDashboard() {
                         type="button"
                         onClick={handleSavePortfolio}
                         disabled={saving}
-                        className="w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase tracking-widest disabled:opacity-50"
+                        className={`w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase tracking-widest disabled:opacity-50 ${focusRing}`}
                       >
                         {saving
                           ? "Menyimpan..."
@@ -1062,7 +1081,7 @@ export default function AdminDashboard() {
                           type="button"
                           onClick={resetPortfolioForm}
                           disabled={saving}
-                          className="w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50"
+                          className={`w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50 ${focusRing}`}
                         >
                           Batal Edit
                         </button>
@@ -1117,7 +1136,7 @@ export default function AdminDashboard() {
                           <button
                             type="button"
                             onClick={() => handleEditPortfolio(portfolio)}
-                            className="text-slate-500 hover:text-cyan-400 transition-colors p-2"
+                            className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors p-2 ${focusRing}`}
                             aria-label={`Edit ${
                               portfolio.title || "portfolio"
                             }`}
@@ -1134,7 +1153,7 @@ export default function AdminDashboard() {
                                 setPortfolios,
                               )
                             }
-                            className="text-slate-600 hover:text-red-400 transition-colors p-2"
+                            className={`rounded-xl text-slate-600 hover:text-red-400 transition-colors p-2 ${focusRing}`}
                             aria-label={`Hapus ${
                               portfolio.title || "portfolio"
                             }`}
@@ -1182,7 +1201,7 @@ export default function AdminDashboard() {
                         value={sTitle}
                         onChange={(event) => setSTitle(event.target.value)}
                         placeholder="Nama Jasa"
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                       />
                     </div>
 
@@ -1198,7 +1217,7 @@ export default function AdminDashboard() {
                         value={sDescription}
                         onChange={(event) => setSDescription(event.target.value)}
                         placeholder="Deskripsi singkat layanan"
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none h-28 resize-none"
+                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 h-28 resize-none"
                       />
                     </div>
 
@@ -1214,7 +1233,7 @@ export default function AdminDashboard() {
                         value={sDriveId}
                         onChange={(event) => setSDriveId(event.target.value)}
                         placeholder="ID Drive Ikon"
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                       />
                     </div>
 
@@ -1230,7 +1249,7 @@ export default function AdminDashboard() {
                         value={sTargetUrl}
                         onChange={(event) => setSTargetUrl(event.target.value)}
                         placeholder="https://..."
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none"
+                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                       />
                     </div>
 
@@ -1239,7 +1258,7 @@ export default function AdminDashboard() {
                         type="button"
                         onClick={handleSaveService}
                         disabled={saving}
-                        className="w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase disabled:opacity-50"
+                        className={`w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase disabled:opacity-50 ${focusRing}`}
                       >
                         {saving
                           ? "Menyimpan..."
@@ -1253,7 +1272,7 @@ export default function AdminDashboard() {
                           type="button"
                           onClick={resetServiceForm}
                           disabled={saving}
-                          className="w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50"
+                          className={`w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50 ${focusRing}`}
                         >
                           Batal Edit
                         </button>
@@ -1306,7 +1325,7 @@ export default function AdminDashboard() {
                         <button
                           type="button"
                           onClick={() => handleEditService(service)}
-                          className="text-slate-500 hover:text-cyan-400 transition-colors p-2"
+                          className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors p-2 ${focusRing}`}
                           aria-label={`Edit ${service.title || "layanan"}`}
                         >
                           <Pencil size={16} />
@@ -1321,7 +1340,7 @@ export default function AdminDashboard() {
                               setServices,
                             )
                           }
-                          className="text-slate-600 hover:text-red-400 transition-colors p-2"
+                          className={`rounded-xl text-slate-600 hover:text-red-400 transition-colors p-2 ${focusRing}`}
                           aria-label={`Hapus ${service.title || "layanan"}`}
                         >
                           <Trash2 size={18} />
@@ -1336,13 +1355,14 @@ export default function AdminDashboard() {
         </div>
       </main>
 
-      <nav className="lg:hidden fixed bottom-0 w-full bg-slate-900/90 backdrop-blur-xl border-t border-white/5 z-50 px-2 py-2 flex justify-around items-center">
+      <nav className="lg:hidden fixed bottom-0 w-full bg-slate-900/90 backdrop-blur-xl border-t border-white/5 z-50 px-2 py-2 flex justify-around items-center" aria-label="Navigasi bawah admin">
         {menuItems.map((item) => (
           <button
             type="button"
             key={item.id}
             onClick={() => setActiveTab(item.id)}
-            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all ${
+            aria-current={activeTab === item.id ? "page" : undefined}
+            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all ${focusRing} ${
               activeTab === item.id ? "text-cyan-400" : "text-slate-500"
             }`}
           >
