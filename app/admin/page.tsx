@@ -1,7 +1,5 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element */
-
 import {
   useCallback,
   useEffect,
@@ -10,8 +8,18 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
+import { useRouter } from "next/navigation";
+import { Briefcase, Link as LinkIcon, User, Wrench } from "lucide-react";
+import { AboutPanel } from "../../components/admin/AboutPanel";
+import { AdminBottomNav } from "../../components/admin/AdminBottomNav";
+import { AdminLoadingScreen } from "../../components/admin/AdminLoadingScreen";
+import { AdminMobileHeader } from "../../components/admin/AdminMobileHeader";
+import { AdminNotice } from "../../components/admin/AdminNotice";
+import { AdminSidebar } from "../../components/admin/AdminSidebar";
+import { PortfolioPanel } from "../../components/admin/PortfolioPanel";
+import { ServicesPanel } from "../../components/admin/ServicesPanel";
+import { SocialsPanel } from "../../components/admin/SocialsPanel";
 import { getErrorMessage } from "../../lib/errors";
-import { formatMediaUrl } from "../../lib/media";
 import { supabase } from "../../lib/supabase";
 import { isValidExternalUrl, normalizeExternalUrl } from "../../lib/url";
 import type {
@@ -19,31 +27,14 @@ import type {
   ActiveTab,
   EditableTable,
   ItemWithId,
+  MenuItem,
   Notice,
   NoticeType,
-  MenuItem,
   PortfolioItem,
   PortfolioMediaType,
   ServiceItem,
   SocialLink,
 } from "../../types/content";
-import { useRouter } from "next/navigation";
-import {
-  LogOut,
-  User,
-  Briefcase,
-  Plus,
-  Trash2,
-  Link as LinkIcon,
-  Loader2,
-  Wrench,
-  Globe,
-  Film,
-  Menu,
-  X,
-  ChevronRight,
-  Pencil,
-} from "lucide-react";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -171,6 +162,11 @@ export default function AdminDashboard() {
     ],
     [],
   );
+
+  const changeTab = (tab: ActiveTab) => {
+    setActiveTab(tab);
+    setIsSidebarOpen(false);
+  };
 
   const resetSocialForm = () => {
     setNewSocialTitle("");
@@ -513,776 +509,136 @@ export default function AdminDashboard() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-900 text-white">
-        <Loader2 className="animate-spin text-cyan-400 mb-4" size={40} />
-        <p className="font-bold tracking-widest text-xs uppercase opacity-50">
-          Menyiapkan Console...
-        </p>
-      </div>
-    );
+    return <AdminLoadingScreen />;
   }
 
   return (
     <div className="min-h-screen bg-[#0F172A] text-slate-200 font-sans">
-      <header className="lg:hidden fixed top-0 w-full bg-slate-900/80 backdrop-blur-md border-b border-white/5 z-50 px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => setIsSidebarOpen(true)}
-            className="p-2 -ml-2 text-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded-xl"
-            aria-label="Buka sidebar admin"
-            aria-controls="admin-sidebar"
-          >
-            <Menu size={24} />
-          </button>
+      <AdminMobileHeader
+        focusRing={focusRing}
+        onOpenSidebar={() => setIsSidebarOpen(true)}
+        onSignOut={handleSignOut}
+      />
 
-          <h2 className="font-black tracking-tighter text-lg">
-            NAFIS<span className="text-cyan-400">.</span>ADMIN
-          </h2>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleSignOut}
-          className={`p-2 -mr-2 rounded-xl text-red-400 ${focusRing}`}
-          aria-label="Logout dari semua perangkat"
-          title="Logout dari semua perangkat"
-        >
-          <LogOut size={20} />
-        </button>
-      </header>
-
-      <div
-        id="admin-sidebar"
-        className={`fixed inset-y-0 left-0 z-[60] w-72 bg-slate-900 border-r border-white/5 transform transition-transform duration-300 lg:translate-x-0 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="p-8 flex flex-col h-full">
-          <div className="flex items-center justify-between mb-10">
-            <h2 className="text-xl font-black tracking-tighter">
-              CONSOLE<span className="text-cyan-400">.</span>
-            </h2>
-
-            <button
-              type="button"
-              onClick={() => setIsSidebarOpen(false)}
-              className={`lg:hidden p-2 rounded-xl text-slate-500 ${focusRing}`}
-              aria-label="Tutup sidebar admin"
-            >
-              <X size={20} />
-            </button>
-          </div>
-
-          <nav className="space-y-1.5 flex-1" aria-label="Navigasi admin">
-            {menuItems.map((item) => (
-              <button
-                type="button"
-                key={item.id}
-                onClick={() => {
-                  setActiveTab(item.id);
-                  setIsSidebarOpen(false);
-                }}
-                aria-current={activeTab === item.id ? "page" : undefined}
-                className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all group ${focusRing} ${
-                  activeTab === item.id
-                    ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/20"
-                    : "text-slate-400 hover:bg-white/5 hover:text-white"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  {item.icon}
-                  <span className="font-bold text-sm">{item.label}</span>
-                </div>
-
-                <ChevronRight
-                  size={16}
-                  className={`opacity-0 group-hover:opacity-100 transition-opacity ${
-                    activeTab === item.id ? "opacity-100" : ""
-                  }`}
-                />
-              </button>
-            ))}
-          </nav>
-
-          <button
-            type="button"
-            onClick={handleSignOut}
-            className={`flex items-center gap-3 rounded-2xl text-slate-500 hover:text-red-400 p-4 mt-auto transition font-bold text-sm ${focusRing}`}
-          >
-            <LogOut size={20} /> Logout Semua Perangkat
-          </button>
-        </div>
-      </div>
+      <AdminSidebar
+        activeTab={activeTab}
+        focusRing={focusRing}
+        isSidebarOpen={isSidebarOpen}
+        menuItems={menuItems}
+        onChangeTab={changeTab}
+        onCloseSidebar={() => setIsSidebarOpen(false)}
+        onSignOut={handleSignOut}
+      />
 
       <main className="lg:ml-72 min-h-screen p-6 md:p-12 pt-24 lg:pt-12">
         <div className="max-w-5xl mx-auto pb-20 lg:pb-0">
-          {notice && (
-            <div
-              role="status"
-              aria-live="polite"
-              aria-atomic="true"
-              className={`mb-8 flex items-start justify-between gap-4 rounded-3xl border p-5 ${
-                notice.type === "error"
-                  ? "border-red-500/20 bg-red-500/10 text-red-200"
-                  : "border-cyan-500/20 bg-cyan-500/10 text-cyan-100"
-              }`}
-            >
-              <p className="text-sm font-semibold leading-relaxed">
-                {notice.message}
-              </p>
-
-              <button
-                type="button"
-                onClick={() => setNotice(null)}
-                className={`shrink-0 rounded-xl p-1 opacity-70 hover:opacity-100 transition ${focusRing}`}
-                aria-label="Tutup notifikasi"
-              >
-                <X size={18} />
-              </button>
-            </div>
-          )}
+          <AdminNotice
+            focusRing={focusRing}
+            notice={notice}
+            onClose={() => setNotice(null)}
+          />
 
           {activeTab === "about" && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <h1 className="text-3xl md:text-4xl font-black mb-2 text-white">
-                Profil Utama
-              </h1>
-              <p className="text-slate-500 text-sm md:text-base mb-8">
-                Kelola identitas dan teks utama di landing page.
-              </p>
-
-              <div className="bg-slate-900/50 border border-white/5 rounded-[2rem] p-6 md:p-10 space-y-8 backdrop-blur-xl">
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 gap-6">
-                    <div>
-                      <label
-                        htmlFor="bannerUrl"
-                        className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
-                      >
-                        ID Google Drive Banner
-                      </label>
-                      <input
-                        id="bannerUrl"
-                        value={bannerUrl}
-                        onChange={(event) => setBannerUrl(event.target.value)}
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm"
-                        placeholder="Paste ID Drive..."
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="headline"
-                        className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
-                      >
-                        Headline Utama
-                      </label>
-                      <input
-                        id="headline"
-                        value={headline}
-                        onChange={(event) => setHeadline(event.target.value)}
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="description"
-                      className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
-                    >
-                      Deskripsi Bio
-                    </label>
-                    <textarea
-                      id="description"
-                      value={description}
-                      onChange={(event) => setDescription(event.target.value)}
-                      className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all h-40 text-sm leading-relaxed"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleSaveAbout}
-                  disabled={saving}
-                  className={`bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all disabled:opacity-50 ${focusRing}`}
-                >
-                  {saving ? "Menyimpan..." : "Update Profil"}
-                </button>
-              </div>
-            </div>
+            <AboutPanel
+              bannerUrl={bannerUrl}
+              description={description}
+              focusRing={focusRing}
+              headline={headline}
+              saving={saving}
+              setBannerUrl={setBannerUrl}
+              setDescription={setDescription}
+              setHeadline={setHeadline}
+              onSave={handleSaveAbout}
+            />
           )}
 
           {activeTab === "socials" && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <h1 className="text-3xl md:text-4xl font-black mb-8 text-white">
-                Media Sosial
-              </h1>
-
-              <div className="grid grid-cols-1 gap-8">
-                <div className="bg-slate-900/50 border border-white/5 rounded-3xl p-6">
-                  {editingSocialId !== null && (
-                    <div className="mb-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4">
-                      <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">
-                        Mode Edit Social
-                      </p>
-                      <p className="mt-1 text-xs text-slate-400">
-                        Kamu sedang mengubah link sosial yang sudah tersimpan.
-                      </p>
-                    </div>
-                  )}
-
-                  <div className="flex flex-col md:flex-row gap-4">
-                    <div className="flex-1">
-                      <label
-                        htmlFor="socialTitle"
-                        className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
-                      >
-                        Nama Social
-                      </label>
-                      <input
-                        id="socialTitle"
-                        value={newSocialTitle}
-                        onChange={(event) =>
-                          setNewSocialTitle(event.target.value)
-                        }
-                        placeholder="Ex: GitHub"
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 text-sm"
-                      />
-                    </div>
-
-                    <div className="flex-[2]">
-                      <label
-                        htmlFor="socialUrl"
-                        className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
-                      >
-                        Link URL
-                      </label>
-                      <input
-                        id="socialUrl"
-                        value={newSocialUrl}
-                        onChange={(event) => setNewSocialUrl(event.target.value)}
-                        placeholder="https://..."
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 text-sm"
-                      />
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={handleSaveSocial}
-                      disabled={saving}
-                      className={`w-full md:w-auto md:self-end bg-white text-slate-900 px-6 py-4 rounded-2xl font-black text-xs uppercase disabled:opacity-50 flex items-center justify-center gap-2 ${focusRing}`}
-                    >
-                      {saving ? (
-                        "Menyimpan..."
-                      ) : editingSocialId !== null ? (
-                        "Simpan Perubahan"
-                      ) : (
-                        <>
-                          <Plus size={16} /> Tambah Social
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  {editingSocialId !== null && (
-                    <button
-                      type="button"
-                      onClick={resetSocialForm}
-                      disabled={saving}
-                      className={`mt-4 w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50 ${focusRing}`}
-                    >
-                      Batal Edit
-                    </button>
-                  )}
-                </div>
-
-                <div className="space-y-3">
-                  {socials.length === 0 && (
-                    <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-6 text-center">
-                      <p className="text-sm font-bold text-slate-300">
-                        Belum ada social link.
-                      </p>
-                      <p className="mt-1 text-xs text-slate-500">
-                        Tambahkan link agar pengunjung bisa menemukan profilmu.
-                      </p>
-                    </div>
-                  )}
-
-                  {socials.map((social) => (
-                    <div
-                      key={social.id}
-                      className="flex items-center justify-between gap-4 p-5 bg-slate-900/30 border border-white/5 rounded-2xl backdrop-blur-sm"
-                    >
-                      <div className="min-w-0">
-                        <p className="font-bold text-white text-sm">
-                          {social.title || "Untitled Social"}
-                        </p>
-                        <p className="text-xs text-slate-500 truncate max-w-[200px] md:max-w-md">
-                          {social.url || "-"}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => handleEditSocial(social)}
-                          className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors p-2 ${focusRing}`}
-                          aria-label={`Edit ${social.title || "social link"}`}
-                        >
-                          <Pencil size={16} />
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            deleteItem<SocialLink>(
-                              "social_links",
-                              social.id,
-                              setSocials,
-                            )
-                          }
-                          className={`rounded-xl text-slate-600 hover:text-red-400 p-2 transition-colors ${focusRing}`}
-                          aria-label={`Hapus ${social.title || "social link"}`}
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <SocialsPanel
+              editingSocialId={editingSocialId}
+              focusRing={focusRing}
+              newSocialTitle={newSocialTitle}
+              newSocialUrl={newSocialUrl}
+              saving={saving}
+              socials={socials}
+              setNewSocialTitle={setNewSocialTitle}
+              setNewSocialUrl={setNewSocialUrl}
+              onCancelEdit={resetSocialForm}
+              onDeleteSocial={(social) => {
+                void deleteItem<SocialLink>(
+                  "social_links",
+                  social.id,
+                  setSocials,
+                );
+              }}
+              onEditSocial={handleEditSocial}
+              onSaveSocial={handleSaveSocial}
+            />
           )}
 
           {activeTab === "portfolio" && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <h1 className="text-3xl md:text-4xl font-black mb-8 text-white">
-                Portfolio
-              </h1>
-
-              <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
-                <div className="xl:col-span-4 space-y-4">
-                  <div className="bg-slate-900 border border-white/5 p-6 rounded-3xl sticky top-24">
-                    <h3 className="font-black text-[10px] uppercase tracking-widest text-cyan-500 mb-6">
-                      {editingPortfolioId !== null
-                        ? "Edit Karya"
-                        : "Tambah Karya"}
-                    </h3>
-
-                    {editingPortfolioId !== null && (
-                      <div className="mb-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4">
-                        <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">
-                          Mode Edit Karya
-                        </p>
-                        <p className="mt-1 text-xs text-slate-400">
-                          Kamu sedang mengubah data karya yang sudah tersimpan.
-                        </p>
-                      </div>
-                    )}
-
-                    <div className="space-y-4">
-                      <div>
-                        <label
-                          htmlFor="portfolioMediaType"
-                          className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
-                        >
-                          Tipe Media
-                        </label>
-                        <select
-                          id="portfolioMediaType"
-                          value={pMediaType}
-                          onChange={(event) =>
-                            setPMediaType(
-                              event.target.value as PortfolioMediaType,
-                            )
-                          }
-                          aria-label="Pilih tipe media portfolio"
-                          title="Pilih tipe media portfolio"
-                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
-                        >
-                          <option value="image">Gambar</option>
-                          <option value="video">Video</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label
-                          htmlFor="portfolioMedia"
-                          className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
-                        >
-                          ID Drive / Link Media
-                        </label>
-                        <input
-                          id="portfolioMedia"
-                          value={pDriveId}
-                          onChange={(event) => setPDriveId(event.target.value)}
-                          placeholder="ID Drive / Link Gambar"
-                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
-                        />
-                      </div>
-
-                      <div>
-                        <label
-                          htmlFor="portfolioTitle"
-                          className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
-                        >
-                          Judul Karya
-                        </label>
-                        <input
-                          id="portfolioTitle"
-                          value={pTitle}
-                          onChange={(event) => setPTitle(event.target.value)}
-                          placeholder="Judul Karya"
-                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
-                        />
-                      </div>
-
-                      <div>
-                        <label
-                          htmlFor="portfolioDescription"
-                          className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
-                        >
-                          Deskripsi Singkat
-                        </label>
-                        <textarea
-                          id="portfolioDescription"
-                          value={pDesc}
-                          onChange={(event) => setPDesc(event.target.value)}
-                          placeholder="Deskripsi Singkat"
-                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 h-24 resize-none"
-                        />
-                      </div>
-
-                      <div>
-                        <label
-                          htmlFor="portfolioTags"
-                          className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
-                        >
-                          Tags
-                        </label>
-                        <input
-                          id="portfolioTags"
-                          value={pTags}
-                          onChange={(event) => setPTags(event.target.value)}
-                          placeholder="Ex: Web, UI/UX"
-                          className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
-                        />
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={handleSavePortfolio}
-                        disabled={saving}
-                        className={`w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase tracking-widest disabled:opacity-50 ${focusRing}`}
-                      >
-                        {saving
-                          ? "Menyimpan..."
-                          : editingPortfolioId !== null
-                            ? "Simpan Perubahan"
-                            : "Simpan Karya"}
-                      </button>
-
-                      {editingPortfolioId !== null && (
-                        <button
-                          type="button"
-                          onClick={resetPortfolioForm}
-                          disabled={saving}
-                          className={`w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50 ${focusRing}`}
-                        >
-                          Batal Edit
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="xl:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {portfolios.length === 0 && (
-                    <div className="md:col-span-2 rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-8 text-center">
-                      <p className="text-sm font-bold text-slate-300">
-                        Belum ada karya.
-                      </p>
-                      <p className="mt-1 text-xs text-slate-500">
-                        Tambahkan karya pertama agar section portfolio tidak kosong.
-                      </p>
-                    </div>
-                  )}
-
-                  {portfolios.map((portfolio) => (
-                    <div
-                      key={portfolio.id}
-                      className="bg-slate-900/50 border border-white/5 rounded-3xl overflow-hidden group"
-                    >
-                      <div className="aspect-video bg-slate-800 relative overflow-hidden">
-                        {portfolio.media_type === "video" ? (
-                          <Film
-                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/20"
-                            size={32}
-                          />
-                        ) : (
-                          <img
-                            src={formatMediaUrl(portfolio.media_url, 600)}
-                            alt={portfolio.title || "Preview portfolio"}
-                            className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity"
-                          />
-                        )}
-                      </div>
-
-                      <div className="p-5 flex justify-between items-center gap-4">
-                        <div className="min-w-0">
-                          <h4 className="font-bold text-white text-sm truncate">
-                            {portfolio.title || "Untitled Project"}
-                          </h4>
-                          <p className="text-[10px] uppercase font-black text-cyan-500 tracking-tighter truncate">
-                            {portfolio.tags || "Project"}
-                          </p>
-                        </div>
-
-                        <div className="flex items-center gap-2 shrink-0">
-                          <button
-                            type="button"
-                            onClick={() => handleEditPortfolio(portfolio)}
-                            className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors p-2 ${focusRing}`}
-                            aria-label={`Edit ${
-                              portfolio.title || "portfolio"
-                            }`}
-                          >
-                            <Pencil size={16} />
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              deleteItem<PortfolioItem>(
-                                "portfolio",
-                                portfolio.id,
-                                setPortfolios,
-                              )
-                            }
-                            className={`rounded-xl text-slate-600 hover:text-red-400 transition-colors p-2 ${focusRing}`}
-                            aria-label={`Hapus ${
-                              portfolio.title || "portfolio"
-                            }`}
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <PortfolioPanel
+              editingPortfolioId={editingPortfolioId}
+              focusRing={focusRing}
+              pDesc={pDesc}
+              pDriveId={pDriveId}
+              pMediaType={pMediaType}
+              portfolios={portfolios}
+              pTags={pTags}
+              pTitle={pTitle}
+              saving={saving}
+              setPDesc={setPDesc}
+              setPDriveId={setPDriveId}
+              setPMediaType={setPMediaType}
+              setPTags={setPTags}
+              setPTitle={setPTitle}
+              onCancelEdit={resetPortfolioForm}
+              onDeletePortfolio={(portfolio) => {
+                void deleteItem<PortfolioItem>(
+                  "portfolio",
+                  portfolio.id,
+                  setPortfolios,
+                );
+              }}
+              onEditPortfolio={handleEditPortfolio}
+              onSavePortfolio={handleSavePortfolio}
+            />
           )}
 
           {activeTab === "services" && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <h1 className="text-3xl md:text-4xl font-black mb-8 text-white">
-                Layanan
-              </h1>
-
-              <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
-                <div className="xl:col-span-4">
-                  <div className="bg-slate-900 border border-white/5 p-6 rounded-3xl space-y-4">
-                    {editingServiceId !== null && (
-                      <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4">
-                        <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">
-                          Mode Edit Layanan
-                        </p>
-                        <p className="mt-1 text-xs text-slate-400">
-                          Kamu sedang mengubah data layanan yang sudah tersimpan.
-                        </p>
-                      </div>
-                    )}
-
-                    <div>
-                      <label
-                        htmlFor="serviceTitle"
-                        className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
-                      >
-                        Nama Jasa
-                      </label>
-                      <input
-                        id="serviceTitle"
-                        value={sTitle}
-                        onChange={(event) => setSTitle(event.target.value)}
-                        placeholder="Nama Jasa"
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="serviceDescription"
-                        className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
-                      >
-                        Deskripsi Singkat
-                      </label>
-                      <textarea
-                        id="serviceDescription"
-                        value={sDescription}
-                        onChange={(event) => setSDescription(event.target.value)}
-                        placeholder="Deskripsi singkat layanan"
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 h-28 resize-none"
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="serviceIcon"
-                        className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
-                      >
-                        ID Drive Ikon
-                      </label>
-                      <input
-                        id="serviceIcon"
-                        value={sDriveId}
-                        onChange={(event) => setSDriveId(event.target.value)}
-                        placeholder="ID Drive Ikon"
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="serviceTargetUrl"
-                        className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
-                      >
-                        Link WhatsApp / Order
-                      </label>
-                      <input
-                        id="serviceTargetUrl"
-                        value={sTargetUrl}
-                        onChange={(event) => setSTargetUrl(event.target.value)}
-                        placeholder="https://..."
-                        className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-3">
-                      <button
-                        type="button"
-                        onClick={handleSaveService}
-                        disabled={saving}
-                        className={`w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase disabled:opacity-50 ${focusRing}`}
-                      >
-                        {saving
-                          ? "Menyimpan..."
-                          : editingServiceId !== null
-                            ? "Simpan Perubahan"
-                            : "Tambah Jasa"}
-                      </button>
-
-                      {editingServiceId !== null && (
-                        <button
-                          type="button"
-                          onClick={resetServiceForm}
-                          disabled={saving}
-                          className={`w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50 ${focusRing}`}
-                        >
-                          Batal Edit
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="xl:col-span-8 space-y-3">
-                  {services.length === 0 && (
-                    <div className="rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-8 text-center">
-                      <p className="text-sm font-bold text-slate-300">
-                        Belum ada layanan.
-                      </p>
-                      <p className="mt-1 text-xs text-slate-500">
-                        Tambahkan layanan agar section produk bisa tampil di homepage.
-                      </p>
-                    </div>
-                  )}
-
-                  {services.map((service) => (
-                    <div
-                      key={service.id}
-                      className="bg-slate-900/50 border border-white/5 p-5 rounded-2xl flex items-center justify-between gap-4"
-                    >
-                      <div className="flex items-center gap-4 min-w-0">
-                        <div className="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center overflow-hidden shrink-0">
-                          {service.image_url ? (
-                            <img
-                              src={formatMediaUrl(service.image_url, 256)}
-                              alt={service.title || "Ikon layanan"}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <Globe size={20} />
-                          )}
-                        </div>
-
-                        <div className="min-w-0">
-                          <h4 className="font-bold text-sm text-white">
-                            {service.title || "Untitled Service"}
-                          </h4>
-                          <p className="text-xs text-slate-500 line-clamp-2 max-w-xl">
-                            {service.description || "Belum ada deskripsi."}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => handleEditService(service)}
-                          className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors p-2 ${focusRing}`}
-                          aria-label={`Edit ${service.title || "layanan"}`}
-                        >
-                          <Pencil size={16} />
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            deleteItem<ServiceItem>(
-                              "services",
-                              service.id,
-                              setServices,
-                            )
-                          }
-                          className={`rounded-xl text-slate-600 hover:text-red-400 transition-colors p-2 ${focusRing}`}
-                          aria-label={`Hapus ${service.title || "layanan"}`}
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <ServicesPanel
+              editingServiceId={editingServiceId}
+              focusRing={focusRing}
+              saving={saving}
+              services={services}
+              sDescription={sDescription}
+              sDriveId={sDriveId}
+              setSDescription={setSDescription}
+              setSDriveId={setSDriveId}
+              setSTargetUrl={setSTargetUrl}
+              setSTitle={setSTitle}
+              sTargetUrl={sTargetUrl}
+              sTitle={sTitle}
+              onCancelEdit={resetServiceForm}
+              onDeleteService={(service) => {
+                void deleteItem<ServiceItem>(
+                  "services",
+                  service.id,
+                  setServices,
+                );
+              }}
+              onEditService={handleEditService}
+              onSaveService={handleSaveService}
+            />
           )}
         </div>
       </main>
 
-      <nav className="lg:hidden fixed bottom-0 w-full bg-slate-900/90 backdrop-blur-xl border-t border-white/5 z-50 px-2 py-2 flex justify-around items-center" aria-label="Navigasi bawah admin">
-        {menuItems.map((item) => (
-          <button
-            type="button"
-            key={item.id}
-            onClick={() => setActiveTab(item.id)}
-            aria-current={activeTab === item.id ? "page" : undefined}
-            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all ${focusRing} ${
-              activeTab === item.id ? "text-cyan-400" : "text-slate-500"
-            }`}
-          >
-            {item.icon}
-            <span className="text-[10px] font-black uppercase tracking-tighter">
-              {item.label}
-            </span>
-          </button>
-        ))}
-      </nav>
+      <AdminBottomNav
+        activeTab={activeTab}
+        focusRing={focusRing}
+        menuItems={menuItems}
+        onChangeTab={setActiveTab}
+      />
     </div>
   );
 }
