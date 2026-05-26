@@ -19,8 +19,20 @@ import { AdminSidebar } from "../../components/admin/AdminSidebar";
 import { PortfolioPanel } from "../../components/admin/PortfolioPanel";
 import { ServicesPanel } from "../../components/admin/ServicesPanel";
 import { SocialsPanel } from "../../components/admin/SocialsPanel";
+import {
+  createPortfolio,
+  createService,
+  createSocial,
+  deleteAdminItem,
+  fetchAdminData,
+  getAdminSession,
+  saveAbout,
+  signOutGlobally,
+  updatePortfolio,
+  updateService,
+  updateSocial,
+} from "../../lib/admin-data";
 import { getErrorMessage } from "../../lib/errors";
-import { supabase } from "../../lib/supabase";
 import { isValidExternalUrl, normalizeExternalUrl } from "../../lib/url";
 import type {
   AboutMe,
@@ -79,46 +91,31 @@ export default function AdminDashboard() {
   }, []);
 
   const checkUser = useCallback(async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+    try {
+      const session = await getAdminSession();
 
-    if (!session) {
+      if (!session) {
+        router.push("/admin/login");
+      }
+    } catch (error) {
+      showNotice("error", `Gagal memeriksa sesi: ${getErrorMessage(error)}`);
       router.push("/admin/login");
     }
-  }, [router]);
+  }, [router, showNotice]);
 
   const fetchAllData = useCallback(async () => {
     try {
-      const [aboutRes, socialRes, portRes, servRes] = await Promise.all([
-        supabase.from("about_me").select("*").maybeSingle(),
-        supabase.from("social_links").select("*"),
-        supabase
-          .from("portfolio")
-          .select("*")
-          .order("created_at", { ascending: false }),
-        supabase.from("services").select("*"),
-      ]);
+      const adminData = await fetchAdminData();
 
-      if (aboutRes.error) throw aboutRes.error;
-      if (socialRes.error) throw socialRes.error;
-      if (portRes.error) throw portRes.error;
-      if (servRes.error) throw servRes.error;
-
-      const aboutData = aboutRes.data as AboutMe | null;
-      const socialData = (socialRes.data || []) as SocialLink[];
-      const portfolioData = (portRes.data || []) as PortfolioItem[];
-      const serviceData = (servRes.data || []) as ServiceItem[];
-
-      if (aboutData) {
-        setHeadline(aboutData.headline || "");
-        setDescription(aboutData.description || "");
-        setBannerUrl(aboutData.banner_url || "");
+      if (adminData.about) {
+        setHeadline(adminData.about.headline || "");
+        setDescription(adminData.about.description || "");
+        setBannerUrl(adminData.about.banner_url || "");
       }
 
-      setSocials(socialData);
-      setPortfolios(portfolioData);
-      setServices(serviceData);
+      setSocials(adminData.socials);
+      setPortfolios(adminData.portfolios);
+      setServices(adminData.services);
     } catch (error) {
       showNotice(
         "error",
@@ -198,14 +195,12 @@ export default function AdminDashboard() {
 
     if (!confirmed) return;
 
-    const { error } = await supabase.auth.signOut({ scope: "global" });
-
-    if (error) {
-      showNotice("error", "Gagal logout. Coba ulangi beberapa saat lagi.");
-      return;
+    try {
+      await signOutGlobally();
+      router.push("/admin/login");
+    } catch (error) {
+      showNotice("error", `Gagal logout: ${getErrorMessage(error)}`);
     }
-
-    router.push("/admin/login");
   };
 
   const handleSaveAbout = async () => {
@@ -217,31 +212,11 @@ export default function AdminDashboard() {
     setSaving(true);
 
     try {
-      const { data: existing, error: selectError } = await supabase
-        .from("about_me")
-        .select("id")
-        .maybeSingle();
-
-      if (selectError) throw selectError;
-
-      const payload = {
+      await saveAbout({
         headline: headline.trim(),
         description: description.trim(),
         banner_url: bannerUrl.trim(),
-      };
-
-      if (existing) {
-        const { error } = await supabase
-          .from("about_me")
-          .update(payload)
-          .eq("id", existing.id);
-
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.from("about_me").insert([payload]);
-
-        if (error) throw error;
-      }
+      });
 
       showNotice("success", "Profil berhasil diperbarui.");
     } catch (error) {
@@ -273,20 +248,7 @@ export default function AdminDashboard() {
 
     try {
       if (editingSocialId !== null) {
-        const { data, error } = await supabase
-          .from("social_links")
-          .update(payload)
-          .eq("id", editingSocialId)
-          .select()
-          .single();
-
-        if (error) throw error;
-
-        const updatedSocial = data as SocialLink | null;
-
-        if (!updatedSocial) {
-          throw new Error("Data social yang diperbarui tidak ditemukan.");
-        }
+        const updatedSocial = await updateSocial(editingSocialId, payload);
 
         setSocials((current) =>
           current.map((social) =>
@@ -298,18 +260,7 @@ export default function AdminDashboard() {
         return;
       }
 
-      const { data, error } = await supabase
-        .from("social_links")
-        .insert([payload])
-        .select();
-
-      if (error) throw error;
-
-      const newSocial = data?.[0] as SocialLink | undefined;
-
-      if (!newSocial) {
-        throw new Error("Data social baru tidak berhasil dikembalikan.");
-      }
+      const newSocial = await createSocial(payload);
 
       setSocials((current) => [...current, newSocial]);
       resetSocialForm();
@@ -346,20 +297,10 @@ export default function AdminDashboard() {
 
     try {
       if (editingPortfolioId !== null) {
-        const { data, error } = await supabase
-          .from("portfolio")
-          .update(payload)
-          .eq("id", editingPortfolioId)
-          .select()
-          .single();
-
-        if (error) throw error;
-
-        const updatedPortfolio = data as PortfolioItem | null;
-
-        if (!updatedPortfolio) {
-          throw new Error("Data karya yang diperbarui tidak ditemukan.");
-        }
+        const updatedPortfolio = await updatePortfolio(
+          editingPortfolioId,
+          payload,
+        );
 
         setPortfolios((current) =>
           current.map((portfolio) =>
@@ -371,18 +312,7 @@ export default function AdminDashboard() {
         return;
       }
 
-      const { data, error } = await supabase
-        .from("portfolio")
-        .insert([payload])
-        .select();
-
-      if (error) throw error;
-
-      const newPortfolio = data?.[0] as PortfolioItem | undefined;
-
-      if (!newPortfolio) {
-        throw new Error("Data karya baru tidak berhasil dikembalikan.");
-      }
+      const newPortfolio = await createPortfolio(payload);
 
       setPortfolios((current) => [newPortfolio, ...current]);
       resetPortfolioForm();
@@ -428,20 +358,7 @@ export default function AdminDashboard() {
 
     try {
       if (editingServiceId !== null) {
-        const { data, error } = await supabase
-          .from("services")
-          .update(payload)
-          .eq("id", editingServiceId)
-          .select()
-          .single();
-
-        if (error) throw error;
-
-        const updatedService = data as ServiceItem | null;
-
-        if (!updatedService) {
-          throw new Error("Data layanan yang diperbarui tidak ditemukan.");
-        }
+        const updatedService = await updateService(editingServiceId, payload);
 
         setServices((current) =>
           current.map((service) =>
@@ -453,18 +370,7 @@ export default function AdminDashboard() {
         return;
       }
 
-      const { data, error } = await supabase
-        .from("services")
-        .insert([payload])
-        .select();
-
-      if (error) throw error;
-
-      const newService = data?.[0] as ServiceItem | undefined;
-
-      if (!newService) {
-        throw new Error("Data layanan baru tidak berhasil dikembalikan.");
-      }
+      const newService = await createService(payload);
 
       setServices((current) => [...current, newService]);
       resetServiceForm();
@@ -495,9 +401,7 @@ export default function AdminDashboard() {
     setSaving(true);
 
     try {
-      const { error } = await supabase.from(table).delete().eq("id", id);
-
-      if (error) throw error;
+      await deleteAdminItem(table, id);
 
       setState((current) => current.filter((item) => item.id !== id));
       showNotice("success", "Data berhasil dihapus.");
