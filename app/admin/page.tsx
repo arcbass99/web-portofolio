@@ -32,10 +32,10 @@ import {
   updateService,
   updateSocial,
 } from "../../lib/admin-data";
+import { ADMIN_FOCUS_RING } from "../../lib/constants";
 import { getErrorMessage } from "../../lib/errors";
 import { isValidExternalUrl, normalizeExternalUrl } from "../../lib/url";
 import type {
-  AboutMe,
   ActiveTab,
   EditableTable,
   ItemWithId,
@@ -83,8 +83,7 @@ export default function AdminDashboard() {
   const [editingServiceId, setEditingServiceId] = useState<number | null>(null);
 
   const [saving, setSaving] = useState(false);
-  const focusRing =
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900";
+  const focusRing = ADMIN_FOCUS_RING;
 
   const showNotice = useCallback((type: NoticeType, message: string) => {
     setNotice({ type, message });
@@ -127,13 +126,18 @@ export default function AdminDashboard() {
   }, [showNotice]);
 
   useEffect(() => {
-    void checkUser();
+    const authTimer = window.setTimeout(() => {
+      void checkUser();
+    }, 0);
 
     const fetchTimer = window.setTimeout(() => {
       void fetchAllData();
     }, 0);
 
-    return () => window.clearTimeout(fetchTimer);
+    return () => {
+      window.clearTimeout(authTimer);
+      window.clearTimeout(fetchTimer);
+    };
   }, [checkUser, fetchAllData]);
 
   useEffect(() => {

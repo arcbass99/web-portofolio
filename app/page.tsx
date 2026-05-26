@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { getErrorMessage } from "../lib/errors";
+import { PUBLIC_FOCUS_RING } from "../lib/constants";
 import type {
   AboutMe,
   PortfolioItem,
@@ -30,8 +31,7 @@ export default function LandingPage() {
   const [isDark, setIsDark] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const focusRing =
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
+  const focusRing = PUBLIC_FOCUS_RING;
 
   const fetchPublicData = useCallback(async () => {
     try {
