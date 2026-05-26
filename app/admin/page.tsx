@@ -8,10 +8,25 @@ import {
   useMemo,
   useState,
   type Dispatch,
-  type ReactNode,
   type SetStateAction,
 } from "react";
+import { getErrorMessage } from "../../lib/errors";
+import { formatMediaUrl } from "../../lib/media";
 import { supabase } from "../../lib/supabase";
+import { isValidExternalUrl, normalizeExternalUrl } from "../../lib/url";
+import type {
+  AboutMe,
+  ActiveTab,
+  EditableTable,
+  ItemWithId,
+  Notice,
+  NoticeType,
+  MenuItem,
+  PortfolioItem,
+  PortfolioMediaType,
+  ServiceItem,
+  SocialLink,
+} from "../../types/content";
 import { useRouter } from "next/navigation";
 import {
   LogOut,
@@ -29,101 +44,6 @@ import {
   ChevronRight,
   Pencil,
 } from "lucide-react";
-
-type ActiveTab = "about" | "socials" | "portfolio" | "services";
-type PortfolioMediaType = "image" | "video";
-type EditableTable = "social_links" | "portfolio" | "services";
-type NoticeType = "success" | "error";
-
-type Notice = {
-  type: NoticeType;
-  message: string;
-} | null;
-
-type ErrorWithMessage = {
-  message: string;
-};
-
-type AboutMe = {
-  id: number;
-  headline: string | null;
-  description: string | null;
-  banner_url: string | null;
-};
-
-type SocialLink = {
-  id: number;
-  title: string | null;
-  url: string | null;
-};
-
-type PortfolioItem = {
-  id: number;
-  title: string | null;
-  description: string | null;
-  tags: string | null;
-  media_url: string | null;
-  media_type: string | null;
-};
-
-type ServiceItem = {
-  id: number;
-  title: string | null;
-  description: string | null;
-  image_url: string | null;
-  target_url: string | null;
-};
-
-type ItemWithId = {
-  id: number;
-};
-
-type MenuItem = {
-  id: ActiveTab;
-  label: string;
-  icon: ReactNode;
-};
-
-const hasMessage = (error: unknown): error is ErrorWithMessage => {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    "message" in error &&
-    typeof (error as { message?: unknown }).message === "string"
-  );
-};
-
-const getErrorMessage = (error: unknown) => {
-  if (hasMessage(error)) {
-    return error.message;
-  }
-
-  return "Terjadi kesalahan yang tidak diketahui.";
-};
-
-const normalizeExternalUrl = (url: string) => {
-  const trimmedUrl = url.trim();
-
-  if (!trimmedUrl) return "";
-
-  if (
-    trimmedUrl.startsWith("http://") ||
-    trimmedUrl.startsWith("https://")
-  ) {
-    return trimmedUrl;
-  }
-
-  return `https://${trimmedUrl}`;
-};
-
-const isValidExternalUrl = (url: string) => {
-  try {
-    const parsedUrl = new URL(url);
-    return parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:";
-  } catch {
-    return false;
-  }
-};
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -251,16 +171,6 @@ export default function AdminDashboard() {
     ],
     [],
   );
-
-  const formatMediaUrl = (idOrUrl?: string | null) => {
-    if (!idOrUrl) return "";
-
-    if (idOrUrl.startsWith("http://") || idOrUrl.startsWith("https://")) {
-      return idOrUrl;
-    }
-
-    return `https://drive.google.com/thumbnail?sz=w600&id=${idOrUrl}`;
-  };
 
   const resetSocialForm = () => {
     setNewSocialTitle("");
@@ -1115,7 +1025,7 @@ export default function AdminDashboard() {
                           />
                         ) : (
                           <img
-                            src={formatMediaUrl(portfolio.media_url)}
+                            src={formatMediaUrl(portfolio.media_url, 600)}
                             alt={portfolio.title || "Preview portfolio"}
                             className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity"
                           />
@@ -1302,7 +1212,7 @@ export default function AdminDashboard() {
                         <div className="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center overflow-hidden shrink-0">
                           {service.image_url ? (
                             <img
-                              src={formatMediaUrl(service.image_url)}
+                              src={formatMediaUrl(service.image_url, 256)}
                               alt={service.title || "Ikon layanan"}
                               className="w-full h-full object-cover"
                             />

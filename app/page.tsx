@@ -2,7 +2,15 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
+import { formatMediaUrl } from "../lib/media";
 import { supabase } from "../lib/supabase";
+import { getErrorMessage } from "../lib/errors";
+import type {
+  AboutMe,
+  PortfolioItem,
+  ServiceItem,
+  SocialLink,
+} from "../types/content";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ExternalLink,
@@ -14,36 +22,6 @@ import {
   Moon,
   Sun,
 } from "lucide-react";
-
-type AboutMe = {
-  id: number;
-  headline: string | null;
-  description: string | null;
-  banner_url: string | null;
-};
-
-type SocialLink = {
-  id: number;
-  title: string | null;
-  url: string | null;
-};
-
-type PortfolioItem = {
-  id: number;
-  title: string | null;
-  description: string | null;
-  media_url: string | null;
-  media_type: string | null;
-  tags: string | null;
-};
-
-type ServiceItem = {
-  id: number;
-  title: string | null;
-  description: string | null;
-  image_url: string | null;
-  target_url: string | null;
-};
 
 export default function LandingPage() {
   const [loading, setLoading] = useState(true);
@@ -80,12 +58,9 @@ export default function LandingPage() {
       setPortfolios((portRes.data || []) as PortfolioItem[]);
       setServices((servRes.data || []) as ServiceItem[]);
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Data belum berhasil dimuat sepenuhnya.";
-
-      setPublicError(message);
+      setPublicError(
+        getErrorMessage(error, "Data belum berhasil dimuat sepenuhnya."),
+      );
     } finally {
       setLoading(false);
     }
@@ -118,16 +93,6 @@ export default function LandingPage() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isMenuOpen]);
-
-  const formatMediaUrl = (idOrUrl?: string | null, width = 1200) => {
-    if (!idOrUrl) return "";
-
-    if (idOrUrl.startsWith("http://") || idOrUrl.startsWith("https://")) {
-      return idOrUrl;
-    }
-
-    return `https://drive.google.com/thumbnail?sz=w${width}&id=${idOrUrl}`;
-  };
 
   const scrollToSection = (id: string) => {
     setIsMenuOpen(false);
