@@ -1,8 +1,6 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
-import { formatMediaUrl } from "../lib/media";
 import { supabase } from "../lib/supabase";
 import { getErrorMessage } from "../lib/errors";
 import type {
@@ -11,17 +9,15 @@ import type {
   ServiceItem,
   SocialLink,
 } from "../types/content";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  ExternalLink,
-  ArrowUpRight,
-  Loader2,
-  ArrowRight,
-  Menu,
-  X,
-  Moon,
-  Sun,
-} from "lucide-react";
+import { PublicBackground } from "../components/public/PublicBackground";
+import { PublicErrorNotice } from "../components/public/PublicErrorNotice";
+import { PublicFooter } from "../components/public/PublicFooter";
+import { PublicLoadingScreen } from "../components/public/PublicLoadingScreen";
+import { PublicMenuOverlay } from "../components/public/PublicMenuOverlay";
+import { PublicNavbar } from "../components/public/PublicNavbar";
+import { HeroSection } from "../components/public/HeroSection";
+import { PortfolioSection } from "../components/public/PortfolioSection";
+import { ServicesSection } from "../components/public/ServicesSection";
 
 export default function LandingPage() {
   const [loading, setLoading] = useState(true);
@@ -33,6 +29,9 @@ export default function LandingPage() {
 
   const [isDark, setIsDark] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const focusRing =
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
 
   const fetchPublicData = useCallback(async () => {
     try {
@@ -110,21 +109,9 @@ export default function LandingPage() {
   const contactHref = primaryContact?.url || "#portfolio";
   const isExternalContact = Boolean(primaryContact?.url);
   const contactLabel = primaryContact ? "Hubungi Saya" : "Lihat Karya";
-  const focusRing =
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#F8FAFC] px-6 text-center">
-        <Loader2 className="animate-spin text-teal-500 mb-5" size={40} />
-        <p className="text-sm font-black uppercase tracking-[0.3em] text-teal-600">
-          Memuat Portfolio
-        </p>
-        <p className="mt-3 max-w-sm text-sm font-medium leading-relaxed text-slate-500">
-          Menyiapkan profil, karya, dan produk digital Nafis.
-        </p>
-      </div>
-    );
+    return <PublicLoadingScreen />;
   }
 
   return (
@@ -133,516 +120,56 @@ export default function LandingPage() {
         isDark ? "bg-[#0B0C10] text-white" : "bg-[#F8FAFC] text-slate-900"
       }`}
     >
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div
-          className={`absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full mix-blend-multiply filter blur-[120px] opacity-60 transition-colors duration-1000 ${
-            isDark ? "bg-indigo-900/50" : "bg-teal-200"
-          }`}
-        />
-        <div
-          className={`absolute top-[20%] -right-[10%] w-[40%] h-[60%] rounded-full mix-blend-multiply filter blur-[120px] opacity-60 transition-colors duration-1000 ${
-            isDark ? "bg-violet-900/40" : "bg-purple-200"
-          }`}
-        />
-        <div
-          className={`absolute -bottom-[20%] left-[20%] w-[60%] h-[50%] rounded-full mix-blend-multiply filter blur-[120px] opacity-60 transition-colors duration-1000 ${
-            isDark ? "bg-cyan-900/30" : "bg-pink-200"
-          }`}
-        />
-      </div>
+      <PublicBackground isDark={isDark} />
 
-      <nav
-        aria-label="Navigasi utama"
-        className={`fixed top-0 w-full z-40 transition-all duration-300 backdrop-blur-md border-b ${
-          isDark
-            ? "bg-black/20 border-white/5"
-            : "bg-white/30 border-white/50"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-24 py-4 flex justify-between items-center">
-          <button
-            type="button"
-            className={`font-black text-2xl tracking-tighter cursor-pointer rounded-lg ${focusRing}`}
-            onClick={() => scrollToSection("home")}
-            aria-label="Kembali ke bagian profil utama"
-          >
-            NAFIS
-            <span className={isDark ? "text-cyan-400" : "text-teal-600"}>
-              .
-            </span>
-          </button>
+      <PublicNavbar
+        isDark={isDark}
+        focusRing={focusRing}
+        onToggleTheme={() => setIsDark((current) => !current)}
+        onOpenMenu={() => setIsMenuOpen(true)}
+        onLogoClick={() => scrollToSection("home")}
+      />
 
-          <div className="flex items-center gap-3 md:gap-4">
-            <button
-              type="button"
-              onClick={() => setIsDark((current) => !current)}
-              aria-label={isDark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
-              className={`p-2.5 md:p-3 rounded-full backdrop-blur-md border transition-all ${focusRing} ${
-                isDark
-                  ? "bg-white/10 border-white/10 text-yellow-300"
-                  : "bg-white/50 border-white/50 text-slate-600 hover:bg-white"
-              }`}
-            >
-              {isDark ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setIsMenuOpen(true)}
-              aria-label="Buka menu navigasi"
-              className={`p-2.5 md:p-3 rounded-full backdrop-blur-md border transition-all ${focusRing} ${
-                isDark
-                  ? "bg-white/10 border-white/10 hover:bg-white/20"
-                  : "bg-white/50 border-white/50 hover:bg-white"
-              }`}
-            >
-              <Menu size={18} />
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Menu navigasi"
-            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            animate={{ opacity: 1, backdropFilter: "blur(24px)" }}
-            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            className={`fixed inset-0 z-50 flex flex-col justify-center items-center ${
-              isDark ? "bg-[#0B0C10]/80" : "bg-white/80"
-            }`}
-          >
-            <button
-              type="button"
-              onClick={() => setIsMenuOpen(false)}
-              aria-label="Tutup menu navigasi"
-              autoFocus
-              className={`absolute top-6 right-6 lg:right-12 xl:right-24 p-4 rounded-full border transition-all ${focusRing} ${
-                isDark
-                  ? "border-white/10 hover:bg-white/10 text-slate-400 hover:text-white"
-                  : "border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-900"
-              }`}
-            >
-              <X size={24} />
-            </button>
-
-            <div className="flex flex-col gap-6 md:gap-8 text-center font-black tracking-tight w-full px-6">
-              {[
-                { id: "home", label: "Profil Utama" },
-                { id: "portfolio", label: "Selected Works" },
-                ...(services.length > 0
-                  ? [{ id: "services", label: "Produk" }]
-                  : []),
-              ].map((item, index) => (
-                <motion.button
-                  type="button"
-                  key={item.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  onClick={() => scrollToSection(item.id)}
-                  aria-label={`Buka bagian ${item.label}`}
-                  className={`text-4xl md:text-6xl rounded-2xl hover:-translate-y-1 transition-all ${focusRing} ${
-                    isDark ? "hover:text-cyan-400" : "hover:text-teal-600"
-                  }`}
-                >
-                  {item.label}
-                </motion.button>
-              ))}
-
-              <motion.a
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                href="/admin"
-                aria-label="Masuk ke console admin"
-                className={`text-xs md:text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-teal-500 mt-12 rounded-lg ${focusRing}`}
-              >
-                — Masuk Console Admin —
-              </motion.a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <PublicMenuOverlay
+        isDark={isDark}
+        isOpen={isMenuOpen}
+        servicesCount={services.length}
+        focusRing={focusRing}
+        onClose={() => setIsMenuOpen(false)}
+        onNavigate={scrollToSection}
+      />
 
       <div className="relative z-10">
-        {publicError && (
-          <div className="mx-auto max-w-7xl px-6 pt-28 lg:px-12 xl:px-24">
-            <div
-              role="status"
-              aria-live="polite"
-              className={`rounded-3xl border p-5 text-sm font-semibold leading-relaxed shadow-sm backdrop-blur-md ${
-                isDark
-                  ? "border-amber-400/20 bg-amber-400/10 text-amber-100"
-                  : "border-amber-200 bg-amber-50 text-amber-900"
-              }`}
-            >
-              Beberapa data belum berhasil dimuat. Halaman tetap ditampilkan
-              dengan fallback sementara. Detail: {publicError}
-            </div>
-          </div>
-        )}
+        <PublicErrorNotice error={publicError} isDark={isDark} />
 
-        <section
-          id="home"
-          className="min-h-screen flex flex-col justify-center px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto py-20 pt-32"
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="order-2 lg:order-1"
-            >
-              <span
-                className={`inline-block px-4 py-1.5 md:py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 border backdrop-blur-sm ${
-                  isDark
-                    ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
-                    : "bg-teal-500/10 text-teal-600 border-teal-500/20"
-                }`}
-              >
-                Available for Projects
-              </span>
+        <HeroSection
+          about={about}
+          socials={socials}
+          isDark={isDark}
+          focusRing={focusRing}
+          onScrollToPortfolio={() => scrollToSection("portfolio")}
+        />
 
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[1.1] mb-6 md:mb-8">
-                {about?.headline || "Membangun Visi Digital Anda"}
-              </h1>
-
-              <p
-                className={`text-lg md:text-xl leading-relaxed max-w-lg mb-8 md:mb-10 font-medium ${
-                  isDark ? "text-slate-400" : "text-slate-600"
-                }`}
-              >
-                {about?.description ||
-                  "Saya merancang dan mengembangkan antarmuka website premium untuk membantu skala bisnis Anda."}
-              </p>
-
-              <div className="flex gap-3 md:gap-4 items-center flex-wrap">
-                {socials.length > 0 ? (
-                  socials.map((social) => (
-                    <a
-                      key={social.id}
-                      href={social.url || "#"}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={`Buka ${social.title || "link social"} di tab baru`}
-                      className={`flex items-center gap-2 px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${focusRing} ${
-                        isDark
-                          ? "bg-white/5 border-white/10 hover:bg-white/10 text-white"
-                          : "bg-white/60 border-white/40 hover:bg-white text-slate-800"
-                      }`}
-                    >
-                      <span className="text-xs md:text-sm font-bold tracking-wide">
-                        {social.title || "Link"}
-                      </span>
-                      <ExternalLink size={16} className="opacity-70" />
-                    </a>
-                  ))
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection("portfolio")}
-                    className={`flex items-center gap-2 px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${focusRing} ${
-                      isDark
-                        ? "bg-white/5 border-white/10 hover:bg-white/10 text-white"
-                        : "bg-white/60 border-white/40 hover:bg-white text-slate-800"
-                    }`}
-                  >
-                    <span className="text-xs md:text-sm font-bold tracking-wide">
-                      Lihat Karya
-                    </span>
-                    <ArrowRight size={16} className="opacity-70" />
-                  </button>
-                )}
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.2 }}
-              className="order-1 lg:order-2"
-            >
-              <div
-                className={`aspect-square md:aspect-[4/5] rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl border backdrop-blur-xl p-2 ${
-                  isDark
-                    ? "bg-white/5 border-white/10"
-                    : "bg-white/40 border-white/50"
-                }`}
-              >
-                <div className="relative w-full h-full rounded-2xl md:rounded-[2rem] overflow-hidden bg-slate-200/50">
-                  {about?.banner_url ? (
-                    <Image
-                      src={formatMediaUrl(about.banner_url, 900)}
-                      alt="Profile Banner"
-                      fill
-                      priority
-                      fetchPriority="high"
-                      sizes="(max-width: 768px) 92vw, (max-width: 1024px) 80vw, 44vw"
-                      quality={82}
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-slate-900 text-center text-white">
-                      <p className="text-4xl md:text-6xl font-black tracking-tighter">
-                        NAFIS<span className="text-teal-400">.</span>
-                      </p>
-                      <p className="mt-3 text-xs md:text-sm font-bold uppercase tracking-[0.25em] text-slate-400">
-                        Personal Portfolio
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        <section id="portfolio" className="py-24 md:py-32 px-6 lg:px-12 xl:px-24">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 gap-4">
-              <div>
-                <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">
-                  Selected Works
-                </h2>
-                <p
-                  className={`text-base md:text-lg font-medium ${
-                    isDark ? "text-slate-400" : "text-slate-500"
-                  }`}
-                >
-                  Kumpulan proyek dan desain saya.
-                </p>
-              </div>
-
-              <span
-                className={`text-4xl md:text-5xl font-black ${
-                  isDark ? "text-white/10" : "text-slate-200"
-                }`}
-              >
-                / 0{portfolios.length}
-              </span>
-            </div>
-
-            {portfolios.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-                {portfolios.map((portfolio, index) => (
-                  <motion.div
-                    key={portfolio.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ delay: index * 0.1 }}
-                    className={`group p-3 md:p-4 rounded-3xl md:rounded-[2.5rem] border backdrop-blur-md shadow-xl transition-all duration-500 ${
-                      isDark
-                        ? "bg-white/5 border-white/10 hover:bg-white/10"
-                        : "bg-white/50 border-white/60 hover:bg-white/80"
-                    }`}
-                  >
-                    <div className="relative aspect-video rounded-2xl md:rounded-[2rem] overflow-hidden mb-4 md:mb-6">
-                      {portfolio.media_type === "video" && portfolio.media_url ? (
-                        <iframe
-                          src={`https://drive.google.com/file/d/${portfolio.media_url}/preview`}
-                          title={portfolio.title || "Portfolio video preview"}
-                          className="w-full h-full border-0"
-                          allow="autoplay"
-                        />
-                      ) : portfolio.media_url ? (
-                        <div className="relative w-full h-full">
-                          <Image
-                            src={formatMediaUrl(portfolio.media_url, 900)}
-                            alt={portfolio.title || "Portfolio image"}
-                            fill
-                            sizes="(max-width: 768px) 92vw, (max-width: 1024px) 44vw, 40vw"
-                            quality={78}
-                            className="object-cover group-hover:scale-105 transition-transform duration-700"
-                          />
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-center justify-center">
-                            <ArrowUpRight
-                              className="text-white opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-500 shadow-xl"
-                              size={40}
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-slate-200/50 px-6 text-center text-slate-400">
-                          <ArrowUpRight size={28} className="mb-3 opacity-60" />
-                          <p className="text-sm font-bold">
-                            Media karya belum tersedia
-                          </p>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 px-2 md:px-4 pb-2">
-                      <div>
-                        <h3 className="text-xl md:text-2xl font-bold mb-1 md:mb-2">
-                          {portfolio.title || "Untitled Project"}
-                        </h3>
-                        <p
-                          className={`line-clamp-2 max-w-sm text-sm md:text-base font-medium ${
-                            isDark ? "text-slate-400" : "text-slate-500"
-                          }`}
-                        >
-                          {portfolio.description || "Belum ada deskripsi."}
-                        </p>
-                      </div>
-
-                      <span
-                        className={`self-start px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider border whitespace-nowrap ${
-                          isDark
-                            ? "bg-white/5 border-white/10"
-                            : "bg-white/50 border-slate-200"
-                        }`}
-                      >
-                        {portfolio.tags || "Project"}
-                      </span>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            ) : (
-              <div
-                className={`rounded-3xl md:rounded-[2.5rem] border p-8 md:p-12 text-center backdrop-blur-md ${
-                  isDark
-                    ? "bg-white/5 border-white/10 text-slate-400"
-                    : "bg-white/50 border-white/60 text-slate-500"
-                }`}
-              >
-                <p className="text-xl md:text-2xl font-black text-inherit">
-                  Karya pilihan sedang disiapkan.
-                </p>
-                <p className="mt-3 text-sm md:text-base font-medium leading-relaxed">
-                  Portfolio akan tampil di sini setelah data karya ditambahkan
-                  dari console admin.
-                </p>
-              </div>
-            )}
-          </div>
-        </section>
+        <PortfolioSection
+          portfolios={portfolios}
+          isDark={isDark}
+        />
 
         {services.length > 0 && (
-          <section
-            id="services"
-            className="py-24 md:py-32 px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto"
-          >
-            <div className="mb-12 md:mb-20">
-              <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">
-                Produk
-              </h2>
-              <p
-                className={`text-base md:text-lg font-medium ${
-                  isDark ? "text-slate-400" : "text-slate-500"
-                }`}
-              >
-                Produk, layanan, dan penawaran digital yang bisa kamu akses.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-              {services.map((service, index) => (
-                <motion.a
-                  key={service.id}
-                  href={service.target_url || "#"}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`Kunjungi ${service.title || "produk"}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:min-h-[18rem] ${focusRing} ${
-                    isDark
-                      ? "bg-white/5 border-white/10 hover:border-cyan-500 hover:bg-white/10"
-                      : "bg-white/50 border-white/60 hover:border-teal-500 hover:bg-white"
-                  }`}
-                >
-                  <div>
-                    <div
-                      className={`relative w-16 h-16 md:w-24 md:h-24 mb-6 rounded-xl md:rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${
-                        isDark
-                          ? "bg-black/50 border-white/10 group-hover:bg-cyan-900/30"
-                          : "bg-white border-slate-100 group-hover:bg-teal-50"
-                      }`}
-                    >
-                      {service.image_url ? (
-                        <Image
-                          src={formatMediaUrl(service.image_url, 256)}
-                          alt={service.title || "Service icon"}
-                          fill
-                          sizes="(max-width: 768px) 64px, 96px"
-                          quality={72}
-                          className="object-contain"
-                        />
-                      ) : (
-                        <ArrowRight
-                          className={
-                            isDark
-                              ? "text-slate-400 group-hover:text-cyan-400"
-                              : "text-slate-400 group-hover:text-teal-600"
-                          }
-                          size={20}
-                        />
-                      )}
-                    </div>
-
-                    <h3 className="text-xl md:text-2xl font-bold mb-3">
-                      {service.title || "Produk"}
-                    </h3>
-
-                    <p
-                      className={`text-sm md:text-base leading-relaxed line-clamp-3 font-medium ${
-                        isDark ? "text-slate-400" : "text-slate-500"
-                      }`}
-                    >
-                      {service.description ||
-                        "Klik untuk melihat detail penawaran ini."}
-                    </p>
-                  </div>
-
-                  <div
-                    className={`mt-6 flex items-center gap-2 text-xs md:text-sm font-bold opacity-70 group-hover:opacity-100 transition-opacity ${
-                      isDark ? "text-cyan-400" : "text-teal-600"
-                    }`}
-                  >
-                    Kunjungi <ArrowRight size={14} />
-                  </div>
-                </motion.a>
-              ))}
-            </div>
-          </section>
+          <ServicesSection
+            services={services}
+            isDark={isDark}
+            focusRing={focusRing}
+          />
         )}
 
-        <footer
-          className={`py-24 md:py-32 px-6 text-center border-t backdrop-blur-sm ${
-            isDark ? "border-white/5 bg-black/20" : "border-white/50 bg-white/10"
-          }`}
-        >
-          <h2 className="text-3xl md:text-4xl lg:text-6xl font-black tracking-tight mb-8 md:mb-10">
-            Mari mulai proyek baru.
-          </h2>
-
-          <a
-            href={contactHref}
-            target={isExternalContact ? "_blank" : undefined}
-            rel={isExternalContact ? "noreferrer" : undefined}
-            aria-label={contactLabel}
-            className={`inline-flex items-center gap-2 px-8 py-3 md:px-10 md:py-4 rounded-full font-bold text-sm transition-all shadow-xl border ${focusRing} ${
-              isDark
-                ? "bg-white text-black hover:bg-cyan-400 border-white"
-                : "bg-slate-900 text-white hover:bg-teal-600 border-slate-900"
-            }`}
-          >
-            {contactLabel}
-            <ArrowRight size={16} />
-          </a>
-
-          <p className="mt-20 text-xs md:text-sm font-bold tracking-widest uppercase opacity-40">
-            © {new Date().getFullYear()} — Dibuat dengan presisi oleh Nafis
-          </p>
-        </footer>
+        <PublicFooter
+          isDark={isDark}
+          contactHref={contactHref}
+          contactLabel={contactLabel}
+          isExternalContact={isExternalContact}
+          focusRing={focusRing}
+        />
       </div>
     </div>
   );
