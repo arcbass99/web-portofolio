@@ -106,14 +106,55 @@ export default function LandingPage() {
     }, 100);
   };
 
+  const getContactPriority = (social: SocialLink) => {
+    const title = social.title?.toLowerCase() || "";
+    const url = social.url?.toLowerCase() || "";
+
+    if (title.includes("whatsapp") || title.includes("wa") || url.includes("wa.me")) {
+      return 1;
+    }
+
+    if (title.includes("email") || title.includes("mail") || url.includes("mailto:")) {
+      return 2;
+    }
+
+    if (title.includes("instagram") || title.includes("ig")) {
+      return 3;
+    }
+
+    return 10;
+  };
+
   const primaryContact =
-    socials.find((social) => social.title?.toLowerCase().includes("instagram")) ||
-    socials[0] ||
+    [...socials]
+      .filter((social) => Boolean(social.url))
+      .sort((first, second) => getContactPriority(first) - getContactPriority(second))[0] ||
     null;
+
+  const contactTitle = primaryContact?.title?.toLowerCase() || "";
+  const contactUrl = primaryContact?.url?.toLowerCase() || "";
+  const isWhatsappContact =
+    contactTitle.includes("whatsapp") ||
+    contactTitle.includes("wa") ||
+    contactUrl.includes("wa.me");
+  const isEmailContact =
+    contactTitle.includes("email") ||
+    contactTitle.includes("mail") ||
+    contactUrl.includes("mailto:");
+  const isInstagramContact =
+    contactTitle.includes("instagram") || contactTitle.includes("ig");
 
   const contactHref = primaryContact?.url || "#portfolio";
   const isExternalContact = Boolean(primaryContact?.url);
-  const contactLabel = primaryContact ? "Hubungi Saya" : "Lihat Karya";
+  const contactLabel = primaryContact
+    ? isWhatsappContact
+      ? "Hubungi via WhatsApp"
+      : isEmailContact
+        ? "Kirim Email"
+        : isInstagramContact
+          ? "Hubungi via Instagram"
+          : "Hubungi Saya"
+    : "Lihat Karya";
 
   if (loading) {
     return <PublicLoadingScreen />;
@@ -150,7 +191,10 @@ export default function LandingPage() {
         <HeroSection
           about={about}
           socials={socials}
+          contactHref={contactHref}
+          contactLabel={contactLabel}
           isDark={isDark}
+          isExternalContact={isExternalContact}
           focusRing={focusRing}
           onScrollToPortfolio={() => scrollToSection("portfolio")}
         />

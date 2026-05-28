@@ -9,7 +9,10 @@ import type { AboutMe, SocialLink } from "../../types/content";
 type HeroSectionProps = {
   about: AboutMe | null;
   socials: SocialLink[];
+  contactHref: string;
+  contactLabel: string;
   isDark: boolean;
+  isExternalContact: boolean;
   focusRing: string;
   onScrollToPortfolio: () => void;
 };
@@ -17,7 +20,10 @@ type HeroSectionProps = {
 export function HeroSection({
   about,
   socials,
+  contactHref,
+  contactLabel,
   isDark,
+  isExternalContact,
   focusRing,
   onScrollToPortfolio,
 }: HeroSectionProps) {
@@ -56,42 +62,59 @@ export function HeroSection({
               "Saya merancang dan mengembangkan antarmuka website premium untuk membantu skala bisnis Anda."}
           </p>
 
-          <div className="flex gap-3 md:gap-4 items-center flex-wrap">
-            {socials.length > 0 ? (
-              socials.map((social) => (
-                <a
-                  key={social.id}
-                  href={social.url || "#"}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`Buka ${social.title || "link social"} di tab baru`}
-                  className={`flex items-center gap-2 px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${focusRing} ${
-                    isDark
-                      ? "bg-white/5 border-white/10 hover:bg-white/10 text-white"
-                      : "bg-white/60 border-white/40 hover:bg-white text-slate-800"
-                  }`}
-                >
-                  <span className="text-xs md:text-sm font-bold tracking-wide">
-                    {social.title || "Link"}
-                  </span>
-                  <ExternalLink size={16} className="opacity-70" />
-                </a>
-              ))
-            ) : (
+          <div className="flex flex-col gap-5">
+            <div className="flex gap-3 md:gap-4 items-center flex-wrap">
+              <a
+                href={contactHref}
+                target={isExternalContact ? "_blank" : undefined}
+                rel={isExternalContact ? "noreferrer" : undefined}
+                aria-label={contactLabel}
+                className={`inline-flex items-center gap-2 px-5 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl border shadow-lg font-black text-xs md:text-sm uppercase tracking-widest hover:-translate-y-1 transition-all duration-300 ${focusRing} ${
+                  isDark
+                    ? "bg-cyan-400 text-slate-950 border-cyan-400 hover:bg-white hover:border-white"
+                    : "bg-slate-900 text-white border-slate-900 hover:bg-teal-600 hover:border-teal-600"
+                }`}
+              >
+                {contactLabel}
+                <ArrowRight size={16} />
+              </a>
+
               <button
                 type="button"
                 onClick={onScrollToPortfolio}
-                className={`flex items-center gap-2 px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${focusRing} ${
+                className={`inline-flex items-center gap-2 px-5 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm font-bold text-xs md:text-sm hover:-translate-y-1 transition-all duration-300 ${focusRing} ${
                   isDark
                     ? "bg-white/5 border-white/10 hover:bg-white/10 text-white"
                     : "bg-white/60 border-white/40 hover:bg-white text-slate-800"
                 }`}
               >
-                <span className="text-xs md:text-sm font-bold tracking-wide">
-                  Lihat Karya
-                </span>
+                Lihat Karya
                 <ArrowRight size={16} className="opacity-70" />
               </button>
+            </div>
+
+            {socials.length > 0 && (
+              <div className="flex gap-3 md:gap-4 items-center flex-wrap">
+                {socials.map((social) => (
+                  <a
+                    key={social.id}
+                    href={social.url || "#"}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`Buka ${social.title || "link social"} di tab baru`}
+                    className={`flex items-center gap-2 px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${focusRing} ${
+                      isDark
+                        ? "bg-white/5 border-white/10 hover:bg-white/10 text-white"
+                        : "bg-white/60 border-white/40 hover:bg-white text-slate-800"
+                    }`}
+                  >
+                    <span className="text-xs md:text-sm font-bold tracking-wide">
+                      {social.title || "Link"}
+                    </span>
+                    <ExternalLink size={16} className="opacity-70" />
+                  </a>
+                ))}
+              </div>
             )}
           </div>
         </motion.div>
