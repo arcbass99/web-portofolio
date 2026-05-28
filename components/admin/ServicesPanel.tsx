@@ -44,6 +44,11 @@ export function ServicesPanel({
   onEditService,
   onSaveService,
 }: ServicesPanelProps) {
+  const serviceIconInput = sDriveId.trim();
+  const serviceIconPreviewUrl = serviceIconInput
+    ? formatMediaUrl(serviceIconInput, 256)
+    : "";
+
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <h1 className="text-3xl md:text-4xl font-black mb-8 text-white">
@@ -110,6 +115,27 @@ export function ServicesPanel({
                 placeholder="ID Drive Ikon"
                 className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
               />
+
+              {serviceIconInput && (
+                <div className="mt-4 rounded-3xl border border-white/10 bg-slate-950/40 p-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                    Preview Ikon
+                  </p>
+                  <div className="mt-3 flex items-center gap-4">
+                    <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-800">
+                      <img
+                        src={serviceIconPreviewUrl}
+                        alt="Preview ikon layanan"
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                    <p className="text-xs leading-relaxed text-slate-500">
+                      Pastikan ikon terlihat jelas di ukuran kecil sebelum
+                      layanan disimpan.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div>

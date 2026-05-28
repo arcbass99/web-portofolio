@@ -48,6 +48,15 @@ export function PortfolioPanel({
   onEditPortfolio,
   onSavePortfolio,
 }: PortfolioPanelProps) {
+  const mediaInput = pDriveId.trim();
+  const portfolioImagePreviewUrl = mediaInput
+    ? formatMediaUrl(mediaInput, 600)
+    : "";
+  const portfolioVideoPreviewUrl =
+    mediaInput.startsWith("http://") || mediaInput.startsWith("https://")
+      ? mediaInput
+      : `https://drive.google.com/file/d/${mediaInput}/preview`;
+
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <h1 className="text-3xl md:text-4xl font-black mb-8 text-white">
@@ -109,6 +118,34 @@ export function PortfolioPanel({
                   placeholder="ID Drive / Link Gambar"
                   className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                 />
+
+                {mediaInput && (
+                  <div className="mt-4 rounded-3xl border border-white/10 bg-slate-950/40 p-3">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                      Preview Media
+                    </p>
+                    <div className="mt-3 aspect-video overflow-hidden rounded-2xl bg-slate-800">
+                      {pMediaType === "video" ? (
+                        <iframe
+                          src={portfolioVideoPreviewUrl}
+                          title="Preview video portfolio"
+                          className="h-full w-full border-0"
+                          allow="autoplay"
+                        />
+                      ) : (
+                        <img
+                          src={portfolioImagePreviewUrl}
+                          alt="Preview media portfolio"
+                          className="h-full w-full object-cover"
+                        />
+                      )}
+                    </div>
+                    <p className="mt-3 text-xs leading-relaxed text-slate-500">
+                      Preview ini belum menyimpan data. Gunakan untuk memastikan
+                      media yang dipilih sudah sesuai.
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div>

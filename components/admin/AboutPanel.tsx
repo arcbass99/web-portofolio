@@ -1,6 +1,9 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
+
 import type { Dispatch, SetStateAction } from "react";
+import { formatMediaUrl } from "../../lib/media";
 
 type AboutPanelProps = {
   bannerUrl: string;
@@ -51,6 +54,25 @@ export function AboutPanel({
                 className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm"
                 placeholder="Paste ID Drive..."
               />
+
+              {bannerUrl.trim() && (
+                <div className="mt-4 rounded-3xl border border-white/10 bg-slate-950/40 p-3">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                    Preview Banner
+                  </p>
+                  <div className="mt-3 aspect-[4/3] overflow-hidden rounded-2xl bg-slate-800">
+                    <img
+                      src={formatMediaUrl(bannerUrl, 600)}
+                      alt="Preview banner profil"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <p className="mt-3 text-xs leading-relaxed text-slate-500">
+                    Preview ini membantu memastikan ID Drive banner sudah benar
+                    sebelum profil disimpan.
+                  </p>
+                </div>
+              )}
             </div>
 
             <div>
