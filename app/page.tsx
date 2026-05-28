@@ -43,8 +43,13 @@ export default function LandingPage() {
         supabase
           .from("portfolio")
           .select("*")
+          .order("sort_order", { ascending: true })
           .order("created_at", { ascending: false }),
-        supabase.from("services").select("*"),
+        supabase
+          .from("services")
+          .select("*")
+          .order("sort_order", { ascending: true })
+          .order("id", { ascending: true }),
       ]);
 
       if (aboutRes.error) throw aboutRes.error;

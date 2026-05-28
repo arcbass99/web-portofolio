@@ -71,6 +71,7 @@ export default function AdminDashboard() {
   const [pDesc, setPDesc] = useState("");
   const [pTags, setPTags] = useState("");
   const [pDriveId, setPDriveId] = useState("");
+  const [pSortOrder, setPSortOrder] = useState("100");
   const [pMediaType, setPMediaType] = useState<PortfolioMediaType>("image");
   const [editingPortfolioId, setEditingPortfolioId] = useState<number | null>(
     null,
@@ -79,6 +80,7 @@ export default function AdminDashboard() {
   const [sTitle, setSTitle] = useState("");
   const [sDescription, setSDescription] = useState("");
   const [sDriveId, setSDriveId] = useState("");
+  const [sSortOrder, setSSortOrder] = useState("100");
   const [sTargetUrl, setSTargetUrl] = useState("");
   const [editingServiceId, setEditingServiceId] = useState<number | null>(null);
 
@@ -169,6 +171,32 @@ export default function AdminDashboard() {
     setIsSidebarOpen(false);
   };
 
+  const sortPortfoliosByOrder = (items: PortfolioItem[]) => {
+    return [...items].sort((first, second) => {
+      const firstOrder = first.sort_order ?? 100;
+      const secondOrder = second.sort_order ?? 100;
+
+      if (firstOrder !== secondOrder) {
+        return firstOrder - secondOrder;
+      }
+
+      return second.id - first.id;
+    });
+  };
+
+  const sortServicesByOrder = (items: ServiceItem[]) => {
+    return [...items].sort((first, second) => {
+      const firstOrder = first.sort_order ?? 100;
+      const secondOrder = second.sort_order ?? 100;
+
+      if (firstOrder !== secondOrder) {
+        return firstOrder - secondOrder;
+      }
+
+      return first.id - second.id;
+    });
+  };
+
   const resetSocialForm = () => {
     setNewSocialTitle("");
     setNewSocialUrl("");
@@ -180,6 +208,7 @@ export default function AdminDashboard() {
     setPDesc("");
     setPTags("");
     setPDriveId("");
+    setPSortOrder("100");
     setPMediaType("image");
     setEditingPortfolioId(null);
   };
@@ -188,6 +217,7 @@ export default function AdminDashboard() {
     setSTitle("");
     setSDescription("");
     setSDriveId("");
+    setSSortOrder("100");
     setSTargetUrl("");
     setEditingServiceId(null);
   };
@@ -289,12 +319,20 @@ export default function AdminDashboard() {
       return;
     }
 
+    const parsedSortOrder = Number.parseInt(pSortOrder, 10);
+
+    if (!pSortOrder.trim() || Number.isNaN(parsedSortOrder)) {
+      showNotice("error", "Urutan tampil karya harus berupa angka.");
+      return;
+    }
+
     const payload = {
       title: pTitle.trim(),
       description: pDesc.trim(),
       tags: pTags.trim(),
       media_url: pDriveId.trim(),
       media_type: pMediaType,
+      sort_order: parsedSortOrder,
     };
 
     setSaving(true);
@@ -307,8 +345,10 @@ export default function AdminDashboard() {
         );
 
         setPortfolios((current) =>
-          current.map((portfolio) =>
-            portfolio.id === updatedPortfolio.id ? updatedPortfolio : portfolio,
+          sortPortfoliosByOrder(
+            current.map((portfolio) =>
+              portfolio.id === updatedPortfolio.id ? updatedPortfolio : portfolio,
+            ),
           ),
         );
         resetPortfolioForm();
@@ -318,7 +358,9 @@ export default function AdminDashboard() {
 
       const newPortfolio = await createPortfolio(payload);
 
-      setPortfolios((current) => [newPortfolio, ...current]);
+      setPortfolios((current) =>
+        sortPortfoliosByOrder([...current, newPortfolio]),
+      );
       resetPortfolioForm();
       showNotice("success", "Karya berhasil ditambahkan.");
     } catch (error) {
@@ -334,6 +376,7 @@ export default function AdminDashboard() {
     setPDesc(portfolio.description || "");
     setPTags(portfolio.tags || "");
     setPDriveId(portfolio.media_url || "");
+    setPSortOrder(String(portfolio.sort_order ?? 100));
     setPMediaType(portfolio.media_type === "video" ? "video" : "image");
     setNotice(null);
   };
@@ -341,6 +384,13 @@ export default function AdminDashboard() {
   const handleSaveService = async () => {
     if (!sTitle.trim() || !sTargetUrl.trim()) {
       showNotice("error", "Judul layanan dan link target wajib diisi.");
+      return;
+    }
+
+    const parsedSortOrder = Number.parseInt(sSortOrder, 10);
+
+    if (!sSortOrder.trim() || Number.isNaN(parsedSortOrder)) {
+      showNotice("error", "Urutan tampil layanan harus berupa angka.");
       return;
     }
 
@@ -356,6 +406,7 @@ export default function AdminDashboard() {
       description: sDescription.trim(),
       image_url: sDriveId.trim(),
       target_url: normalizedUrl,
+      sort_order: parsedSortOrder,
     };
 
     setSaving(true);
@@ -365,8 +416,10 @@ export default function AdminDashboard() {
         const updatedService = await updateService(editingServiceId, payload);
 
         setServices((current) =>
-          current.map((service) =>
-            service.id === updatedService.id ? updatedService : service,
+          sortServicesByOrder(
+            current.map((service) =>
+              service.id === updatedService.id ? updatedService : service,
+            ),
           ),
         );
         resetServiceForm();
@@ -376,7 +429,7 @@ export default function AdminDashboard() {
 
       const newService = await createService(payload);
 
-      setServices((current) => [...current, newService]);
+      setServices((current) => sortServicesByOrder([...current, newService]));
       resetServiceForm();
       showNotice("success", "Layanan berhasil ditambahkan.");
     } catch (error) {
@@ -391,6 +444,7 @@ export default function AdminDashboard() {
     setSTitle(service.title || "");
     setSDescription(service.description || "");
     setSDriveId(service.image_url || "");
+    setSSortOrder(String(service.sort_order ?? 100));
     setSTargetUrl(service.target_url || "");
     setNotice(null);
   };
@@ -491,12 +545,14 @@ export default function AdminDashboard() {
               pDriveId={pDriveId}
               pMediaType={pMediaType}
               portfolios={portfolios}
+              pSortOrder={pSortOrder}
               pTags={pTags}
               pTitle={pTitle}
               saving={saving}
               setPDesc={setPDesc}
               setPDriveId={setPDriveId}
               setPMediaType={setPMediaType}
+              setPSortOrder={setPSortOrder}
               setPTags={setPTags}
               setPTitle={setPTitle}
               onCancelEdit={resetPortfolioForm}
@@ -520,8 +576,10 @@ export default function AdminDashboard() {
               services={services}
               sDescription={sDescription}
               sDriveId={sDriveId}
+              sSortOrder={sSortOrder}
               setSDescription={setSDescription}
               setSDriveId={setSDriveId}
+              setSSortOrder={setSSortOrder}
               setSTargetUrl={setSTargetUrl}
               setSTitle={setSTitle}
               sTargetUrl={sTargetUrl}

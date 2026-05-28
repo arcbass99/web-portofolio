@@ -14,12 +14,14 @@ type PortfolioPanelProps = {
   pDriveId: string;
   pMediaType: PortfolioMediaType;
   portfolios: PortfolioItem[];
+  pSortOrder: string;
   pTags: string;
   pTitle: string;
   saving: boolean;
   setPDesc: Dispatch<SetStateAction<string>>;
   setPDriveId: Dispatch<SetStateAction<string>>;
   setPMediaType: Dispatch<SetStateAction<PortfolioMediaType>>;
+  setPSortOrder: Dispatch<SetStateAction<string>>;
   setPTags: Dispatch<SetStateAction<string>>;
   setPTitle: Dispatch<SetStateAction<string>>;
   onCancelEdit: () => void;
@@ -35,12 +37,14 @@ export function PortfolioPanel({
   pDriveId,
   pMediaType,
   portfolios,
+  pSortOrder,
   pTags,
   pTitle,
   saving,
   setPDesc,
   setPDriveId,
   setPMediaType,
+  setPSortOrder,
   setPTags,
   setPTitle,
   onCancelEdit,
@@ -146,6 +150,28 @@ export function PortfolioPanel({
                     </p>
                   </div>
                 )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="portfolioSortOrder"
+                  className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
+                >
+                  Urutan Tampil
+                </label>
+                <input
+                  id="portfolioSortOrder"
+                  type="number"
+                  inputMode="numeric"
+                  value={pSortOrder}
+                  onChange={(event) => setPSortOrder(event.target.value)}
+                  placeholder="10"
+                  className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                />
+                <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                  Angka lebih kecil tampil lebih dulu. Gunakan kelipatan 10
+                  seperti 10, 20, 30 agar mudah menyisipkan karya baru.
+                </p>
               </div>
 
               <div>
@@ -262,6 +288,9 @@ export function PortfolioPanel({
                   </h4>
                   <p className="text-[10px] uppercase font-black text-cyan-500 tracking-tighter truncate">
                     {portfolio.tags || "Project"}
+                  </p>
+                  <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-slate-600">
+                    Urutan {portfolio.sort_order ?? 100}
                   </p>
                 </div>
 

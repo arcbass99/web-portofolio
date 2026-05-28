@@ -33,6 +33,7 @@ export type PortfolioItem = {
   tags: string | null;
   media_url: string | null;
   media_type: string | null;
+  sort_order: number | null;
 };
 
 export type ServiceItem = {
@@ -41,6 +42,7 @@ export type ServiceItem = {
   description: string | null;
   image_url: string | null;
   target_url: string | null;
+  sort_order: number | null;
 };
 
 export type ItemWithId = {
