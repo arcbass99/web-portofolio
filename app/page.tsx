@@ -7,6 +7,7 @@ import { PUBLIC_FOCUS_RING } from "../lib/constants";
 import type {
   AboutMe,
   PortfolioItem,
+  ProfileHighlight,
   ServiceItem,
   SocialLink,
 } from "../types/content";
@@ -19,6 +20,7 @@ import { PublicNavbar } from "../components/public/PublicNavbar";
 import { HeroSection } from "../components/public/HeroSection";
 import { PortfolioSection } from "../components/public/PortfolioSection";
 import { ServicesSection } from "../components/public/ServicesSection";
+import { TrackRecordSection } from "../components/public/TrackRecordSection";
 
 export default function LandingPage() {
   const [loading, setLoading] = useState(true);
@@ -26,6 +28,7 @@ export default function LandingPage() {
   const [socials, setSocials] = useState<SocialLink[]>([]);
   const [portfolios, setPortfolios] = useState<PortfolioItem[]>([]);
   const [services, setServices] = useState<ServiceItem[]>([]);
+  const [highlights, setHighlights] = useState<ProfileHighlight[]>([]);
   const [publicError, setPublicError] = useState<string | null>(null);
 
   const [isDark, setIsDark] = useState(false);
@@ -37,30 +40,38 @@ export default function LandingPage() {
     try {
       setPublicError(null);
 
-      const [aboutRes, socialRes, portRes, servRes] = await Promise.all([
-        supabase.from("about_me").select("*").maybeSingle(),
-        supabase.from("social_links").select("*"),
-        supabase
-          .from("portfolio")
-          .select("*")
-          .order("sort_order", { ascending: true })
-          .order("created_at", { ascending: false }),
-        supabase
-          .from("services")
-          .select("*")
-          .order("sort_order", { ascending: true })
-          .order("id", { ascending: true }),
-      ]);
+      const [aboutRes, socialRes, portRes, servRes, highlightRes] =
+        await Promise.all([
+          supabase.from("about_me").select("*").maybeSingle(),
+          supabase.from("social_links").select("*"),
+          supabase
+            .from("portfolio")
+            .select("*")
+            .order("sort_order", { ascending: true })
+            .order("created_at", { ascending: false }),
+          supabase
+            .from("services")
+            .select("*")
+            .order("sort_order", { ascending: true })
+            .order("id", { ascending: true }),
+          supabase
+            .from("profile_highlights")
+            .select("*")
+            .order("sort_order", { ascending: true })
+            .order("id", { ascending: true }),
+        ]);
 
       if (aboutRes.error) throw aboutRes.error;
       if (socialRes.error) throw socialRes.error;
       if (portRes.error) throw portRes.error;
       if (servRes.error) throw servRes.error;
+      if (highlightRes.error) throw highlightRes.error;
 
       setAbout(aboutRes.data as AboutMe | null);
       setSocials((socialRes.data || []) as SocialLink[]);
       setPortfolios((portRes.data || []) as PortfolioItem[]);
       setServices((servRes.data || []) as ServiceItem[]);
+      setHighlights((highlightRes.data || []) as ProfileHighlight[]);
     } catch (error) {
       setPublicError(
         getErrorMessage(error, "Data belum berhasil dimuat sepenuhnya."),
@@ -198,6 +209,13 @@ export default function LandingPage() {
           focusRing={focusRing}
           onScrollToPortfolio={() => scrollToSection("portfolio")}
         />
+
+        {highlights.length > 0 && (
+          <TrackRecordSection
+            highlights={highlights}
+            isDark={isDark}
+          />
+        )}
 
         <PortfolioSection
           portfolios={portfolios}

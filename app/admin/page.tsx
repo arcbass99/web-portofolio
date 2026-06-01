@@ -9,7 +9,7 @@ import {
   type SetStateAction,
 } from "react";
 import { useRouter } from "next/navigation";
-import { Briefcase, Link as LinkIcon, User, Wrench } from "lucide-react";
+import { Award, Briefcase, Link as LinkIcon, User, Wrench } from "lucide-react";
 import { AboutPanel } from "../../components/admin/AboutPanel";
 import { AdminBottomNav } from "../../components/admin/AdminBottomNav";
 import { AdminLoadingScreen } from "../../components/admin/AdminLoadingScreen";
@@ -19,8 +19,10 @@ import { AdminSidebar } from "../../components/admin/AdminSidebar";
 import { PortfolioPanel } from "../../components/admin/PortfolioPanel";
 import { ServicesPanel } from "../../components/admin/ServicesPanel";
 import { SocialsPanel } from "../../components/admin/SocialsPanel";
+import { TrackRecordPanel } from "../../components/admin/TrackRecordPanel";
 import {
   createPortfolio,
+  createProfileHighlight,
   createService,
   createSocial,
   deleteAdminItem,
@@ -29,6 +31,7 @@ import {
   saveAbout,
   signOutGlobally,
   updatePortfolio,
+  updateProfileHighlight,
   updateService,
   updateSocial,
 } from "../../lib/admin-data";
@@ -44,6 +47,8 @@ import type {
   NoticeType,
   PortfolioItem,
   PortfolioMediaType,
+  ProfileHighlight,
+  ProfileHighlightCategory,
   ServiceItem,
   SocialLink,
 } from "../../types/content";
@@ -62,6 +67,7 @@ export default function AdminDashboard() {
   const [socials, setSocials] = useState<SocialLink[]>([]);
   const [portfolios, setPortfolios] = useState<PortfolioItem[]>([]);
   const [services, setServices] = useState<ServiceItem[]>([]);
+  const [highlights, setHighlights] = useState<ProfileHighlight[]>([]);
 
   const [newSocialTitle, setNewSocialTitle] = useState("");
   const [newSocialUrl, setNewSocialUrl] = useState("");
@@ -83,6 +89,17 @@ export default function AdminDashboard() {
   const [sSortOrder, setSSortOrder] = useState("100");
   const [sTargetUrl, setSTargetUrl] = useState("");
   const [editingServiceId, setEditingServiceId] = useState<number | null>(null);
+
+  const [hCategory, setHCategory] =
+    useState<ProfileHighlightCategory>("education");
+  const [hPeriod, setHPeriod] = useState("");
+  const [hTitle, setHTitle] = useState("");
+  const [hDescription, setHDescription] = useState("");
+  const [hImageUrl, setHImageUrl] = useState("");
+  const [hSortOrder, setHSortOrder] = useState("100");
+  const [editingHighlightId, setEditingHighlightId] = useState<number | null>(
+    null,
+  );
 
   const [saving, setSaving] = useState(false);
   const focusRing = ADMIN_FOCUS_RING;
@@ -117,6 +134,7 @@ export default function AdminDashboard() {
       setSocials(adminData.socials);
       setPortfolios(adminData.portfolios);
       setServices(adminData.services);
+      setHighlights(adminData.highlights);
     } catch (error) {
       showNotice(
         "error",
@@ -160,6 +178,7 @@ export default function AdminDashboard() {
     () => [
       { id: "about", label: "Profil", icon: <User size={20} /> },
       { id: "socials", label: "Socials", icon: <LinkIcon size={20} /> },
+      { id: "track_record", label: "Track Record", icon: <Award size={20} /> },
       { id: "portfolio", label: "Karya", icon: <Briefcase size={20} /> },
       { id: "services", label: "Layanan", icon: <Wrench size={20} /> },
     ],
@@ -197,6 +216,33 @@ export default function AdminDashboard() {
     });
   };
 
+  const sortHighlightsByOrder = (items: ProfileHighlight[]) => {
+    const categoryOrder: Record<ProfileHighlightCategory, number> = {
+      education: 1,
+      achievement: 2,
+      leadership: 3,
+      skill: 4,
+    };
+
+    return [...items].sort((first, second) => {
+      const firstCategory = categoryOrder[first.category] ?? 99;
+      const secondCategory = categoryOrder[second.category] ?? 99;
+
+      if (firstCategory !== secondCategory) {
+        return firstCategory - secondCategory;
+      }
+
+      const firstOrder = first.sort_order ?? 100;
+      const secondOrder = second.sort_order ?? 100;
+
+      if (firstOrder !== secondOrder) {
+        return firstOrder - secondOrder;
+      }
+
+      return first.id - second.id;
+    });
+  };
+
   const resetSocialForm = () => {
     setNewSocialTitle("");
     setNewSocialUrl("");
@@ -220,6 +266,16 @@ export default function AdminDashboard() {
     setSSortOrder("100");
     setSTargetUrl("");
     setEditingServiceId(null);
+  };
+
+  const resetHighlightForm = () => {
+    setHCategory("education");
+    setHPeriod("");
+    setHTitle("");
+    setHDescription("");
+    setHImageUrl("");
+    setHSortOrder("100");
+    setEditingHighlightId(null);
   };
 
   const handleSignOut = async () => {
@@ -449,6 +505,80 @@ export default function AdminDashboard() {
     setNotice(null);
   };
 
+  const handleSaveHighlight = async () => {
+    if (!hTitle.trim()) {
+      showNotice("error", "Judul track record wajib diisi.");
+      return;
+    }
+
+    const parsedSortOrder = Number.parseInt(hSortOrder, 10);
+
+    if (!hSortOrder.trim() || Number.isNaN(parsedSortOrder)) {
+      showNotice("error", "Urutan tampil track record harus berupa angka.");
+      return;
+    }
+
+    const isSkill = hCategory === "skill";
+    const payload = {
+      category: hCategory,
+      period: isSkill ? "" : hPeriod.trim(),
+      title: hTitle.trim(),
+      description: isSkill ? "" : hDescription.trim(),
+      image_url: isSkill ? "" : hImageUrl.trim(),
+      sort_order: parsedSortOrder,
+    };
+
+    setSaving(true);
+
+    try {
+      if (editingHighlightId !== null) {
+        const updatedHighlight = await updateProfileHighlight(
+          editingHighlightId,
+          payload,
+        );
+
+        setHighlights((current) =>
+          sortHighlightsByOrder(
+            current.map((highlight) =>
+              highlight.id === updatedHighlight.id
+                ? updatedHighlight
+                : highlight,
+            ),
+          ),
+        );
+        resetHighlightForm();
+        showNotice("success", "Track record berhasil diperbarui.");
+        return;
+      }
+
+      const newHighlight = await createProfileHighlight(payload);
+
+      setHighlights((current) =>
+        sortHighlightsByOrder([...current, newHighlight]),
+      );
+      resetHighlightForm();
+      showNotice("success", "Track record berhasil ditambahkan.");
+    } catch (error) {
+      showNotice(
+        "error",
+        `Gagal menyimpan track record: ${getErrorMessage(error)}`,
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleEditHighlight = (highlight: ProfileHighlight) => {
+    setEditingHighlightId(highlight.id);
+    setHCategory(highlight.category);
+    setHPeriod(highlight.period || "");
+    setHTitle(highlight.title || "");
+    setHDescription(highlight.description || "");
+    setHImageUrl(highlight.image_url || "");
+    setHSortOrder(String(highlight.sort_order ?? 100));
+    setNotice(null);
+  };
+
   const deleteItem = async <T extends ItemWithId>(
     table: EditableTable,
     id: number,
@@ -534,6 +664,37 @@ export default function AdminDashboard() {
               }}
               onEditSocial={handleEditSocial}
               onSaveSocial={handleSaveSocial}
+            />
+          )}
+
+          {activeTab === "track_record" && (
+            <TrackRecordPanel
+              editingHighlightId={editingHighlightId}
+              focusRing={focusRing}
+              hCategory={hCategory}
+              hDescription={hDescription}
+              hImageUrl={hImageUrl}
+              highlights={highlights}
+              hPeriod={hPeriod}
+              hSortOrder={hSortOrder}
+              hTitle={hTitle}
+              saving={saving}
+              setHCategory={setHCategory}
+              setHDescription={setHDescription}
+              setHImageUrl={setHImageUrl}
+              setHPeriod={setHPeriod}
+              setHSortOrder={setHSortOrder}
+              setHTitle={setHTitle}
+              onCancelEdit={resetHighlightForm}
+              onDeleteHighlight={(highlight) => {
+                void deleteItem<ProfileHighlight>(
+                  "profile_highlights",
+                  highlight.id,
+                  setHighlights,
+                );
+              }}
+              onEditHighlight={handleEditHighlight}
+              onSaveHighlight={handleSaveHighlight}
             />
           )}
 

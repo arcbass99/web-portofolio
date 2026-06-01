@@ -3,6 +3,8 @@ import type {
   EditableTable,
   PortfolioItem,
   PortfolioMediaType,
+  ProfileHighlight,
+  ProfileHighlightCategory,
   ServiceItem,
   SocialLink,
 } from "../types/content";
@@ -13,6 +15,7 @@ export type AdminData = {
   socials: SocialLink[];
   portfolios: PortfolioItem[];
   services: ServiceItem[];
+  highlights: ProfileHighlight[];
 };
 
 type AboutPayload = {
@@ -43,6 +46,15 @@ type ServicePayload = {
   sort_order: number;
 };
 
+type ProfileHighlightPayload = {
+  category: ProfileHighlightCategory;
+  period: string;
+  title: string;
+  description: string;
+  image_url: string;
+  sort_order: number;
+};
+
 export const getAdminSession = async () => {
   const {
     data: { session },
@@ -61,31 +73,39 @@ export const signOutGlobally = async () => {
 };
 
 export const fetchAdminData = async (): Promise<AdminData> => {
-  const [aboutRes, socialRes, portRes, servRes] = await Promise.all([
-    supabase.from("about_me").select("*").maybeSingle(),
-    supabase.from("social_links").select("*"),
-    supabase
-      .from("portfolio")
-      .select("*")
-      .order("sort_order", { ascending: true })
-      .order("created_at", { ascending: false }),
-    supabase
-      .from("services")
-      .select("*")
-      .order("sort_order", { ascending: true })
-      .order("id", { ascending: true }),
-  ]);
+  const [aboutRes, socialRes, portRes, servRes, highlightRes] =
+    await Promise.all([
+      supabase.from("about_me").select("*").maybeSingle(),
+      supabase.from("social_links").select("*"),
+      supabase
+        .from("portfolio")
+        .select("*")
+        .order("sort_order", { ascending: true })
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("services")
+        .select("*")
+        .order("sort_order", { ascending: true })
+        .order("id", { ascending: true }),
+      supabase
+        .from("profile_highlights")
+        .select("*")
+        .order("sort_order", { ascending: true })
+        .order("id", { ascending: true }),
+    ]);
 
   if (aboutRes.error) throw aboutRes.error;
   if (socialRes.error) throw socialRes.error;
   if (portRes.error) throw portRes.error;
   if (servRes.error) throw servRes.error;
+  if (highlightRes.error) throw highlightRes.error;
 
   return {
     about: aboutRes.data as AboutMe | null,
     socials: (socialRes.data || []) as SocialLink[],
     portfolios: (portRes.data || []) as PortfolioItem[],
     services: (servRes.data || []) as ServiceItem[],
+    highlights: (highlightRes.data || []) as ProfileHighlight[],
   };
 };
 
@@ -195,6 +215,43 @@ export const updateService = async (id: number, payload: ServicePayload) => {
   if (!data) throw new Error("Data layanan yang diperbarui tidak ditemukan.");
 
   return data as ServiceItem;
+};
+
+
+export const createProfileHighlight = async (
+  payload: ProfileHighlightPayload,
+) => {
+  const { data, error } = await supabase
+    .from("profile_highlights")
+    .insert([payload])
+    .select()
+    .single();
+
+  if (error) throw error;
+  if (!data) {
+    throw new Error("Data track record baru tidak berhasil dikembalikan.");
+  }
+
+  return data as ProfileHighlight;
+};
+
+export const updateProfileHighlight = async (
+  id: number,
+  payload: ProfileHighlightPayload,
+) => {
+  const { data, error } = await supabase
+    .from("profile_highlights")
+    .update(payload)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  if (!data) {
+    throw new Error("Data track record yang diperbarui tidak ditemukan.");
+  }
+
+  return data as ProfileHighlight;
 };
 
 export const deleteAdminItem = async (table: EditableTable, id: number) => {
