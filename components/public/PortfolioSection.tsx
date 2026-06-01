@@ -58,19 +58,19 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
   };
 
   return (
-    <section id="portfolio" className="py-24 md:py-32 px-6 lg:px-12 xl:px-24">
+    <section id="portfolio" className="py-16 md:py-24 px-6 lg:px-12 xl:px-24">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-14 gap-4">
           <div>
             <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">
-              Selected Works
+              Karya Pilihan
             </h2>
             <p
               className={`text-base md:text-lg font-medium ${
                 isDark ? "text-slate-400" : "text-slate-500"
               }`}
             >
-              Kumpulan proyek dan desain saya.
+              Kumpulan karya visual, desain, dan eksperimen digital yang sedang saya kembangkan.
             </p>
           </div>
 
@@ -84,7 +84,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
         </div>
 
         {portfolios.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {portfolios.map((portfolio, index) => (
               <motion.article
                 key={portfolio.id}

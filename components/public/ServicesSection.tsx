@@ -20,22 +20,22 @@ export function ServicesSection({
   return (
     <section
       id="services"
-      className="py-24 md:py-32 px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto"
+      className="py-16 md:py-24 px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto"
     >
-      <div className="mb-12 md:mb-20">
+      <div className="mb-10 md:mb-14">
         <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">
-          Produk
+          Produk Digital
         </h2>
         <p
           className={`text-base md:text-lg font-medium ${
             isDark ? "text-slate-400" : "text-slate-500"
           }`}
         >
-          Produk, layanan, dan penawaran digital yang bisa kamu akses.
+          Produk, layanan, dan penawaran digital yang sedang saya kembangkan.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-7">
         {services.map((service, index) => (
           <motion.a
             key={service.id}

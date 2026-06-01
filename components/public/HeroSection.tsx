@@ -14,7 +14,6 @@ type HeroSectionProps = {
   isDark: boolean;
   isExternalContact: boolean;
   focusRing: string;
-  onScrollToPortfolio: () => void;
 };
 
 export function HeroSection({
@@ -25,14 +24,13 @@ export function HeroSection({
   isDark,
   isExternalContact,
   focusRing,
-  onScrollToPortfolio,
 }: HeroSectionProps) {
   return (
     <section
       id="home"
-      className="min-h-screen flex flex-col justify-center px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto py-20 pt-32"
+      className="min-h-[88vh] flex flex-col justify-center px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto py-16 pt-28 md:pt-32"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -46,11 +44,11 @@ export function HeroSection({
                 : "bg-teal-500/10 text-teal-600 border-teal-500/20"
             }`}
           >
-            Available for Projects
+            Terbuka untuk Kolaborasi
           </span>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[1.1] mb-6 md:mb-8">
-            {about?.headline || "Membangun Visi Digital Anda"}
+            {about?.headline || "Belajar, berkarya, dan membangun solusi digital."}
           </h1>
 
           <p
@@ -59,7 +57,7 @@ export function HeroSection({
             }`}
           >
             {about?.description ||
-              "Saya merancang dan mengembangkan antarmuka website premium untuk membantu skala bisnis Anda."}
+              "Saya memadukan minat pada biologi, riset, desain visual, dan teknologi untuk membuat karya digital yang rapi, berguna, dan terus berkembang."}
           </p>
 
           <div className="flex flex-col gap-5">
@@ -78,19 +76,6 @@ export function HeroSection({
                 {contactLabel}
                 <ArrowRight size={16} />
               </a>
-
-              <button
-                type="button"
-                onClick={onScrollToPortfolio}
-                className={`inline-flex items-center gap-2 px-5 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm font-bold text-xs md:text-sm hover:-translate-y-1 transition-all duration-300 ${focusRing} ${
-                  isDark
-                    ? "bg-white/5 border-white/10 hover:bg-white/10 text-white"
-                    : "bg-white/60 border-white/40 hover:bg-white text-slate-800"
-                }`}
-              >
-                Lihat Karya
-                <ArrowRight size={16} className="opacity-70" />
-              </button>
             </div>
 
             {socials.length > 0 && (
@@ -148,7 +133,7 @@ export function HeroSection({
                     NAFIS<span className="text-teal-400">.</span>
                   </p>
                   <p className="mt-3 text-xs md:text-sm font-bold uppercase tracking-[0.25em] text-slate-400">
-                    Personal Portfolio
+                    Track Record & Karya
                   </p>
                 </div>
               )}

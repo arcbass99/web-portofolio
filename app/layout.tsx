@@ -8,10 +8,10 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 const siteUrl = "https://im-nafis.vercel.app";
-const siteName = "Nafis Portfolio";
-const siteTitle = "Nafis — Personal Portfolio";
+const siteName = "Im Nafis";
+const siteTitle = "Nafis — Profil, Track Record & Karya Digital";
 const siteDescription =
-  "Portfolio pribadi Nafis yang menampilkan profil, karya pilihan, layanan, dan produk digital yang sedang dikembangkan.";
+  "Profil digital Nafis yang menampilkan perjalanan akademik, track record, karya pilihan, produk digital, dan ruang kolaborasi kreatif.";
 const ogImage = "/og-image.png";
 
 export const metadata: Metadata = {
@@ -22,35 +22,36 @@ export const metadata: Metadata = {
   },
   description: siteDescription,
   applicationName: siteName,
-  authors: [{ name: "Nafis" }],
-  creator: "Nafis",
-  publisher: "Nafis",
+  authors: [{ name: "Muhammad Nafis Alfa Rizky" }],
+  creator: "Muhammad Nafis Alfa Rizky",
+  publisher: "Muhammad Nafis Alfa Rizky",
   keywords: [
     "Nafis",
-    "portfolio Nafis",
-    "personal portfolio",
-    "web portfolio",
-    "portfolio developer",
-    "portfolio digital",
+    "Muhammad Nafis Alfa Rizky",
+    "portfolio",
+    "track record",
+    "desain visual",
     "produk digital",
-    "layanan digital",
+    "S1 Biologi UNESA",
   ],
-  alternates: {
-    canonical: "/",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
   },
   openGraph: {
-    title: siteTitle,
-    description: siteDescription,
+    type: "website",
+    locale: "id_ID",
     url: siteUrl,
     siteName,
-    locale: "id_ID",
-    type: "website",
+    title: siteTitle,
+    description: siteDescription,
     images: [
       {
         url: ogImage,
         width: 1200,
         height: 630,
-        alt: "Nafis Personal Portfolio",
+        alt: "Nafis — Profil, Track Record, dan Karya Digital",
       },
     ],
   },
@@ -60,27 +61,12 @@ export const metadata: Metadata = {
     description: siteDescription,
     images: [ogImage],
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
-  },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0F172A",
+  themeColor: "#0f766e",
 };
 
 export default function RootLayout({
@@ -90,11 +76,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className="scroll-smooth" data-scroll-behavior="smooth">
-      <body
-        className={`${jakarta.className} antialiased bg-slate-50 text-slate-900`}
-      >
-        {children}
-      </body>
+      <body className={jakarta.className}>{children}</body>
     </html>
   );
 }

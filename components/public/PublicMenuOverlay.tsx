@@ -6,6 +6,7 @@ import { X } from "lucide-react";
 type PublicMenuOverlayProps = {
   isDark: boolean;
   isOpen: boolean;
+  highlightsCount: number;
   servicesCount: number;
   focusRing: string;
   onClose: () => void;
@@ -15,6 +16,7 @@ type PublicMenuOverlayProps = {
 export function PublicMenuOverlay({
   isDark,
   isOpen,
+  highlightsCount,
   servicesCount,
   focusRing,
   onClose,
@@ -22,8 +24,9 @@ export function PublicMenuOverlay({
 }: PublicMenuOverlayProps) {
   const menuItems = [
     { id: "home", label: "Profil Utama" },
-    { id: "portfolio", label: "Selected Works" },
-    ...(servicesCount > 0 ? [{ id: "services", label: "Produk" }] : []),
+    ...(highlightsCount > 0 ? [{ id: "track-record", label: "Track Record" }] : []),
+    { id: "portfolio", label: "Karya Pilihan" },
+    ...(servicesCount > 0 ? [{ id: "services", label: "Produk Digital" }] : []),
   ];
 
   return (
@@ -54,14 +57,14 @@ export function PublicMenuOverlay({
             <X size={24} />
           </button>
 
-          <div className="flex flex-col gap-6 md:gap-8 text-center font-black tracking-tight w-full px-6">
+          <div className="flex flex-col gap-5 md:gap-7 text-center font-black tracking-tight w-full px-6">
             {menuItems.map((item, index) => (
               <motion.button
                 type="button"
                 key={item.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.08 }}
                 onClick={() => onNavigate(item.id)}
                 aria-label={`Buka bagian ${item.label}`}
                 className={`text-4xl md:text-6xl rounded-2xl hover:-translate-y-1 transition-all ${focusRing} ${
@@ -75,10 +78,10 @@ export function PublicMenuOverlay({
             <motion.a
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 0.35 }}
               href="/admin"
               aria-label="Masuk ke console admin"
-              className={`text-xs md:text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-teal-500 mt-12 rounded-lg ${focusRing}`}
+              className={`text-xs md:text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-teal-500 mt-10 rounded-lg ${focusRing}`}
             >
               — Masuk Console Admin —
             </motion.a>

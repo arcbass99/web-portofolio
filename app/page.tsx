@@ -155,7 +155,7 @@ export default function LandingPage() {
   const isInstagramContact =
     contactTitle.includes("instagram") || contactTitle.includes("ig");
 
-  const contactHref = primaryContact?.url || "#portfolio";
+  const contactHref = primaryContact?.url || "#track-record";
   const isExternalContact = Boolean(primaryContact?.url);
   const contactLabel = primaryContact
     ? isWhatsappContact
@@ -165,7 +165,7 @@ export default function LandingPage() {
         : isInstagramContact
           ? "Hubungi via Instagram"
           : "Hubungi Saya"
-    : "Lihat Karya";
+    : "Jelajahi Profil";
 
   if (loading) {
     return <PublicLoadingScreen />;
@@ -190,6 +190,7 @@ export default function LandingPage() {
       <PublicMenuOverlay
         isDark={isDark}
         isOpen={isMenuOpen}
+        highlightsCount={highlights.length}
         servicesCount={services.length}
         focusRing={focusRing}
         onClose={() => setIsMenuOpen(false)}
@@ -207,7 +208,6 @@ export default function LandingPage() {
           isDark={isDark}
           isExternalContact={isExternalContact}
           focusRing={focusRing}
-          onScrollToPortfolio={() => scrollToSection("portfolio")}
         />
 
         {highlights.length > 0 && (
