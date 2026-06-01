@@ -23,7 +23,7 @@ export function PublicMenuOverlay({
   onNavigate,
 }: PublicMenuOverlayProps) {
   const menuItems = [
-    { id: "home", label: "Profil Utama" },
+    { id: "home", label: "I’m Nafis" },
     ...(highlightsCount > 0 ? [{ id: "track-record", label: "Track Record" }] : []),
     { id: "portfolio", label: "Karya Pilihan" },
     ...(servicesCount > 0 ? [{ id: "services", label: "Produk Digital" }] : []),
@@ -57,7 +57,7 @@ export function PublicMenuOverlay({
             <X size={24} />
           </button>
 
-          <div className="flex flex-col gap-5 md:gap-7 text-center font-black tracking-tight w-full px-6">
+          <div className="flex flex-col gap-4 md:gap-6 text-center font-black tracking-tight w-full px-6">
             {menuItems.map((item, index) => (
               <motion.button
                 type="button"
@@ -67,7 +67,7 @@ export function PublicMenuOverlay({
                 transition={{ delay: index * 0.08 }}
                 onClick={() => onNavigate(item.id)}
                 aria-label={`Buka bagian ${item.label}`}
-                className={`text-4xl md:text-6xl rounded-2xl hover:-translate-y-1 transition-all ${focusRing} ${
+                className={`text-4xl md:text-5xl lg:text-6xl rounded-2xl hover:-translate-y-1 transition-all ${focusRing} ${
                   isDark ? "hover:text-cyan-400" : "hover:text-teal-600"
                 }`}
               >
@@ -81,7 +81,7 @@ export function PublicMenuOverlay({
               transition={{ delay: 0.35 }}
               href="/admin"
               aria-label="Masuk ke console admin"
-              className={`text-xs md:text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-teal-500 mt-10 rounded-lg ${focusRing}`}
+              className={`text-xs md:text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-teal-500 mt-8 md:mt-10 rounded-lg ${focusRing}`}
             >
               — Masuk Console Admin —
             </motion.a>

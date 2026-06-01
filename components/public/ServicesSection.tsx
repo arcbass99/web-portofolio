@@ -20,10 +20,10 @@ export function ServicesSection({
   return (
     <section
       id="services"
-      className="py-16 md:py-24 px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto"
+      className="py-14 md:py-20 lg:py-24 px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto"
     >
-      <div className="mb-10 md:mb-14">
-        <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">
+      <div className="mb-8 md:mb-12">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-2 md:mb-4">
           Produk Digital
         </h2>
         <p
@@ -35,7 +35,7 @@ export function ServicesSection({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-7">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
         {services.map((service, index) => (
           <motion.a
             key={service.id}
@@ -47,7 +47,7 @@ export function ServicesSection({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ delay: index * 0.1 }}
-            className={`p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:min-h-[18rem] ${focusRing} ${
+            className={`p-5 md:p-8 rounded-[1.75rem] md:rounded-[2rem] border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:min-h-[16.5rem] ${focusRing} ${
               isDark
                 ? "bg-white/5 border-white/10 hover:border-cyan-500 hover:bg-white/10"
                 : "bg-white/50 border-white/60 hover:border-teal-500 hover:bg-white"
@@ -55,7 +55,7 @@ export function ServicesSection({
           >
             <div>
               <div
-                className={`relative w-16 h-16 md:w-24 md:h-24 mb-6 rounded-xl md:rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${
+                className={`relative w-14 h-14 md:w-20 md:h-20 mb-5 md:mb-6 rounded-xl md:rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${
                   isDark
                     ? "bg-black/50 border-white/10 group-hover:bg-cyan-900/30"
                     : "bg-white border-slate-100 group-hover:bg-teal-50"
@@ -82,7 +82,7 @@ export function ServicesSection({
                 )}
               </div>
 
-              <h3 className="text-xl md:text-2xl font-bold mb-3">
+              <h3 className="text-xl md:text-2xl font-bold mb-2 md:mb-3">
                 {service.title || "Produk"}
               </h3>
 

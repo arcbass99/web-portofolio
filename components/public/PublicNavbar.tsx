@@ -24,14 +24,14 @@ export function PublicNavbar({
         isDark ? "bg-black/20 border-white/5" : "bg-white/30 border-white/50"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-24 py-4 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-24 py-3.5 md:py-4 flex justify-between items-center">
         <button
           type="button"
-          className={`font-black text-2xl tracking-tighter cursor-pointer rounded-lg ${focusRing}`}
+          className={`font-black text-xl md:text-2xl tracking-tighter cursor-pointer rounded-lg ${focusRing}`}
           onClick={onLogoClick}
           aria-label="Kembali ke bagian profil utama"
         >
-          NAFIS
+          I’m Nafis
           <span className={isDark ? "text-cyan-400" : "text-teal-600"}>.</span>
         </button>
 

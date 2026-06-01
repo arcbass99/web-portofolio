@@ -8,8 +8,8 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 const siteUrl = "https://im-nafis.vercel.app";
-const siteName = "Im Nafis";
-const siteTitle = "Nafis — Profil, Track Record & Karya Digital";
+const siteName = "I’m Nafis";
+const siteTitle = "I’m Nafis — Profil, Track Record & Karya Digital";
 const siteDescription =
   "Profil digital Nafis yang menampilkan perjalanan akademik, track record, karya pilihan, produk digital, dan ruang kolaborasi kreatif.";
 const ogImage = "/og-image.png";
@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   creator: "Muhammad Nafis Alfa Rizky",
   publisher: "Muhammad Nafis Alfa Rizky",
   keywords: [
+    "I’m Nafis",
     "Nafis",
     "Muhammad Nafis Alfa Rizky",
     "portfolio",
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
         url: ogImage,
         width: 1200,
         height: 630,
-        alt: "Nafis — Profil, Track Record, dan Karya Digital",
+        alt: "I’m Nafis — Profil, Track Record, dan Karya Digital",
       },
     ],
   },

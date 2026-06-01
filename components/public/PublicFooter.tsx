@@ -19,11 +19,11 @@ export function PublicFooter({
 }: PublicFooterProps) {
   return (
     <footer
-      className={`py-16 md:py-24 px-6 text-center border-t backdrop-blur-sm ${
+      className={`py-14 md:py-20 lg:py-24 px-6 text-center border-t backdrop-blur-sm ${
         isDark ? "border-white/5 bg-black/20" : "border-white/50 bg-white/10"
       }`}
     >
-      <h2 className="text-3xl md:text-4xl lg:text-6xl font-black tracking-tight mb-8 md:mb-10">
+      <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-6 md:mb-8">
         Mari mulai kolaborasi.
       </h2>
 
@@ -32,7 +32,7 @@ export function PublicFooter({
         target={isExternalContact ? "_blank" : undefined}
         rel={isExternalContact ? "noreferrer" : undefined}
         aria-label={contactLabel}
-        className={`inline-flex items-center gap-2 px-8 py-3 md:px-10 md:py-4 rounded-full font-bold text-sm transition-all shadow-xl border ${focusRing} ${
+        className={`inline-flex items-center gap-2 px-7 py-3 md:px-9 md:py-4 rounded-full font-bold text-sm transition-all shadow-xl border ${focusRing} ${
           isDark
             ? "bg-white text-black hover:bg-cyan-400 border-white"
             : "bg-slate-900 text-white hover:bg-teal-600 border-slate-900"
@@ -42,8 +42,8 @@ export function PublicFooter({
         <ArrowRight size={16} />
       </a>
 
-      <p className="mt-14 md:mt-16 text-xs md:text-sm font-bold tracking-widest uppercase opacity-40">
-        © {new Date().getFullYear()} — Dibuat dengan presisi oleh Nafis
+      <p className="mt-10 md:mt-14 text-xs md:text-sm font-bold tracking-widest uppercase opacity-40">
+        © {new Date().getFullYear()} — I’m Nafis. Dibuat dengan presisi oleh Nafis
       </p>
     </footer>
   );

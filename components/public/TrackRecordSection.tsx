@@ -62,10 +62,10 @@ export function TrackRecordSection({
   return (
     <section
       id="track-record"
-      className="py-16 md:py-24 px-6 lg:px-12 xl:px-24"
+      className="py-14 md:py-20 lg:py-24 px-6 lg:px-12 xl:px-24"
     >
       <div className="max-w-7xl mx-auto">
-        <div className="mb-10 md:mb-14 max-w-3xl">
+        <div className="mb-6 md:mb-12 max-w-3xl">
           <span
             className={`inline-flex rounded-full border px-4 py-1.5 text-[10px] font-black uppercase tracking-widest ${
               isDark
@@ -76,7 +76,7 @@ export function TrackRecordSection({
             Track Record
           </span>
 
-          <h2 className="mt-5 text-3xl md:text-5xl font-black tracking-tight">
+          <h2 className="mt-5 text-3xl md:text-4xl lg:text-5xl font-black tracking-tight">
             Jejak akademik, prestasi, dan proses kreatif.
           </h2>
 
@@ -90,8 +90,8 @@ export function TrackRecordSection({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 md:gap-8">
-          <div className="xl:col-span-7 space-y-6 md:space-y-8">
+        <div className="grid grid-cols-1 xl:grid-cols-[1.618fr_1fr] gap-5 md:gap-8">
+          <div className="space-y-5 md:space-y-7">
             {hasEducation && (
               <TimelineBlock
                 title="Riwayat Pendidikan"
@@ -111,7 +111,7 @@ export function TrackRecordSection({
             )}
           </div>
 
-          <div className="xl:col-span-5 space-y-6 md:space-y-8">
+          <div className="space-y-5 md:space-y-7">
             {hasAchievements && (
               <AchievementBlock
                 items={grouped.achievement}
@@ -145,13 +145,13 @@ function TimelineBlock({ title, icon, items, isDark }: TimelineBlockProps) {
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      className={`rounded-3xl md:rounded-[2rem] border p-6 md:p-8 backdrop-blur-md shadow-xl ${
+      className={`rounded-[1.75rem] md:rounded-[2rem] border p-5 md:p-8 backdrop-blur-md shadow-xl ${
         isDark
           ? "border-white/10 bg-white/5"
           : "border-white/60 bg-white/50"
       }`}
     >
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-3 mb-6">
         <span
           className={`inline-flex h-10 w-10 items-center justify-center rounded-2xl ${
             isDark
@@ -166,7 +166,7 @@ function TimelineBlock({ title, icon, items, isDark }: TimelineBlockProps) {
         </h3>
       </div>
 
-      <div className="relative space-y-6 md:space-y-8">
+      <div className="relative space-y-5 md:space-y-6">
         <div
           className={`absolute left-[0.72rem] top-2 bottom-2 w-px ${
             isDark ? "bg-white/10" : "bg-slate-200"
@@ -251,7 +251,7 @@ function AchievementBlock({ items, isDark }: AchievementBlockProps) {
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      className={`rounded-3xl md:rounded-[2rem] border p-6 md:p-8 backdrop-blur-md shadow-xl ${
+      className={`rounded-[1.75rem] md:rounded-[2rem] border p-5 md:p-8 backdrop-blur-md shadow-xl ${
         isDark
           ? "border-white/10 bg-white/5"
           : "border-white/60 bg-white/50"
@@ -342,7 +342,7 @@ function SkillBlock({ items, isDark }: SkillBlockProps) {
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      className={`rounded-3xl md:rounded-[2rem] border p-6 md:p-8 backdrop-blur-md shadow-xl ${
+      className={`rounded-[1.75rem] md:rounded-[2rem] border p-5 md:p-8 backdrop-blur-md shadow-xl ${
         isDark
           ? "border-white/10 bg-white/5"
           : "border-white/60 bg-white/50"
