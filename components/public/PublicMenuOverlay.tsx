@@ -81,7 +81,7 @@ export function PublicMenuOverlay({
               transition={{ delay: 0.35 }}
               href="/admin"
               aria-label="Masuk ke console admin"
-              className={`text-xs md:text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-teal-500 mt-8 md:mt-10 rounded-lg ${focusRing}`}
+              className={`text-xs md:text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-teal-500 mt-8 rounded-lg ${focusRing}`}
             >
               — Masuk Console Admin —
             </motion.a>

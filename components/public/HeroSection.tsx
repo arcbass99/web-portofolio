@@ -28,9 +28,9 @@ export function HeroSection({
   return (
     <section
       id="home"
-      className="min-h-[84vh] flex flex-col justify-center px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto py-14 pt-28 md:py-20 md:pt-32 lg:py-24"
+      className="flex min-h-[auto] flex-col justify-center px-6 pb-12 pt-24 md:min-h-[76vh] md:pb-16 md:pt-28 lg:px-12 xl:px-24 max-w-7xl mx-auto"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.65fr] gap-8 md:gap-12 lg:gap-[5.25rem] items-center">
+      <div className="grid grid-cols-1 items-center gap-8 md:gap-10 lg:grid-cols-[1.618fr_1fr] lg:gap-14">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -47,12 +47,12 @@ export function HeroSection({
             Terbuka untuk Kolaborasi
           </span>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[1.05] mb-5 md:mb-8">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[1.08] mb-5 md:mb-7">
             {about?.headline || "Belajar, berkarya, dan membangun solusi digital."}
           </h1>
 
           <p
-            className={`text-base md:text-lg leading-relaxed max-w-[38rem] mb-7 md:mb-9 font-medium ${
+            className={`text-base md:text-lg leading-relaxed max-w-xl mb-7 md:mb-8 font-medium ${
               isDark ? "text-slate-400" : "text-slate-600"
             }`}
           >
@@ -60,8 +60,8 @@ export function HeroSection({
               "Saya memadukan minat pada biologi, riset, desain visual, dan teknologi untuk membuat karya digital yang rapi, berguna, dan terus berkembang."}
           </p>
 
-          <div className="flex flex-col gap-5">
-            <div className="flex gap-3 md:gap-4 items-center flex-wrap">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-wrap items-center gap-3">
               <a
                 href={contactHref}
                 target={isExternalContact ? "_blank" : undefined}
@@ -79,7 +79,7 @@ export function HeroSection({
             </div>
 
             {socials.length > 0 && (
-              <div className="flex gap-3 md:gap-4 items-center flex-wrap">
+              <div className="flex flex-wrap items-center gap-3">
                 {socials.map((social) => (
                   <a
                     key={social.id}
@@ -108,18 +108,18 @@ export function HeroSection({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.2 }}
-          className="order-1 lg:order-2 max-w-[31rem] w-full mx-auto lg:mr-0"
+          className="order-1 mx-auto w-full max-w-sm md:max-w-md lg:order-2 lg:max-w-none"
         >
           <div
-            className={`aspect-[5/6] rounded-[1.75rem] md:rounded-[2rem] overflow-hidden shadow-2xl border backdrop-blur-xl p-2 ${
+            className={`aspect-[5/6] rounded-3xl md:rounded-[2rem] overflow-hidden shadow-2xl border backdrop-blur-xl p-2 ${
               isDark ? "bg-white/5 border-white/10" : "bg-white/40 border-white/50"
             }`}
           >
-            <div className="relative w-full h-full rounded-[1.35rem] md:rounded-[1.5rem] overflow-hidden bg-slate-200/50">
+            <div className="relative w-full h-full rounded-2xl md:rounded-[1.5rem] overflow-hidden bg-slate-200/50">
               {about?.banner_url ? (
                 <Image
                   src={formatMediaUrl(about.banner_url, 900)}
-                  alt="Profile Banner"
+                  alt="Foto profil Nafis"
                   fill
                   priority
                   fetchPriority="high"
@@ -133,7 +133,7 @@ export function HeroSection({
                     I’m Nafis<span className="text-teal-400">.</span>
                   </p>
                   <p className="mt-3 text-xs md:text-sm font-bold uppercase tracking-[0.25em] text-slate-400">
-                    Profil • Track Record • Karya
+                    Track Record & Karya
                   </p>
                 </div>
               )}

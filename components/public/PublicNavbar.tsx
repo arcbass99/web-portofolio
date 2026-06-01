@@ -31,7 +31,7 @@ export function PublicNavbar({
           onClick={onLogoClick}
           aria-label="Kembali ke bagian profil utama"
         >
-          I’m Nafis
+          NAFIS
           <span className={isDark ? "text-cyan-400" : "text-teal-600"}>.</span>
         </button>
 

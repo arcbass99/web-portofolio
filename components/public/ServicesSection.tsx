@@ -20,10 +20,10 @@ export function ServicesSection({
   return (
     <section
       id="services"
-      className="py-14 md:py-20 lg:py-24 px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto"
+      className="py-12 md:py-20 px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto"
     >
       <div className="mb-8 md:mb-12">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-2 md:mb-4">
+        <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">
           Produk Digital
         </h2>
         <p
@@ -35,7 +35,7 @@ export function ServicesSection({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
         {services.map((service, index) => (
           <motion.a
             key={service.id}
@@ -47,7 +47,7 @@ export function ServicesSection({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ delay: index * 0.1 }}
-            className={`p-5 md:p-8 rounded-[1.75rem] md:rounded-[2rem] border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:min-h-[16.5rem] ${focusRing} ${
+            className={`p-5 md:p-7 rounded-3xl border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:min-h-[16.5rem] ${focusRing} ${
               isDark
                 ? "bg-white/5 border-white/10 hover:border-cyan-500 hover:bg-white/10"
                 : "bg-white/50 border-white/60 hover:border-teal-500 hover:bg-white"
@@ -55,7 +55,7 @@ export function ServicesSection({
           >
             <div>
               <div
-                className={`relative w-14 h-14 md:w-20 md:h-20 mb-5 md:mb-6 rounded-xl md:rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${
+                className={`relative w-14 h-14 md:w-20 md:h-20 mb-5 rounded-xl md:rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${
                   isDark
                     ? "bg-black/50 border-white/10 group-hover:bg-cyan-900/30"
                     : "bg-white border-slate-100 group-hover:bg-teal-50"
@@ -66,7 +66,7 @@ export function ServicesSection({
                     src={formatMediaUrl(service.image_url, 256)}
                     alt={service.title || "Service icon"}
                     fill
-                    sizes="(max-width: 768px) 64px, 96px"
+                    sizes="(max-width: 768px) 56px, 80px"
                     quality={72}
                     className="object-contain"
                   />
@@ -82,7 +82,7 @@ export function ServicesSection({
                 )}
               </div>
 
-              <h3 className="text-xl md:text-2xl font-bold mb-2 md:mb-3">
+              <h3 className="text-xl md:text-[1.35rem] font-bold mb-3 leading-tight">
                 {service.title || "Produk"}
               </h3>
 
@@ -97,7 +97,7 @@ export function ServicesSection({
             </div>
 
             <div
-              className={`mt-6 flex items-center gap-2 text-xs md:text-sm font-bold opacity-70 group-hover:opacity-100 transition-opacity ${
+              className={`mt-5 flex items-center gap-2 text-xs md:text-sm font-bold opacity-70 group-hover:opacity-100 transition-opacity ${
                 isDark ? "text-cyan-400" : "text-teal-600"
               }`}
             >

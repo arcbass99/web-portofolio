@@ -58,15 +58,15 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
   };
 
   return (
-    <section id="portfolio" className="py-14 md:py-20 lg:py-24 px-6 lg:px-12 xl:px-24">
+    <section id="portfolio" className="py-12 md:py-20 px-6 lg:px-12 xl:px-24">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-4">
           <div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-2 md:mb-4">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">
               Karya Pilihan
             </h2>
             <p
-              className={`text-base md:text-lg font-medium ${
+              className={`max-w-2xl text-base md:text-lg font-medium leading-relaxed ${
                 isDark ? "text-slate-400" : "text-slate-500"
               }`}
             >
@@ -84,7 +84,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
         </div>
 
         {portfolios.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
+          <div className={`grid grid-cols-1 gap-6 md:gap-8 ${portfolios.length > 1 ? "md:grid-cols-2" : "max-w-2xl"}`}>
             {portfolios.map((portfolio, index) => (
               <motion.article
                 key={portfolio.id}
@@ -102,13 +102,13 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                   }
                 }}
                 aria-label={`Lihat detail ${portfolio.title || "portfolio"}`}
-                className={`group cursor-pointer p-3 md:p-4 rounded-[1.75rem] md:rounded-[2rem] border backdrop-blur-md shadow-xl transition-all duration-500 ${focusRing} ${
+                className={`group cursor-pointer p-3 md:p-4 rounded-3xl border backdrop-blur-md shadow-xl transition-all duration-500 ${focusRing} ${
                   isDark
                     ? "bg-white/5 border-white/10 hover:bg-white/10"
                     : "bg-white/50 border-white/60 hover:bg-white/80"
                 }`}
               >
-                <div className="relative aspect-video rounded-[1.35rem] md:rounded-[1.5rem] overflow-hidden mb-4 md:mb-6">
+                <div className="relative aspect-video rounded-2xl overflow-hidden mb-4 md:mb-5">
                   {portfolio.media_type === "video" && portfolio.media_url ? (
                     <iframe
                       src={getPortfolioVideoPreviewUrl(portfolio.media_url)}
@@ -173,7 +173,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
           </div>
         ) : (
           <div
-            className={`rounded-[1.75rem] md:rounded-[2rem] border p-6 md:p-10 text-center backdrop-blur-md ${
+            className={`rounded-3xl md:rounded-[2.5rem] border p-8 md:p-12 text-center backdrop-blur-md ${
               isDark
                 ? "bg-white/5 border-white/10 text-slate-400"
                 : "bg-white/50 border-white/60 text-slate-500"
@@ -213,7 +213,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 24, scale: 0.96 }}
               transition={{ duration: 0.25 }}
-              className={`relative z-10 max-h-[88vh] w-full max-w-5xl overflow-y-auto rounded-3xl border p-4 shadow-2xl md:rounded-[2rem] md:p-5 ${
+              className={`relative z-10 max-h-[88vh] w-full max-w-5xl overflow-y-auto rounded-3xl border p-4 shadow-2xl md:p-5 ${
                 isDark
                   ? "border-white/10 bg-[#0B0C10] text-white"
                   : "border-white/70 bg-white text-slate-900"
@@ -276,7 +276,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                       {selectedPortfolio.tags || "Project"}
                     </span>
 
-                    <h3 className="mt-5 text-3xl font-black tracking-tight md:text-5xl">
+                    <h3 className="mt-5 text-3xl font-black tracking-tight md:text-4xl">
                       {selectedPortfolio.title || "Untitled Project"}
                     </h3>
 

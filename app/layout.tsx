@@ -26,7 +26,6 @@ export const metadata: Metadata = {
   creator: "Muhammad Nafis Alfa Rizky",
   publisher: "Muhammad Nafis Alfa Rizky",
   keywords: [
-    "I’m Nafis",
     "Nafis",
     "Muhammad Nafis Alfa Rizky",
     "portfolio",
