@@ -197,7 +197,7 @@ export default function LandingPage() {
         onNavigate={scrollToSection}
       />
 
-      <div className="relative z-10">
+      <main id="main-content" className="relative z-10">
         <PublicErrorNotice error={publicError} isDark={isDark} />
 
         <HeroSection
@@ -237,7 +237,7 @@ export default function LandingPage() {
           isExternalContact={isExternalContact}
           focusRing={focusRing}
         />
-      </div>
+      </main>
     </div>
   );
 }

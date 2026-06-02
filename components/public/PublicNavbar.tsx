@@ -29,7 +29,7 @@ export function PublicNavbar({
           type="button"
           className={`font-black text-lg md:text-xl tracking-tighter cursor-pointer rounded-lg ${focusRing}`}
           onClick={onLogoClick}
-          aria-label="Kembali ke bagian profil utama"
+          aria-label="I’m Nafis — kembali ke bagian profil utama"
         >
           I’m Nafis
           <span className={isDark ? "text-cyan-400" : "text-teal-600"}>.</span>
