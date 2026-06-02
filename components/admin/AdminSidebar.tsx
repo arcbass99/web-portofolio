@@ -25,15 +25,20 @@ export function AdminSidebar({
   return (
     <div
       id="admin-sidebar"
-      className={`fixed inset-y-0 left-0 z-[60] w-72 bg-slate-900 border-r border-white/5 transform transition-transform duration-300 lg:translate-x-0 ${
+      className={`fixed inset-y-0 left-0 z-[60] w-72 bg-slate-950/95 border-r border-white/5 backdrop-blur-xl transform transition-transform duration-300 lg:translate-x-0 ${
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      <div className="p-8 flex flex-col h-full">
-        <div className="flex items-center justify-between mb-10">
-          <h2 className="text-xl font-black tracking-tighter">
-            CONSOLE<span className="text-cyan-400">.</span>
-          </h2>
+      <div className="p-6 flex flex-col h-full">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-lg font-black tracking-tight text-white">
+              I’m Nafis<span className="text-cyan-400">.</span>
+            </h2>
+            <p className="mt-1 text-[10px] font-black uppercase tracking-widest text-slate-500">
+              Admin Console
+            </p>
+          </div>
 
           <button
             type="button"
@@ -45,14 +50,14 @@ export function AdminSidebar({
           </button>
         </div>
 
-        <nav className="space-y-1.5 flex-1" aria-label="Navigasi admin">
+        <nav className="space-y-1 flex-1" aria-label="Navigasi admin">
           {menuItems.map((item) => (
             <button
               type="button"
               key={item.id}
               onClick={() => onChangeTab(item.id)}
               aria-current={activeTab === item.id ? "page" : undefined}
-              className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all group ${focusRing} ${
+              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl transition-all group ${focusRing} ${
                 activeTab === item.id
                   ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/20"
                   : "text-slate-400 hover:bg-white/5 hover:text-white"
@@ -76,7 +81,7 @@ export function AdminSidebar({
         <button
           type="button"
           onClick={onSignOut}
-          className={`flex items-center gap-3 rounded-2xl text-slate-500 hover:text-red-400 p-4 mt-auto transition font-bold text-sm ${focusRing}`}
+          className={`flex items-center gap-3 rounded-2xl text-slate-500 hover:text-red-400 px-3.5 py-3 mt-auto transition font-bold text-sm ${focusRing}`}
         >
           <LogOut size={20} /> Logout Semua Perangkat
         </button>

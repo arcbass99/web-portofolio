@@ -30,16 +30,16 @@ export function AboutPanel({
 }: AboutPanelProps) {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h1 className="text-3xl md:text-4xl font-black mb-2 text-white">
+      <h1 className="text-2xl md:text-4xl font-black mb-2 text-white">
         Profil Utama
       </h1>
-      <p className="text-slate-500 text-sm md:text-base mb-8">
+      <p className="text-slate-500 text-sm md:text-base mb-6">
         Kelola identitas dan teks utama di landing page.
       </p>
 
-      <div className="bg-slate-900/50 border border-white/5 rounded-[2rem] p-6 md:p-10 space-y-8 backdrop-blur-xl">
+      <div className="bg-slate-900/50 border border-white/5 rounded-3xl p-5 md:p-7 space-y-6 backdrop-blur-xl">
         <div className="space-y-4">
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-5">
             <div>
               <label
                 htmlFor="bannerUrl"
@@ -51,7 +51,7 @@ export function AboutPanel({
                 id="bannerUrl"
                 value={bannerUrl}
                 onChange={(event) => setBannerUrl(event.target.value)}
-                className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm"
                 placeholder="Paste ID Drive..."
               />
 
@@ -86,7 +86,7 @@ export function AboutPanel({
                 id="headline"
                 value={headline}
                 onChange={(event) => setHeadline(event.target.value)}
-                className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm"
               />
             </div>
           </div>
@@ -102,7 +102,7 @@ export function AboutPanel({
               id="description"
               value={description}
               onChange={(event) => setDescription(event.target.value)}
-              className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all h-40 text-sm leading-relaxed"
+              className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all h-32 text-sm leading-relaxed"
             />
           </div>
         </div>
@@ -111,7 +111,7 @@ export function AboutPanel({
           type="button"
           onClick={onSave}
           disabled={saving}
-          className={`bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all disabled:opacity-50 ${focusRing}`}
+          className={`bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-6 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all disabled:opacity-50 ${focusRing}`}
         >
           {saving ? "Menyimpan..." : "Update Profil"}
         </button>

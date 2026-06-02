@@ -17,7 +17,7 @@ export function AdminNotice({ focusRing, notice, onClose }: AdminNoticeProps) {
       role="status"
       aria-live="polite"
       aria-atomic="true"
-      className={`mb-8 flex items-start justify-between gap-4 rounded-3xl border p-5 ${
+      className={`mb-6 flex items-start justify-between gap-4 rounded-2xl border p-4 ${
         notice.type === "error"
           ? "border-red-500/20 bg-red-500/10 text-red-200"
           : "border-cyan-500/20 bg-cyan-500/10 text-cyan-100"

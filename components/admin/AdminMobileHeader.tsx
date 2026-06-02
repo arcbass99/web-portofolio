@@ -14,7 +14,7 @@ export function AdminMobileHeader({
   onSignOut,
 }: AdminMobileHeaderProps) {
   return (
-    <header className="lg:hidden fixed top-0 w-full bg-slate-900/80 backdrop-blur-md border-b border-white/5 z-50 px-6 py-4 flex justify-between items-center">
+    <header className="lg:hidden fixed top-0 w-full bg-slate-950/90 backdrop-blur-xl border-b border-white/5 z-50 px-5 py-3.5 flex justify-between items-center">
       <div className="flex items-center gap-3">
         <button
           type="button"
@@ -26,8 +26,11 @@ export function AdminMobileHeader({
           <Menu size={24} />
         </button>
 
-        <h2 className="font-black tracking-tighter text-lg">
-          NAFIS<span className="text-cyan-400">.</span>ADMIN
+        <h2 className="font-black tracking-tight text-base">
+          I’m Nafis<span className="text-cyan-400">.</span>
+          <span className="ml-1 text-[10px] uppercase tracking-widest text-slate-500">
+            Admin
+          </span>
         </h2>
       </div>
 

@@ -63,13 +63,13 @@ export function PortfolioPanel({
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h1 className="text-3xl md:text-4xl font-black mb-8 text-white">
-        Portfolio
+      <h1 className="text-2xl md:text-4xl font-black mb-6 text-white">
+        Karya
       </h1>
 
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
-        <div className="xl:col-span-4 space-y-4">
-          <div className="bg-slate-900 border border-white/5 p-6 rounded-3xl sticky top-24">
+      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.618fr)] gap-5 md:gap-5">
+        <div className="space-y-4">
+          <div className="bg-slate-900 border border-white/5 p-5 rounded-3xl sticky top-24">
             <h3 className="font-black text-[10px] uppercase tracking-widest text-cyan-500 mb-6">
               {editingPortfolioId !== null ? "Edit Karya" : "Tambah Karya"}
             </h3>
@@ -101,7 +101,7 @@ export function PortfolioPanel({
                   }
                   aria-label="Pilih tipe media portfolio"
                   title="Pilih tipe media portfolio"
-                  className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                 >
                   <option value="image">Gambar</option>
                   <option value="video">Video</option>
@@ -120,7 +120,7 @@ export function PortfolioPanel({
                   value={pDriveId}
                   onChange={(event) => setPDriveId(event.target.value)}
                   placeholder="ID Drive / Link Gambar"
-                  className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                 />
 
                 {mediaInput && (
@@ -166,7 +166,7 @@ export function PortfolioPanel({
                   value={pSortOrder}
                   onChange={(event) => setPSortOrder(event.target.value)}
                   placeholder="10"
-                  className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                 />
                 <p className="mt-2 text-xs leading-relaxed text-slate-500">
                   Angka lebih kecil tampil lebih dulu. Gunakan kelipatan 10
@@ -186,7 +186,7 @@ export function PortfolioPanel({
                   value={pTitle}
                   onChange={(event) => setPTitle(event.target.value)}
                   placeholder="Judul Karya"
-                  className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                 />
               </div>
 
@@ -202,7 +202,7 @@ export function PortfolioPanel({
                   value={pDesc}
                   onChange={(event) => setPDesc(event.target.value)}
                   placeholder="Deskripsi Singkat"
-                  className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 h-24 resize-none"
+                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 h-24 resize-none"
                 />
               </div>
 
@@ -218,7 +218,7 @@ export function PortfolioPanel({
                   value={pTags}
                   onChange={(event) => setPTags(event.target.value)}
                   placeholder="Ex: Web, UI/UX"
-                  className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                 />
               </div>
 
@@ -226,7 +226,7 @@ export function PortfolioPanel({
                 type="button"
                 onClick={onSavePortfolio}
                 disabled={saving}
-                className={`w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase tracking-widest disabled:opacity-50 ${focusRing}`}
+                className={`w-full bg-cyan-500 text-slate-900 p-3.5 rounded-2xl font-black text-xs uppercase tracking-widest disabled:opacity-50 ${focusRing}`}
               >
                 {saving
                   ? "Menyimpan..."
@@ -240,7 +240,7 @@ export function PortfolioPanel({
                   type="button"
                   onClick={onCancelEdit}
                   disabled={saving}
-                  className={`w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50 ${focusRing}`}
+                  className={`w-full bg-white/5 hover:bg-white/10 text-slate-300 p-3.5 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50 ${focusRing}`}
                 >
                   Batal Edit
                 </button>
@@ -249,7 +249,7 @@ export function PortfolioPanel({
           </div>
         </div>
 
-        <div className="xl:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {portfolios.length === 0 && (
             <div className="md:col-span-2 rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-8 text-center">
               <p className="text-sm font-bold text-slate-300">

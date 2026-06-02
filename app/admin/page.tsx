@@ -622,8 +622,8 @@ export default function AdminDashboard() {
         onSignOut={handleSignOut}
       />
 
-      <main className="lg:ml-72 min-h-screen p-6 md:p-12 pt-24 lg:pt-12">
-        <div className="max-w-5xl mx-auto pb-20 lg:pb-0">
+      <main className="lg:ml-72 min-h-screen px-5 pt-24 pb-28 md:px-8 lg:px-10 lg:py-8">
+        <div className="max-w-6xl mx-auto pb-24 lg:pb-0">
           <AdminNotice
             focusRing={focusRing}
             notice={notice}

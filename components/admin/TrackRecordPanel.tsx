@@ -97,16 +97,16 @@ export function TrackRecordPanel({
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h1 className="text-3xl md:text-4xl font-black mb-2 text-white">
+      <h1 className="text-2xl md:text-4xl font-black mb-2 text-white">
         Track Record
       </h1>
-      <p className="text-slate-500 text-sm md:text-base mb-8">
+      <p className="text-slate-500 text-sm md:text-base mb-6">
         Kelola riwayat pendidikan, pencapaian, kepemimpinan, dan keahlian inti.
       </p>
 
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
-        <div className="xl:col-span-4">
-          <div className="bg-slate-900 border border-white/5 p-6 rounded-3xl space-y-4 sticky top-24">
+      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.618fr)] gap-5 md:gap-5">
+        <div className="">
+          <div className="bg-slate-900 border border-white/5 p-5 rounded-3xl space-y-4 sticky top-24">
             <h3 className="font-black text-[10px] uppercase tracking-widest text-cyan-500">
               {editingHighlightId !== null
                 ? "Edit Track Record"
@@ -139,7 +139,7 @@ export function TrackRecordPanel({
                 }
                 aria-label="Pilih kategori track record"
                 title="Pilih kategori track record"
-                className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
               >
                 {categoryOrder.map((category) => (
                   <option key={category} value={category}>
@@ -162,7 +162,7 @@ export function TrackRecordPanel({
                   value={hPeriod}
                   onChange={(event) => setHPeriod(event.target.value)}
                   placeholder="2024–2026"
-                  className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                 />
               </div>
             )}
@@ -180,7 +180,7 @@ export function TrackRecordPanel({
                   value={hImageUrl}
                   onChange={(event) => setHImageUrl(event.target.value)}
                   placeholder="ID Drive / Link Gambar"
-                  className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                 />
 
                 {imagePreviewUrl && (
@@ -217,7 +217,7 @@ export function TrackRecordPanel({
                 value={hTitle}
                 onChange={(event) => setHTitle(event.target.value)}
                 placeholder={isSkill ? "Analytical Thinking" : "Judul item"}
-                className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
               />
             </div>
 
@@ -234,7 +234,7 @@ export function TrackRecordPanel({
                   value={hDescription}
                   onChange={(event) => setHDescription(event.target.value)}
                   placeholder="Deskripsi singkat"
-                  className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 h-28 resize-none"
+                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 h-24 resize-none"
                 />
               </div>
             )}
@@ -253,7 +253,7 @@ export function TrackRecordPanel({
                 value={hSortOrder}
                 onChange={(event) => setHSortOrder(event.target.value)}
                 placeholder="10"
-                className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
               />
               <p className="mt-2 text-xs leading-relaxed text-slate-500">
                 Angka lebih kecil tampil lebih dulu. Gunakan 10, 20, 30 agar
@@ -265,7 +265,7 @@ export function TrackRecordPanel({
               type="button"
               onClick={onSaveHighlight}
               disabled={saving}
-              className={`w-full bg-cyan-500 text-slate-900 p-4 rounded-2xl font-black text-xs uppercase disabled:opacity-50 ${focusRing}`}
+              className={`w-full bg-cyan-500 text-slate-900 p-3.5 rounded-2xl font-black text-xs uppercase disabled:opacity-50 ${focusRing}`}
             >
               {saving
                 ? "Menyimpan..."
@@ -279,7 +279,7 @@ export function TrackRecordPanel({
                 type="button"
                 onClick={onCancelEdit}
                 disabled={saving}
-                className={`w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50 ${focusRing}`}
+                className={`w-full bg-white/5 hover:bg-white/10 text-slate-300 p-3.5 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50 ${focusRing}`}
               >
                 Batal Edit
               </button>
@@ -287,7 +287,7 @@ export function TrackRecordPanel({
           </div>
         </div>
 
-        <div className="xl:col-span-8 space-y-6">
+        <div className="space-y-6">
           {highlights.length === 0 && (
             <div className="rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-8 text-center">
               <p className="text-sm font-bold text-slate-300">
@@ -316,7 +316,7 @@ export function TrackRecordPanel({
                   {items.map((highlight) => (
                     <article
                       key={highlight.id}
-                      className="bg-slate-900/50 border border-white/5 p-5 rounded-2xl flex items-center justify-between gap-4"
+                      className="bg-slate-900/50 border border-white/5 p-4 rounded-2xl flex items-center justify-between gap-4"
                     >
                       <div className="flex items-center gap-4 min-w-0">
                         {highlight.image_url ? (

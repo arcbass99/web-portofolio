@@ -35,12 +35,12 @@ export function SocialsPanel({
 }: SocialsPanelProps) {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h1 className="text-3xl md:text-4xl font-black mb-8 text-white">
+      <h1 className="text-2xl md:text-4xl font-black mb-6 text-white">
         Media Sosial
       </h1>
 
-      <div className="grid grid-cols-1 gap-8">
-        <div className="bg-slate-900/50 border border-white/5 rounded-3xl p-6">
+      <div className="grid grid-cols-1 gap-5">
+        <div className="bg-slate-900/50 border border-white/5 rounded-3xl p-5">
           {editingSocialId !== null && (
             <div className="mb-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4">
               <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">
@@ -65,7 +65,7 @@ export function SocialsPanel({
                 value={newSocialTitle}
                 onChange={(event) => setNewSocialTitle(event.target.value)}
                 placeholder="Ex: GitHub"
-                className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 text-sm"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 text-sm"
               />
             </div>
 
@@ -81,7 +81,7 @@ export function SocialsPanel({
                 value={newSocialUrl}
                 onChange={(event) => setNewSocialUrl(event.target.value)}
                 placeholder="https://..."
-                className="w-full bg-slate-800/50 border border-white/10 p-4 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 text-sm"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 text-sm"
               />
             </div>
 
@@ -89,7 +89,7 @@ export function SocialsPanel({
               type="button"
               onClick={onSaveSocial}
               disabled={saving}
-              className={`w-full md:w-auto md:self-end bg-white text-slate-900 px-6 py-4 rounded-2xl font-black text-xs uppercase disabled:opacity-50 flex items-center justify-center gap-2 ${focusRing}`}
+              className={`w-full md:w-auto md:self-end bg-white text-slate-900 px-5 py-3.5 rounded-2xl font-black text-xs uppercase disabled:opacity-50 flex items-center justify-center gap-2 ${focusRing}`}
             >
               {saving ? (
                 "Menyimpan..."
@@ -108,7 +108,7 @@ export function SocialsPanel({
               type="button"
               onClick={onCancelEdit}
               disabled={saving}
-              className={`mt-4 w-full bg-white/5 hover:bg-white/10 text-slate-300 p-4 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50 ${focusRing}`}
+              className={`mt-4 w-full bg-white/5 hover:bg-white/10 text-slate-300 p-3.5 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50 ${focusRing}`}
             >
               Batal Edit
             </button>
@@ -130,7 +130,7 @@ export function SocialsPanel({
           {socials.map((social) => (
             <div
               key={social.id}
-              className="flex items-center justify-between gap-4 p-5 bg-slate-900/30 border border-white/5 rounded-2xl backdrop-blur-sm"
+              className="flex items-center justify-between gap-4 p-4 bg-slate-900/30 border border-white/5 rounded-2xl backdrop-blur-sm"
             >
               <div className="min-w-0">
                 <p className="font-bold text-white text-sm">
