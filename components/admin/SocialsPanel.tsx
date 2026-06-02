@@ -44,10 +44,10 @@ export function SocialsPanel({
           {editingSocialId !== null && (
             <div className="mb-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4">
               <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">
-                Mode Edit Social
+                Mode Edit Link Sosial
               </p>
               <p className="mt-1 text-xs text-slate-400">
-                Kamu sedang mengubah link sosial yang sudah tersimpan.
+                Kamu sedang mengubah link media sosial yang sudah tersimpan.
               </p>
             </div>
           )}
@@ -58,13 +58,13 @@ export function SocialsPanel({
                 htmlFor="socialTitle"
                 className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
               >
-                Nama Social
+                Nama Media
               </label>
               <input
                 id="socialTitle"
                 value={newSocialTitle}
                 onChange={(event) => setNewSocialTitle(event.target.value)}
-                placeholder="Ex: GitHub"
+                placeholder="Ex: Instagram"
                 className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 text-sm"
               />
             </div>
@@ -97,7 +97,7 @@ export function SocialsPanel({
                 "Simpan Perubahan"
               ) : (
                 <>
-                  <Plus size={16} /> Tambah Social
+                  <Plus size={16} /> Tambah Link
                 </>
               )}
             </button>
@@ -119,10 +119,10 @@ export function SocialsPanel({
           {socials.length === 0 && (
             <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-6 text-center">
               <p className="text-sm font-bold text-slate-300">
-                Belum ada social link.
+                Belum ada link sosial.
               </p>
               <p className="mt-1 text-xs text-slate-500">
-                Tambahkan link agar pengunjung bisa menemukan profilmu.
+                Tambahkan link agar pengunjung bisa menemukan kanal utamamu.
               </p>
             </div>
           )}
@@ -134,7 +134,7 @@ export function SocialsPanel({
             >
               <div className="min-w-0">
                 <p className="font-bold text-white text-sm">
-                  {social.title || "Untitled Social"}
+                  {social.title || "Untitled Link"}
                 </p>
                 <p className="text-xs text-slate-500 truncate max-w-[200px] md:max-w-md">
                   {social.url || "-"}
@@ -146,7 +146,7 @@ export function SocialsPanel({
                   type="button"
                   onClick={() => onEditSocial(social)}
                   className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors p-2 ${focusRing}`}
-                  aria-label={`Edit ${social.title || "social link"}`}
+                  aria-label={`Edit ${social.title || "link sosial"}`}
                 >
                   <Pencil size={16} />
                 </button>
@@ -155,7 +155,7 @@ export function SocialsPanel({
                   type="button"
                   onClick={() => onDeleteSocial(social)}
                   className={`rounded-xl text-slate-600 hover:text-red-400 p-2 transition-colors ${focusRing}`}
-                  aria-label={`Hapus ${social.title || "social link"}`}
+                  aria-label={`Hapus ${social.title || "link sosial"}`}
                 >
                   <Trash2 size={18} />
                 </button>

@@ -65,10 +65,10 @@ export function ServicesPanel({
             {editingServiceId !== null && (
               <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4">
                 <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">
-                  Mode Edit Layanan
+                  Mode Edit Produk
                 </p>
                 <p className="mt-1 text-xs text-slate-400">
-                  Kamu sedang mengubah data layanan yang sudah tersimpan.
+                  Kamu sedang mengubah data produk/layanan yang sudah tersimpan.
                 </p>
               </div>
             )}
@@ -100,7 +100,7 @@ export function ServicesPanel({
                 id="serviceDescription"
                 value={sDescription}
                 onChange={(event) => setSDescription(event.target.value)}
-                placeholder="Deskripsi singkat layanan"
+                placeholder="Deskripsi singkat produk"
                 className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 h-24 resize-none"
               />
             </div>
@@ -129,13 +129,13 @@ export function ServicesPanel({
                     <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-800">
                       <img
                         src={serviceIconPreviewUrl}
-                        alt="Preview ikon layanan"
+                        alt="Preview ikon produk"
                         className="h-full w-full object-cover"
                       />
                     </div>
                     <p className="text-xs leading-relaxed text-slate-500">
                       Pastikan ikon terlihat jelas di ukuran kecil sebelum
-                      layanan disimpan.
+                      produk disimpan.
                     </p>
                   </div>
                 </div>
@@ -160,7 +160,7 @@ export function ServicesPanel({
               />
               <p className="mt-2 text-xs leading-relaxed text-slate-500">
                 Angka lebih kecil tampil lebih dulu. Gunakan kelipatan 10
-                seperti 10, 20, 30 agar mudah menyisipkan layanan baru.
+                seperti 10, 20, 30 agar mudah menyisipkan produk baru.
               </p>
             </div>
 
@@ -212,10 +212,10 @@ export function ServicesPanel({
           {services.length === 0 && (
             <div className="rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-8 text-center">
               <p className="text-sm font-bold text-slate-300">
-                Belum ada layanan.
+                Belum ada produk.
               </p>
               <p className="mt-1 text-xs text-slate-500">
-                Tambahkan layanan agar section produk bisa tampil di homepage.
+                Tambahkan produk/layanan agar section Produk Digital bisa tampil di homepage.
               </p>
             </div>
           )}
@@ -230,7 +230,7 @@ export function ServicesPanel({
                   {service.image_url ? (
                     <img
                       src={formatMediaUrl(service.image_url, 256)}
-                      alt={service.title || "Ikon layanan"}
+                      alt={service.title || "Ikon produk"}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -256,7 +256,7 @@ export function ServicesPanel({
                   type="button"
                   onClick={() => onEditService(service)}
                   className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors p-2 ${focusRing}`}
-                  aria-label={`Edit ${service.title || "layanan"}`}
+                  aria-label={`Edit ${service.title || "produk"}`}
                 >
                   <Pencil size={16} />
                 </button>
@@ -265,7 +265,7 @@ export function ServicesPanel({
                   type="button"
                   onClick={() => onDeleteService(service)}
                   className={`rounded-xl text-slate-600 hover:text-red-400 transition-colors p-2 ${focusRing}`}
-                  aria-label={`Hapus ${service.title || "layanan"}`}
+                  aria-label={`Hapus ${service.title || "produk"}`}
                 >
                   <Trash2 size={18} />
                 </button>

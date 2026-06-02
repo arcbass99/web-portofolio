@@ -177,10 +177,10 @@ export default function AdminDashboard() {
   const menuItems = useMemo<MenuItem[]>(
     () => [
       { id: "about", label: "Profil", icon: <User size={20} /> },
-      { id: "socials", label: "Socials", icon: <LinkIcon size={20} /> },
+      { id: "socials", label: "Media", icon: <LinkIcon size={20} /> },
       { id: "track_record", label: "Track Record", icon: <Award size={20} /> },
       { id: "portfolio", label: "Karya", icon: <Briefcase size={20} /> },
-      { id: "services", label: "Layanan", icon: <Wrench size={20} /> },
+      { id: "services", label: "Produk", icon: <Wrench size={20} /> },
     ],
     [],
   );
@@ -318,14 +318,14 @@ export default function AdminDashboard() {
 
   const handleSaveSocial = async () => {
     if (!newSocialTitle.trim() || !newSocialUrl.trim()) {
-      showNotice("error", "Nama dan link sosial media wajib diisi.");
+      showNotice("error", "Nama dan link media sosial wajib diisi.");
       return;
     }
 
     const normalizedUrl = normalizeExternalUrl(newSocialUrl);
 
     if (!isValidExternalUrl(normalizedUrl)) {
-      showNotice("error", "Link sosial media harus berupa URL yang valid.");
+      showNotice("error", "Link media sosial harus berupa URL yang valid.");
       return;
     }
 
@@ -346,7 +346,7 @@ export default function AdminDashboard() {
           ),
         );
         resetSocialForm();
-        showNotice("success", "Social berhasil diperbarui.");
+        showNotice("success", "Link sosial berhasil diperbarui.");
         return;
       }
 
@@ -354,9 +354,9 @@ export default function AdminDashboard() {
 
       setSocials((current) => [...current, newSocial]);
       resetSocialForm();
-      showNotice("success", "Social berhasil ditambahkan.");
+      showNotice("success", "Link sosial berhasil ditambahkan.");
     } catch (error) {
-      showNotice("error", `Gagal menyimpan social: ${getErrorMessage(error)}`);
+      showNotice("error", `Gagal menyimpan link sosial: ${getErrorMessage(error)}`);
     } finally {
       setSaving(false);
     }
@@ -439,21 +439,21 @@ export default function AdminDashboard() {
 
   const handleSaveService = async () => {
     if (!sTitle.trim() || !sTargetUrl.trim()) {
-      showNotice("error", "Judul layanan dan link target wajib diisi.");
+      showNotice("error", "Nama produk/layanan dan link target wajib diisi.");
       return;
     }
 
     const parsedSortOrder = Number.parseInt(sSortOrder, 10);
 
     if (!sSortOrder.trim() || Number.isNaN(parsedSortOrder)) {
-      showNotice("error", "Urutan tampil layanan harus berupa angka.");
+      showNotice("error", "Urutan tampil produk harus berupa angka.");
       return;
     }
 
     const normalizedUrl = normalizeExternalUrl(sTargetUrl);
 
     if (!isValidExternalUrl(normalizedUrl)) {
-      showNotice("error", "Link target layanan harus berupa URL yang valid.");
+      showNotice("error", "Link target produk harus berupa URL yang valid.");
       return;
     }
 
@@ -479,7 +479,7 @@ export default function AdminDashboard() {
           ),
         );
         resetServiceForm();
-        showNotice("success", "Layanan berhasil diperbarui.");
+        showNotice("success", "Produk berhasil diperbarui.");
         return;
       }
 
@@ -487,9 +487,9 @@ export default function AdminDashboard() {
 
       setServices((current) => sortServicesByOrder([...current, newService]));
       resetServiceForm();
-      showNotice("success", "Layanan berhasil ditambahkan.");
+      showNotice("success", "Produk berhasil ditambahkan.");
     } catch (error) {
-      showNotice("error", `Gagal menyimpan layanan: ${getErrorMessage(error)}`);
+      showNotice("error", `Gagal menyimpan produk: ${getErrorMessage(error)}`);
     } finally {
       setSaving(false);
     }
