@@ -20,9 +20,9 @@ export function ServicesSection({
   return (
     <section
       id="services"
-      className="py-12 md:py-20 px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto"
+      className="pt-10 pb-12 md:pt-16 md:pb-16 px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto"
     >
-      <div className="mb-8 md:mb-12">
+      <div className="mb-7 md:mb-10">
         <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">
           Produk Digital
         </h2>
@@ -47,7 +47,7 @@ export function ServicesSection({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ delay: index * 0.1 }}
-            className={`p-5 md:p-7 rounded-3xl border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:min-h-[16.5rem] ${focusRing} ${
+            className={`p-5 md:p-6 rounded-3xl border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:min-h-[15.75rem] ${focusRing} ${
               isDark
                 ? "bg-white/5 border-white/10 hover:border-cyan-500 hover:bg-white/10"
                 : "bg-white/50 border-white/60 hover:border-teal-500 hover:bg-white"
@@ -55,7 +55,7 @@ export function ServicesSection({
           >
             <div>
               <div
-                className={`relative w-14 h-14 md:w-20 md:h-20 mb-5 rounded-xl md:rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${
+                className={`relative w-14 h-14 md:w-[4.5rem] md:h-[4.5rem] mb-5 rounded-xl md:rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${
                   isDark
                     ? "bg-black/50 border-white/10 group-hover:bg-cyan-900/30"
                     : "bg-white border-slate-100 group-hover:bg-teal-50"
@@ -66,7 +66,7 @@ export function ServicesSection({
                     src={formatMediaUrl(service.image_url, 256)}
                     alt={service.title || "Service icon"}
                     fill
-                    sizes="(max-width: 768px) 56px, 80px"
+                    sizes="(max-width: 768px) 56px, 72px"
                     quality={72}
                     className="object-contain"
                   />

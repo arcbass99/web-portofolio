@@ -62,10 +62,10 @@ export function TrackRecordSection({
   return (
     <section
       id="track-record"
-      className="py-12 md:py-20 px-6 lg:px-12 xl:px-24"
+      className="pt-10 pb-8 md:pt-14 md:pb-14 px-6 lg:px-12 xl:px-24"
     >
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8 md:mb-12 max-w-3xl">
+        <div className="mb-7 md:mb-10 max-w-3xl">
           <span
             className={`inline-flex rounded-full border px-4 py-1.5 text-[10px] font-black uppercase tracking-widest ${
               isDark
@@ -90,8 +90,8 @@ export function TrackRecordSection({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:gap-8 xl:grid-cols-[1.618fr_1fr]">
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 gap-5 md:gap-7 xl:grid-cols-[1.618fr_1fr]">
+          <div className="space-y-5 md:space-y-6">
             {hasEducation && (
               <TimelineBlock
                 title="Riwayat Pendidikan"
@@ -111,7 +111,7 @@ export function TrackRecordSection({
             )}
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-5 md:space-y-6">
             {hasAchievements && (
               <AchievementBlock
                 items={grouped.achievement}
@@ -145,7 +145,7 @@ function TimelineBlock({ title, icon, items, isDark }: TimelineBlockProps) {
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      className={`rounded-3xl border p-5 md:p-7 backdrop-blur-md shadow-xl ${
+      className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
         isDark
           ? "border-white/10 bg-white/5"
           : "border-white/60 bg-white/50"
@@ -166,7 +166,7 @@ function TimelineBlock({ title, icon, items, isDark }: TimelineBlockProps) {
         </h3>
       </div>
 
-      <div className="relative space-y-5 md:space-y-6">
+      <div className="relative space-y-4 md:space-y-5">
         <div
           className={`absolute left-[0.72rem] top-2 bottom-2 w-px ${
             isDark ? "bg-white/10" : "bg-slate-200"
@@ -251,7 +251,7 @@ function AchievementBlock({ items, isDark }: AchievementBlockProps) {
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      className={`rounded-3xl border p-5 md:p-7 backdrop-blur-md shadow-xl ${
+      className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
         isDark
           ? "border-white/10 bg-white/5"
           : "border-white/60 bg-white/50"
@@ -342,7 +342,7 @@ function SkillBlock({ items, isDark }: SkillBlockProps) {
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      className={`rounded-3xl border p-5 md:p-7 backdrop-blur-md shadow-xl ${
+      className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
         isDark
           ? "border-white/10 bg-white/5"
           : "border-white/60 bg-white/50"

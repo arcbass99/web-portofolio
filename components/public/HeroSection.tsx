@@ -28,7 +28,7 @@ export function HeroSection({
   return (
     <section
       id="home"
-      className="flex min-h-[auto] flex-col justify-center px-6 pb-12 pt-24 md:min-h-[76vh] md:pb-16 md:pt-28 lg:px-12 xl:px-24 max-w-7xl mx-auto"
+      className="flex min-h-[auto] flex-col justify-center px-6 pb-10 pt-24 md:pb-12 md:pt-24 lg:min-h-[66vh] lg:px-12 xl:px-24 max-w-7xl mx-auto"
     >
       <div className="grid grid-cols-1 items-center gap-8 md:gap-10 lg:grid-cols-[1.618fr_1fr] lg:gap-14">
         <motion.div

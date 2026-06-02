@@ -58,9 +58,9 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
   };
 
   return (
-    <section id="portfolio" className="py-12 md:py-20 px-6 lg:px-12 xl:px-24">
+    <section id="portfolio" className="pt-8 pb-10 md:pt-16 md:pb-16 px-6 lg:px-12 xl:px-24">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-7 md:mb-10 gap-4">
           <div>
             <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-4">
               Karya Pilihan
@@ -84,7 +84,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
         </div>
 
         {portfolios.length > 0 ? (
-          <div className={`grid grid-cols-1 gap-6 md:gap-8 ${portfolios.length > 1 ? "md:grid-cols-2" : "max-w-2xl"}`}>
+          <div className={`grid grid-cols-1 gap-6 md:gap-8 ${portfolios.length > 1 ? "md:grid-cols-2" : "max-w-[43rem]"}`}>
             {portfolios.map((portfolio, index) => (
               <motion.article
                 key={portfolio.id}
