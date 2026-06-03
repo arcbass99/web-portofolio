@@ -14,7 +14,6 @@ import type {
 import { PublicBackground } from "../components/public/PublicBackground";
 import { PublicErrorNotice } from "../components/public/PublicErrorNotice";
 import { PublicFooter } from "../components/public/PublicFooter";
-import { PublicLoadingScreen } from "../components/public/PublicLoadingScreen";
 import { PublicMenuOverlay } from "../components/public/PublicMenuOverlay";
 import { PublicNavbar } from "../components/public/PublicNavbar";
 import { HeroSection } from "../components/public/HeroSection";
@@ -23,7 +22,6 @@ import { ServicesSection } from "../components/public/ServicesSection";
 import { TrackRecordSection } from "../components/public/TrackRecordSection";
 
 export default function LandingPage() {
-  const [loading, setLoading] = useState(true);
   const [about, setAbout] = useState<AboutMe | null>(null);
   const [socials, setSocials] = useState<SocialLink[]>([]);
   const [portfolios, setPortfolios] = useState<PortfolioItem[]>([]);
@@ -38,8 +36,6 @@ export default function LandingPage() {
 
   const fetchPublicData = useCallback(async () => {
     try {
-      setPublicError(null);
-
       const [aboutRes, socialRes, portRes, servRes, highlightRes] =
         await Promise.all([
           supabase.from("about_me").select("*").maybeSingle(),
@@ -67,6 +63,7 @@ export default function LandingPage() {
       if (servRes.error) throw servRes.error;
       if (highlightRes.error) throw highlightRes.error;
 
+      setPublicError(null);
       setAbout(aboutRes.data as AboutMe | null);
       setSocials((socialRes.data || []) as SocialLink[]);
       setPortfolios((portRes.data || []) as PortfolioItem[]);
@@ -76,8 +73,6 @@ export default function LandingPage() {
       setPublicError(
         getErrorMessage(error, "Data belum berhasil dimuat sepenuhnya."),
       );
-    } finally {
-      setLoading(false);
     }
   }, []);
 
@@ -166,10 +161,6 @@ export default function LandingPage() {
           ? "Hubungi via Instagram"
           : "Hubungi Saya"
     : "Jelajahi Profil";
-
-  if (loading) {
-    return <PublicLoadingScreen />;
-  }
 
   return (
     <div

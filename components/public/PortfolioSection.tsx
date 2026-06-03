@@ -115,6 +115,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                       title={portfolio.title || "Portfolio video preview"}
                       className="w-full h-full border-0 pointer-events-none"
                       allow="autoplay"
+                      loading="lazy"
                       tabIndex={-1}
                     />
                   ) : portfolio.media_url ? (
@@ -244,6 +245,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                       title={selectedPortfolio.title || "Portfolio video detail"}
                       className="h-full w-full border-0"
                       allow="autoplay"
+                      loading="lazy"
                     />
                   ) : selectedPortfolio.media_url ? (
                     <Image
