@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 import { Award, GraduationCap, Sparkles, Users } from "lucide-react";
 import { formatMediaUrl } from "../../lib/media";
+import { SpotlightCard } from "../ui/SpotlightCard";
 import type {
   ProfileHighlight,
   ProfileHighlightCategory,
@@ -145,13 +146,18 @@ function TimelineBlock({ title, icon, items, isDark }: TimelineBlockProps) {
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-100px" }}
-      className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
-        isDark
-          ? "border-white/10 bg-white/5"
-          : "border-white/60 bg-white/50"
-      }`}
     >
-      <div className="flex items-center gap-3 mb-5">
+      <SpotlightCard
+        isDark={isDark}
+        tone="cyan"
+        intensity="subtle"
+        className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
+          isDark
+            ? "border-white/10 bg-white/5"
+            : "border-white/60 bg-white/50"
+        }`}
+      >
+        <div className="flex items-center gap-3 mb-5">
         <span
           className={`inline-flex h-10 w-10 items-center justify-center rounded-2xl ${
             isDark
@@ -236,6 +242,7 @@ function TimelineBlock({ title, icon, items, isDark }: TimelineBlockProps) {
           </div>
         ))}
       </div>
+      </SpotlightCard>
     </motion.div>
   );
 }
@@ -251,13 +258,18 @@ function AchievementBlock({ items, isDark }: AchievementBlockProps) {
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-100px" }}
-      className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
-        isDark
-          ? "border-white/10 bg-white/5"
-          : "border-white/60 bg-white/50"
-      }`}
     >
-      <div className="flex items-center gap-3 mb-5">
+      <SpotlightCard
+        isDark={isDark}
+        tone="amber"
+        intensity="subtle"
+        className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
+          isDark
+            ? "border-white/10 bg-white/5"
+            : "border-white/60 bg-white/50"
+        }`}
+      >
+        <div className="flex items-center gap-3 mb-5">
         <span
           className={`inline-flex h-10 w-10 items-center justify-center rounded-2xl ${
             isDark
@@ -280,13 +292,19 @@ function AchievementBlock({ items, isDark }: AchievementBlockProps) {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ delay: index * 0.08 }}
-            className={`rounded-2xl border p-3.5 md:p-4 ${
-              isDark
-                ? "border-white/10 bg-black/20"
-                : "border-slate-200 bg-white/70"
-            }`}
+            className="rounded-2xl"
           >
-            <div className="flex items-start gap-4">
+            <SpotlightCard
+              isDark={isDark}
+              tone="amber"
+              intensity="subtle"
+              className={`rounded-2xl border p-3.5 md:p-4 ${
+                isDark
+                  ? "border-white/10 bg-black/20"
+                  : "border-slate-200 bg-white/70"
+              }`}
+            >
+              <div className="flex items-start gap-4">
               {item.image_url && (
                 <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-slate-200">
                   <Image
@@ -323,10 +341,12 @@ function AchievementBlock({ items, isDark }: AchievementBlockProps) {
                   </p>
                 )}
               </div>
-            </div>
+              </div>
+            </SpotlightCard>
           </motion.article>
         ))}
       </div>
+      </SpotlightCard>
     </motion.div>
   );
 }
@@ -342,13 +362,18 @@ function SkillBlock({ items, isDark }: SkillBlockProps) {
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-100px" }}
-      className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
-        isDark
-          ? "border-white/10 bg-white/5"
-          : "border-white/60 bg-white/50"
-      }`}
     >
-      <div className="flex items-center gap-3 mb-5">
+      <SpotlightCard
+        isDark={isDark}
+        tone="violet"
+        intensity="subtle"
+        className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
+          isDark
+            ? "border-white/10 bg-white/5"
+            : "border-white/60 bg-white/50"
+        }`}
+      >
+        <div className="flex items-center gap-3 mb-5">
         <span
           className={`inline-flex h-10 w-10 items-center justify-center rounded-2xl ${
             isDark
@@ -365,8 +390,12 @@ function SkillBlock({ items, isDark }: SkillBlockProps) {
 
       <div className="flex flex-wrap gap-2.5 md:gap-3">
         {items.map((item) => (
-          <span
+          <SpotlightCard
+            as="span"
             key={item.id}
+            isDark={isDark}
+            tone="violet"
+            intensity="subtle"
             className={`rounded-full border px-4 py-2 text-xs md:text-sm font-black ${
               isDark
                 ? "border-white/10 bg-white/5 text-slate-200"
@@ -374,9 +403,10 @@ function SkillBlock({ items, isDark }: SkillBlockProps) {
             }`}
           >
             {item.title}
-          </span>
+          </SpotlightCard>
         ))}
       </div>
+      </SpotlightCard>
     </motion.div>
   );
 }

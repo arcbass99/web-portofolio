@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
+import { SpotlightCard } from "../ui/SpotlightCard";
 
 type PublicFooterProps = {
   isDark: boolean;
@@ -27,11 +28,15 @@ export function PublicFooter({
         Mari mulai kolaborasi.
       </h2>
 
-      <a
+      <SpotlightCard
+        as="a"
         href={contactHref}
         target={isExternalContact ? "_blank" : undefined}
         rel={isExternalContact ? "noreferrer" : undefined}
         aria-label={contactLabel}
+        isDark={isDark}
+        tone="cyan"
+        intensity="medium"
         className={`inline-flex items-center gap-2 px-7 py-3 md:px-9 md:py-4 rounded-full font-bold text-sm transition-all shadow-xl border ${focusRing} ${
           isDark
             ? "bg-white text-black hover:bg-cyan-400 border-white"
@@ -40,7 +45,7 @@ export function PublicFooter({
       >
         {contactLabel}
         <ArrowRight size={16} />
-      </a>
+      </SpotlightCard>
 
       <p
         className={`mt-8 md:mt-10 text-xs md:text-sm font-bold tracking-widest uppercase ${

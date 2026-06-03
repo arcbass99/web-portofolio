@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { formatMediaUrl } from "../../lib/media";
+import { SpotlightCard } from "../ui/SpotlightCard";
 import type { AboutMe, SocialLink } from "../../types/content";
 
 type HeroSectionProps = {
@@ -110,8 +111,11 @@ export function HeroSection({
           transition={{ duration: 1, delay: 0.2 }}
           className="order-1 mx-auto w-full max-w-sm md:max-w-md lg:order-2 lg:max-w-none"
         >
-          <div
-            className={`aspect-[5/6] rounded-3xl md:rounded-[2rem] overflow-hidden shadow-2xl border backdrop-blur-xl p-2 ${
+          <SpotlightCard
+            isDark={isDark}
+            tone="cyan"
+            intensity="strong"
+            className={`aspect-[5/6] rounded-3xl md:rounded-[2rem] shadow-2xl border backdrop-blur-xl p-2 ${
               isDark ? "bg-white/5 border-white/10" : "bg-white/40 border-white/50"
             }`}
           >
@@ -138,7 +142,7 @@ export function HeroSection({
                 </div>
               )}
             </div>
-          </div>
+          </SpotlightCard>
         </motion.div>
       </div>
     </section>

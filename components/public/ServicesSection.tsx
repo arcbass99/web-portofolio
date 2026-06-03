@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { formatMediaUrl } from "../../lib/media";
+import { SpotlightCard } from "../ui/SpotlightCard";
 import type { ServiceItem } from "../../types/content";
 
 type ServicesSectionProps = {
@@ -37,23 +38,30 @@ export function ServicesSection({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
         {services.map((service, index) => (
-          <motion.a
+          <motion.div
             key={service.id}
-            href={service.target_url || "#"}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={`Kunjungi ${service.title || "produk"}`}
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ delay: index * 0.1 }}
-            className={`p-5 md:p-6 rounded-3xl border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:min-h-[15.75rem] ${focusRing} ${
-              isDark
-                ? "bg-white/5 border-white/10 hover:border-cyan-500 hover:bg-white/10"
-                : "bg-white/50 border-white/60 hover:border-teal-500 hover:bg-white"
-            }`}
+            className="h-full"
           >
-            <div>
+            <SpotlightCard
+              as="a"
+              href={service.target_url || "#"}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Kunjungi ${service.title || "produk"}`}
+              isDark={isDark}
+              tone="cyan"
+              intensity="strong"
+              className={`h-full p-5 md:p-6 rounded-3xl border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:min-h-[15.75rem] ${focusRing} ${
+                isDark
+                  ? "bg-white/5 border-white/10 hover:border-cyan-500 hover:bg-white/10"
+                  : "bg-white/50 border-white/60 hover:border-teal-500 hover:bg-white"
+              }`}
+            >
+              <div>
               <div
                 className={`relative w-14 h-14 md:w-[4.5rem] md:h-[4.5rem] mb-5 rounded-xl md:rounded-2xl overflow-hidden flex items-center justify-center border transition-colors ${
                   isDark
@@ -103,7 +111,8 @@ export function ServicesSection({
             >
               Kunjungi <ArrowRight size={14} />
             </div>
-          </motion.a>
+            </SpotlightCard>
+          </motion.div>
         ))}
       </div>
     </section>

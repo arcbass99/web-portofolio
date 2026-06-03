@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { formatMediaUrl } from "../../lib/media";
+import { SpotlightCard } from "../ui/SpotlightCard";
 import type { PortfolioItem } from "../../types/content";
 
 type PortfolioSectionProps = {
@@ -102,13 +103,19 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                   }
                 }}
                 aria-label={`Lihat detail ${portfolio.title || "portfolio"}`}
-                className={`group cursor-pointer p-3 md:p-4 rounded-3xl border backdrop-blur-md shadow-xl transition-all duration-500 ${focusRing} ${
-                  isDark
-                    ? "bg-white/5 border-white/10 hover:bg-white/10"
-                    : "bg-white/50 border-white/60 hover:bg-white/80"
-                }`}
+                className={`group cursor-pointer rounded-3xl ${focusRing}`}
               >
-                <div className="relative aspect-video rounded-2xl overflow-hidden mb-4 md:mb-5">
+                <SpotlightCard
+                  isDark={isDark}
+                  tone="teal"
+                  intensity="medium"
+                  className={`p-3 md:p-4 rounded-3xl border backdrop-blur-md shadow-xl transition-all duration-500 ${
+                    isDark
+                      ? "bg-white/5 border-white/10 hover:bg-white/10"
+                      : "bg-white/50 border-white/60 hover:bg-white/80"
+                  }`}
+                >
+                  <div className="relative aspect-video rounded-2xl overflow-hidden mb-4 md:mb-5">
                   {portfolio.media_type === "video" && portfolio.media_url ? (
                     <iframe
                       src={getPortfolioVideoPreviewUrl(portfolio.media_url)}
@@ -169,11 +176,15 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                     {portfolio.tags || "Project"}
                   </span>
                 </div>
+                </SpotlightCard>
               </motion.article>
             ))}
           </div>
         ) : (
-          <div
+          <SpotlightCard
+            isDark={isDark}
+            tone="teal"
+            intensity="subtle"
             className={`rounded-3xl md:rounded-[2.5rem] border p-8 md:p-12 text-center backdrop-blur-md ${
               isDark
                 ? "bg-white/5 border-white/10 text-slate-300"
@@ -187,7 +198,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
               Portfolio akan tampil di sini setelah data karya ditambahkan dari
               console admin.
             </p>
-          </div>
+          </SpotlightCard>
         )}
       </div>
 
