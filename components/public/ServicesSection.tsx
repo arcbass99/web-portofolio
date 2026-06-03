@@ -28,7 +28,7 @@ export function ServicesSection({
         </h2>
         <p
           className={`text-base md:text-lg font-medium ${
-            isDark ? "text-slate-400" : "text-slate-500"
+            isDark ? "text-slate-300" : "text-slate-700"
           }`}
         >
           Produk, layanan, dan penawaran digital yang sedang saya kembangkan.
@@ -74,8 +74,8 @@ export function ServicesSection({
                   <ArrowRight
                     className={
                       isDark
-                        ? "text-slate-400 group-hover:text-cyan-400"
-                        : "text-slate-400 group-hover:text-teal-600"
+                        ? "text-slate-300 group-hover:text-cyan-300"
+                        : "text-slate-600 group-hover:text-teal-700"
                     }
                     size={20}
                   />
@@ -88,7 +88,7 @@ export function ServicesSection({
 
               <p
                 className={`text-sm md:text-base leading-relaxed line-clamp-3 font-medium ${
-                  isDark ? "text-slate-400" : "text-slate-500"
+                  isDark ? "text-slate-300" : "text-slate-700"
                 }`}
               >
                 {service.description ||
@@ -97,8 +97,8 @@ export function ServicesSection({
             </div>
 
             <div
-              className={`mt-5 flex items-center gap-2 text-xs md:text-sm font-bold opacity-70 group-hover:opacity-100 transition-opacity ${
-                isDark ? "text-cyan-400" : "text-teal-600"
+              className={`mt-5 flex items-center gap-2 text-xs md:text-sm font-bold opacity-100 transition-opacity ${
+                isDark ? "text-cyan-300" : "text-teal-700"
               }`}
             >
               Kunjungi <ArrowRight size={14} />

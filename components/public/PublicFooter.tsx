@@ -20,7 +20,7 @@ export function PublicFooter({
   return (
     <footer
       className={`py-10 md:py-14 px-6 text-center border-t backdrop-blur-sm ${
-        isDark ? "border-white/5 bg-black/20" : "border-white/50 bg-white/10"
+        isDark ? "border-white/10 bg-black/25" : "border-white/60 bg-white/30"
       }`}
     >
       <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-6 md:mb-8">
@@ -42,7 +42,11 @@ export function PublicFooter({
         <ArrowRight size={16} />
       </a>
 
-      <p className="mt-8 md:mt-10 text-xs md:text-sm font-bold tracking-widest uppercase opacity-40">
+      <p
+        className={`mt-8 md:mt-10 text-xs md:text-sm font-bold tracking-widest uppercase ${
+          isDark ? "text-slate-300" : "text-slate-700"
+        }`}
+      >
         © {new Date().getFullYear()} — I’m Nafis. Dibuat dengan presisi.
       </p>
     </footer>

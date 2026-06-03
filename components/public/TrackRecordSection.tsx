@@ -69,8 +69,8 @@ export function TrackRecordSection({
           <span
             className={`inline-flex rounded-full border px-4 py-1.5 text-[10px] font-black uppercase tracking-widest ${
               isDark
-                ? "border-cyan-400/20 bg-cyan-400/10 text-cyan-300"
-                : "border-teal-200 bg-teal-50 text-teal-700"
+                ? "border-cyan-400/30 bg-cyan-400/15 text-cyan-200"
+                : "border-teal-300 bg-teal-50 text-teal-800"
             }`}
           >
             Track Record
@@ -82,7 +82,7 @@ export function TrackRecordSection({
 
           <p
             className={`mt-4 text-base md:text-lg font-medium leading-relaxed ${
-              isDark ? "text-slate-400" : "text-slate-500"
+              isDark ? "text-slate-300" : "text-slate-700"
             }`}
           >
             Ringkasan perjalanan yang membentuk cara saya berpikir, memimpin,
@@ -195,7 +195,7 @@ function TimelineBlock({ title, icon, items, isDark }: TimelineBlockProps) {
               {item.period && (
                 <p
                   className={`mb-1 text-xs font-black uppercase tracking-widest ${
-                    isDark ? "text-cyan-300" : "text-teal-700"
+                    isDark ? "text-cyan-200" : "text-teal-800"
                   }`}
                 >
                   {item.period}
@@ -224,7 +224,7 @@ function TimelineBlock({ title, icon, items, isDark }: TimelineBlockProps) {
                   {item.description && (
                     <p
                       className={`mt-1.5 text-sm leading-relaxed font-medium ${
-                        isDark ? "text-slate-400" : "text-slate-600"
+                        isDark ? "text-slate-300" : "text-slate-700"
                       }`}
                     >
                       {item.description}
@@ -304,7 +304,7 @@ function AchievementBlock({ items, isDark }: AchievementBlockProps) {
                 {item.period && (
                   <p
                     className={`mb-1 text-[10px] font-black uppercase tracking-widest ${
-                      isDark ? "text-amber-300" : "text-amber-700"
+                      isDark ? "text-amber-200" : "text-amber-800"
                     }`}
                   >
                     {item.period}
@@ -316,7 +316,7 @@ function AchievementBlock({ items, isDark }: AchievementBlockProps) {
                 {item.description && (
                   <p
                     className={`mt-1.5 text-sm leading-relaxed font-medium ${
-                      isDark ? "text-slate-400" : "text-slate-600"
+                      isDark ? "text-slate-300" : "text-slate-700"
                     }`}
                   >
                     {item.description}
@@ -370,7 +370,7 @@ function SkillBlock({ items, isDark }: SkillBlockProps) {
             className={`rounded-full border px-4 py-2 text-xs md:text-sm font-black ${
               isDark
                 ? "border-white/10 bg-white/5 text-slate-200"
-                : "border-slate-200 bg-white/70 text-slate-700"
+                : "border-slate-300 bg-white/80 text-slate-800"
             }`}
           >
             {item.title}

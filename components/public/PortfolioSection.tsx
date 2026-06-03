@@ -67,7 +67,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
             </h2>
             <p
               className={`max-w-2xl text-base md:text-lg font-medium leading-relaxed ${
-                isDark ? "text-slate-400" : "text-slate-500"
+                isDark ? "text-slate-300" : "text-slate-700"
               }`}
             >
               Kumpulan karya visual, desain, dan eksperimen digital yang sedang saya kembangkan.
@@ -76,7 +76,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
 
           <span
             className={`text-4xl md:text-5xl font-black ${
-              isDark ? "text-white/10" : "text-slate-200"
+              isDark ? "text-white/30" : "text-slate-400"
             }`}
           >
             / 0{portfolios.length}
@@ -136,7 +136,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                       </div>
                     </div>
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-slate-200/50 px-6 text-center text-slate-400">
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-slate-200/50 px-6 text-center text-slate-600">
                       <ArrowUpRight size={28} className="mb-3 opacity-60" />
                       <p className="text-sm font-bold">
                         Media karya belum tersedia
@@ -152,7 +152,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                     </h3>
                     <p
                       className={`line-clamp-2 max-w-sm text-sm md:text-base font-medium ${
-                        isDark ? "text-slate-400" : "text-slate-500"
+                        isDark ? "text-slate-300" : "text-slate-700"
                       }`}
                     >
                       {portfolio.description || "Belum ada deskripsi."}
@@ -176,8 +176,8 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
           <div
             className={`rounded-3xl md:rounded-[2.5rem] border p-8 md:p-12 text-center backdrop-blur-md ${
               isDark
-                ? "bg-white/5 border-white/10 text-slate-400"
-                : "bg-white/50 border-white/60 text-slate-500"
+                ? "bg-white/5 border-white/10 text-slate-300"
+                : "bg-white/50 border-white/60 text-slate-700"
             }`}
           >
             <p className="text-xl md:text-2xl font-black text-inherit">
@@ -284,7 +284,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
 
                     <p
                       className={`mt-5 whitespace-pre-line text-sm font-medium leading-relaxed md:text-base ${
-                        isDark ? "text-slate-300" : "text-slate-600"
+                        isDark ? "text-slate-200" : "text-slate-700"
                       }`}
                     >
                       {selectedPortfolio.description ||

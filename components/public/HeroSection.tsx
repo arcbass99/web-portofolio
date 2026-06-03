@@ -40,8 +40,8 @@ export function HeroSection({
           <span
             className={`inline-block px-4 py-1.5 md:py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 border backdrop-blur-sm ${
               isDark
-                ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
-                : "bg-teal-500/10 text-teal-600 border-teal-500/20"
+                ? "bg-cyan-400/15 text-cyan-300 border-cyan-400/30"
+                : "bg-teal-100/80 text-teal-800 border-teal-300/70"
             }`}
           >
             Terbuka untuk Kolaborasi
@@ -53,7 +53,7 @@ export function HeroSection({
 
           <p
             className={`text-base md:text-lg leading-relaxed max-w-xl mb-7 md:mb-8 font-medium ${
-              isDark ? "text-slate-400" : "text-slate-600"
+              isDark ? "text-slate-300" : "text-slate-700"
             }`}
           >
             {about?.description ||
@@ -132,7 +132,7 @@ export function HeroSection({
                   <p className="text-4xl md:text-6xl font-black tracking-tighter">
                     I’m Nafis<span className="text-teal-400">.</span>
                   </p>
-                  <p className="mt-3 text-xs md:text-sm font-bold uppercase tracking-[0.25em] text-slate-400">
+                  <p className="mt-3 text-xs md:text-sm font-bold uppercase tracking-[0.25em] text-slate-300">
                     Track Record & Karya
                   </p>
                 </div>
