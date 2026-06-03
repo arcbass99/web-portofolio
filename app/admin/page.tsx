@@ -108,20 +108,20 @@ export default function AdminDashboard() {
     setNotice({ type, message });
   }, []);
 
-  const checkUser = useCallback(async () => {
+  const initializeAdmin = useCallback(async () => {
     try {
       const session = await getAdminSession();
 
       if (!session) {
-        router.push("/admin/login");
+        router.replace("/admin/login");
+        return;
       }
     } catch (error) {
-      showNotice("error", `Gagal memeriksa sesi: ${getErrorMessage(error)}`);
-      router.push("/admin/login");
+      showNotice("error", `Gagal memeriksa sesi admin: ${getErrorMessage(error)}`);
+      router.replace("/admin/login");
+      return;
     }
-  }, [router, showNotice]);
 
-  const fetchAllData = useCallback(async () => {
     try {
       const adminData = await fetchAdminData();
 
@@ -143,22 +143,15 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [showNotice]);
+  }, [router, showNotice]);
 
   useEffect(() => {
-    const authTimer = window.setTimeout(() => {
-      void checkUser();
+    const initializeTimer = window.setTimeout(() => {
+      void initializeAdmin();
     }, 0);
 
-    const fetchTimer = window.setTimeout(() => {
-      void fetchAllData();
-    }, 0);
-
-    return () => {
-      window.clearTimeout(authTimer);
-      window.clearTimeout(fetchTimer);
-    };
-  }, [checkUser, fetchAllData]);
+    return () => window.clearTimeout(initializeTimer);
+  }, [initializeAdmin]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -287,7 +280,7 @@ export default function AdminDashboard() {
 
     try {
       await signOutGlobally();
-      router.push("/admin/login");
+      router.replace("/admin/login");
     } catch (error) {
       showNotice("error", `Gagal logout: ${getErrorMessage(error)}`);
     }
