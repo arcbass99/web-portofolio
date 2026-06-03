@@ -1,0 +1,141 @@
+.spotlight {
+  --spotlight-rgb: 34 211 238;
+  --spotlight-fill: 0.14;
+  --spotlight-border: 0.34;
+  --spotlight-shadow: 0.42;
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.spotlight::before,
+.spotlight::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.spotlight::before {
+  z-index: -1;
+  background:
+    radial-gradient(
+      circle at 16% 0%,
+      rgb(var(--spotlight-rgb) / var(--spotlight-fill)),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 92% 18%,
+      rgb(var(--spotlight-rgb) / calc(var(--spotlight-fill) * 0.72)),
+      transparent 46%
+    );
+  transform: scale(0.985);
+}
+
+.spotlight::after {
+  z-index: 1;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--spotlight-rgb) / var(--spotlight-border)),
+    0 0 38px -24px rgb(var(--spotlight-rgb) / var(--spotlight-shadow));
+}
+
+.spotlight:hover::before,
+.spotlight:hover::after,
+.spotlight:focus-visible::before,
+.spotlight:focus-visible::after,
+.spotlight:focus-within::before,
+.spotlight:focus-within::after {
+  opacity: 1;
+}
+
+.spotlight:hover::before,
+.spotlight:focus-visible::before,
+.spotlight:focus-within::before {
+  transform: scale(1);
+}
+
+.dark.toneCyan {
+  --spotlight-rgb: 34 211 238;
+}
+
+.light.toneCyan {
+  --spotlight-rgb: 20 184 166;
+}
+
+.dark.toneTeal {
+  --spotlight-rgb: 45 212 191;
+}
+
+.light.toneTeal {
+  --spotlight-rgb: 13 148 136;
+}
+
+.dark.toneViolet {
+  --spotlight-rgb: 167 139 250;
+}
+
+.light.toneViolet {
+  --spotlight-rgb: 99 102 241;
+}
+
+.dark.toneAmber {
+  --spotlight-rgb: 251 191 36;
+}
+
+.light.toneAmber {
+  --spotlight-rgb: 217 119 6;
+}
+
+.dark.toneRose {
+  --spotlight-rgb: 251 113 133;
+}
+
+.light.toneRose {
+  --spotlight-rgb: 219 39 119;
+}
+
+.dark.toneWhite {
+  --spotlight-rgb: 255 255 255;
+}
+
+.light.toneWhite {
+  --spotlight-rgb: 15 23 42;
+}
+
+.intensitySubtle {
+  --spotlight-fill: 0.08;
+  --spotlight-border: 0.22;
+  --spotlight-shadow: 0.28;
+}
+
+.intensityMedium {
+  --spotlight-fill: 0.13;
+  --spotlight-border: 0.34;
+  --spotlight-shadow: 0.42;
+}
+
+.intensityStrong {
+  --spotlight-fill: 0.18;
+  --spotlight-border: 0.48;
+  --spotlight-shadow: 0.56;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .spotlight::before,
+  .spotlight::after {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight::before,
+  .spotlight::after {
+    transition: none;
+  }
+}
