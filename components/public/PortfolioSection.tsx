@@ -88,8 +88,8 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
             {portfolios.map((portfolio, index) => (
               <motion.article
                 key={portfolio.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ delay: index * 0.1 }}
                 role="button"

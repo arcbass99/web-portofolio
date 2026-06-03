@@ -142,8 +142,8 @@ type TimelineBlockProps = {
 function TimelineBlock({ title, icon, items, isDark }: TimelineBlockProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-100px" }}
       className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
         isDark
@@ -186,8 +186,8 @@ function TimelineBlock({ title, icon, items, isDark }: TimelineBlockProps) {
             />
 
             <motion.div
-              initial={{ opacity: 0, x: -12 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ delay: index * 0.08 }}
               className="min-w-0"
@@ -248,8 +248,8 @@ type AchievementBlockProps = {
 function AchievementBlock({ items, isDark }: AchievementBlockProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-100px" }}
       className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
         isDark
@@ -276,8 +276,8 @@ function AchievementBlock({ items, isDark }: AchievementBlockProps) {
         {items.map((item, index) => (
           <motion.article
             key={item.id}
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ delay: index * 0.08 }}
             className={`rounded-2xl border p-3.5 md:p-4 ${
@@ -339,8 +339,8 @@ type SkillBlockProps = {
 function SkillBlock({ items, isDark }: SkillBlockProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-100px" }}
       className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
         isDark

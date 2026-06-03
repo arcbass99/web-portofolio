@@ -43,8 +43,8 @@ export function ServicesSection({
             target="_blank"
             rel="noreferrer"
             aria-label={`Kunjungi ${service.title || "produk"}`}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ delay: index * 0.1 }}
             className={`p-5 md:p-6 rounded-3xl border backdrop-blur-md shadow-lg transition-all duration-300 flex flex-col justify-between group md:min-h-[15.75rem] ${focusRing} ${
