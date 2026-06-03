@@ -23,69 +23,87 @@ export function AdminSidebar({
   onSignOut,
 }: AdminSidebarProps) {
   return (
-    <div
-      id="admin-sidebar"
-      className={`fixed inset-y-0 left-0 z-[60] w-72 bg-slate-950/95 border-r border-white/5 backdrop-blur-xl transform transition-transform duration-300 lg:translate-x-0 ${
-        isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-      }`}
-    >
-      <div className="p-6 flex flex-col h-full">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-lg font-black tracking-tight text-white">
-              I’m Nafis<span className="text-cyan-400">.</span>
-            </h2>
-            <p className="mt-1 text-[10px] font-black uppercase tracking-widest text-slate-500">
-              Admin Console
-            </p>
+    <>
+      {isSidebarOpen && (
+        <button
+          type="button"
+          className="fixed inset-0 z-[55] bg-slate-950/60 backdrop-blur-sm lg:hidden"
+          onClick={onCloseSidebar}
+          aria-label="Tutup sidebar admin"
+        />
+      )}
+
+      <aside
+        id="admin-sidebar"
+        aria-label="Sidebar admin"
+        className={`fixed inset-y-0 left-0 z-[60] w-72 transform border-r border-white/5 bg-slate-950/95 backdrop-blur-xl transition-transform duration-300 lg:translate-x-0 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex h-full flex-col p-6">
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-black tracking-tight text-white">
+                I’m Nafis<span className="text-cyan-400">.</span>
+              </h2>
+              <p className="mt-1 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                Admin Console
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={onCloseSidebar}
+              className={`rounded-xl p-2 text-slate-300 transition hover:bg-white/5 hover:text-white lg:hidden ${focusRing}`}
+              aria-label="Tutup sidebar admin"
+              title="Tutup sidebar admin"
+            >
+              <X size={20} />
+            </button>
           </div>
+
+          <nav className="flex-1 space-y-1" aria-label="Navigasi admin">
+            {menuItems.map((item) => {
+              const isActive = activeTab === item.id;
+
+              return (
+                <button
+                  type="button"
+                  key={item.id}
+                  onClick={() => onChangeTab(item.id)}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`group flex w-full items-center justify-between rounded-2xl px-3.5 py-3 text-left transition-all ${focusRing} ${
+                    isActive
+                      ? "bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20"
+                      : "text-slate-300 hover:bg-white/5 hover:text-white"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    {item.icon}
+                    <span className="text-sm font-bold">{item.label}</span>
+                  </div>
+
+                  <ChevronRight
+                    size={16}
+                    aria-hidden="true"
+                    className={`transition-opacity ${
+                      isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                    }`}
+                  />
+                </button>
+              );
+            })}
+          </nav>
 
           <button
             type="button"
-            onClick={onCloseSidebar}
-            className={`lg:hidden p-2 rounded-xl text-slate-500 ${focusRing}`}
-            aria-label="Tutup sidebar admin"
+            onClick={onSignOut}
+            className={`mt-auto flex items-center gap-3 rounded-2xl px-3.5 py-3 text-sm font-bold text-slate-300 transition hover:bg-red-500/10 hover:text-red-300 ${focusRing}`}
           >
-            <X size={20} />
+            <LogOut size={20} aria-hidden="true" /> Logout Semua Perangkat
           </button>
         </div>
-
-        <nav className="space-y-1 flex-1" aria-label="Navigasi admin">
-          {menuItems.map((item) => (
-            <button
-              type="button"
-              key={item.id}
-              onClick={() => onChangeTab(item.id)}
-              aria-current={activeTab === item.id ? "page" : undefined}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl transition-all group ${focusRing} ${
-                activeTab === item.id
-                  ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/20"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                {item.icon}
-                <span className="font-bold text-sm">{item.label}</span>
-              </div>
-
-              <ChevronRight
-                size={16}
-                className={`opacity-0 group-hover:opacity-100 transition-opacity ${
-                  activeTab === item.id ? "opacity-100" : ""
-                }`}
-              />
-            </button>
-          ))}
-        </nav>
-
-        <button
-          type="button"
-          onClick={onSignOut}
-          className={`flex items-center gap-3 rounded-2xl text-slate-500 hover:text-red-400 px-3.5 py-3 mt-auto transition font-bold text-sm ${focusRing}`}
-        >
-          <LogOut size={20} /> Logout Semua Perangkat
-        </button>
-      </div>
-    </div>
+      </aside>
+    </>
   );
 }

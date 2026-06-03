@@ -167,6 +167,17 @@ export default function AdminDashboard() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isSidebarOpen]);
 
+  useEffect(() => {
+    if (!isSidebarOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isSidebarOpen]);
+
   const menuItems = useMemo<MenuItem[]>(
     () => [
       { id: "about", label: "Profil", icon: <User size={20} /> },
@@ -601,6 +612,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-[#0F172A] text-slate-200 font-sans">
       <AdminMobileHeader
         focusRing={focusRing}
+        isSidebarOpen={isSidebarOpen}
         onOpenSidebar={() => setIsSidebarOpen(true)}
         onSignOut={handleSignOut}
       />
@@ -615,7 +627,10 @@ export default function AdminDashboard() {
         onSignOut={handleSignOut}
       />
 
-      <main className="lg:ml-72 min-h-screen px-5 pt-24 pb-28 md:px-8 lg:px-10 lg:py-8">
+      <main
+        className="lg:ml-72 min-h-screen px-5 pt-24 pb-28 md:px-8 lg:px-10 lg:py-8"
+        aria-busy={saving}
+      >
         <div className="max-w-6xl mx-auto pb-24 lg:pb-0">
           <AdminNotice
             focusRing={focusRing}
@@ -757,7 +772,7 @@ export default function AdminDashboard() {
         activeTab={activeTab}
         focusRing={focusRing}
         menuItems={menuItems}
-        onChangeTab={setActiveTab}
+        onChangeTab={changeTab}
       />
     </div>
   );

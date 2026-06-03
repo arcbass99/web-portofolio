@@ -12,15 +12,17 @@ type AdminNoticeProps = {
 export function AdminNotice({ focusRing, notice, onClose }: AdminNoticeProps) {
   if (!notice) return null;
 
+  const isError = notice.type === "error";
+
   return (
     <div
-      role="status"
-      aria-live="polite"
+      role={isError ? "alert" : "status"}
+      aria-live={isError ? "assertive" : "polite"}
       aria-atomic="true"
       className={`mb-6 flex items-start justify-between gap-4 rounded-2xl border p-4 ${
-        notice.type === "error"
-          ? "border-red-500/20 bg-red-500/10 text-red-200"
-          : "border-cyan-500/20 bg-cyan-500/10 text-cyan-100"
+        isError
+          ? "border-red-500/20 bg-red-500/10 text-red-100"
+          : "border-cyan-500/20 bg-cyan-500/10 text-cyan-50"
       }`}
     >
       <p className="text-sm font-semibold leading-relaxed">{notice.message}</p>
@@ -28,8 +30,9 @@ export function AdminNotice({ focusRing, notice, onClose }: AdminNoticeProps) {
       <button
         type="button"
         onClick={onClose}
-        className={`shrink-0 rounded-xl p-1 opacity-70 hover:opacity-100 transition ${focusRing}`}
+        className={`shrink-0 rounded-xl p-1 opacity-80 transition hover:opacity-100 ${focusRing}`}
         aria-label="Tutup notifikasi"
+        title="Tutup notifikasi"
       >
         <X size={18} />
       </button>
