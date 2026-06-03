@@ -1,15 +1,11 @@
-import type {
-  AnchorHTMLAttributes,
-  HTMLAttributes,
-  ReactNode,
-} from "react";
+import type { ReactNode } from "react";
 import styles from "./SpotlightCard.module.css";
 
 type SpotlightTone = "cyan" | "teal" | "violet" | "amber" | "rose" | "white";
 type SpotlightIntensity = "subtle" | "medium" | "strong";
 type SpotlightElement = "div" | "article" | "a" | "span";
 
-type SpotlightCardProps = HTMLAttributes<HTMLElement> & {
+type SpotlightCardProps = {
   as?: SpotlightElement;
   children: ReactNode;
   className?: string;
@@ -19,6 +15,7 @@ type SpotlightCardProps = HTMLAttributes<HTMLElement> & {
   href?: string;
   target?: string;
   rel?: string;
+  "aria-label"?: string;
 };
 
 const toneClassMap: Record<SpotlightTone, string> = {
@@ -36,17 +33,12 @@ const intensityClassMap: Record<SpotlightIntensity, string> = {
   strong: styles.intensityStrong,
 };
 
-const buildClassName = ({
-  className,
-  isDark,
-  tone,
-  intensity,
-}: {
-  className: string;
-  isDark: boolean;
-  tone: SpotlightTone;
-  intensity: SpotlightIntensity;
-}) =>
+const buildClassName = (
+  className: string,
+  isDark: boolean,
+  tone: SpotlightTone,
+  intensity: SpotlightIntensity,
+) =>
   [
     styles.spotlight,
     isDark ? styles.dark : styles.light,
@@ -67,22 +59,22 @@ export function SpotlightCard({
   href,
   target,
   rel,
-  ...props
+  "aria-label": ariaLabel,
 }: SpotlightCardProps) {
-  const composedClassName = buildClassName({
+  const composedClassName = buildClassName(
     className,
     isDark,
     tone,
     intensity,
-  });
+  );
 
   if (as === "a") {
     return (
       <a
-        {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)}
         href={href}
         target={target}
         rel={rel}
+        aria-label={ariaLabel}
         className={composedClassName}
       >
         {children}
@@ -91,24 +83,12 @@ export function SpotlightCard({
   }
 
   if (as === "article") {
-    return (
-      <article {...props} className={composedClassName}>
-        {children}
-      </article>
-    );
+    return <article className={composedClassName}>{children}</article>;
   }
 
   if (as === "span") {
-    return (
-      <span {...props} className={composedClassName}>
-        {children}
-      </span>
-    );
+    return <span className={composedClassName}>{children}</span>;
   }
 
-  return (
-    <div {...props} className={composedClassName}>
-      {children}
-    </div>
-  );
+  return <div className={composedClassName}>{children}</div>;
 }
