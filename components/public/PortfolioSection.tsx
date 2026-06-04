@@ -32,8 +32,8 @@ const getPortfolioVideoPreviewUrl = (mediaUrl?: string | null) => {
   return `https://drive.google.com/file/d/${mediaUrl}/preview`;
 };
 
-const formatPortfolioIndex = (index: number) => {
-  return String(index + 1).padStart(2, "0");
+const formatPortfolioNumber = (value: number) => {
+  return String(value).padStart(2, "0");
 };
 
 export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) {
@@ -130,8 +130,8 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
               }`}
             >
               {totalPortfolios > 0
-                ? `${formatPortfolioIndex(safeActiveIndex)} / ${formatPortfolioIndex(totalPortfolios - 1)}`
-                : "/ 00"}
+                ? `${formatPortfolioNumber(safeActiveIndex + 1)} / ${formatPortfolioNumber(totalPortfolios)}`
+                : "00 / 00"}
             </span>
 
             {canNavigate && (
@@ -184,7 +184,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                 transition={{ duration: 0.22 }}
                 role="group"
                 aria-roledescription="slide"
-                aria-label={`${formatPortfolioIndex(safeActiveIndex)} dari ${formatPortfolioIndex(totalPortfolios - 1)}: ${activePortfolio.title || "portfolio"}`}
+                aria-label={`${formatPortfolioNumber(safeActiveIndex + 1)} dari ${formatPortfolioNumber(totalPortfolios)}: ${activePortfolio.title || "portfolio"}`}
               >
                 <SpotlightCard
                   isDark={isDark}
@@ -202,14 +202,14 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                     className={`group block w-full rounded-[1.45rem] text-left ${focusRing}`}
                     aria-label={`Lihat detail ${activePortfolio.title || "portfolio"}`}
                   >
-                    <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.28fr_0.9fr] lg:gap-7">
-                      <div className="relative aspect-video min-h-[13rem] overflow-hidden rounded-[1.25rem] bg-slate-900 md:min-h-[18rem] lg:min-h-[24rem]">
+                    <div className="flex min-w-0 flex-col gap-5">
+                      <div className="relative aspect-video w-full min-w-0 overflow-hidden rounded-[1.25rem] bg-slate-900">
                         {activePortfolio.media_url ? (
                           <Image
                             src={formatMediaUrl(activePortfolio.media_url, 1200)}
                             alt={activePortfolio.title || "Portfolio image"}
                             fill
-                            sizes="(max-width: 768px) 92vw, (max-width: 1280px) 62vw, 760px"
+                            sizes="(max-width: 768px) 92vw, (max-width: 1280px) 88vw, 1080px"
                             quality={80}
                             className="object-cover transition-transform duration-700 group-hover:scale-[1.025]"
                             priority={safeActiveIndex === 0}
@@ -234,7 +234,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                         </div>
                       </div>
 
-                      <div className="flex min-h-full flex-col justify-between gap-6 px-1 pb-1 md:px-2 lg:py-3">
+                      <div className="flex min-w-0 flex-col gap-5 px-2 pb-2 md:px-3 lg:px-4 lg:pb-3">
                         <div>
                           <span
                             className={`inline-flex max-w-full rounded-full border px-4 py-1.5 text-[10px] md:text-xs font-black uppercase tracking-widest ${
@@ -248,12 +248,12 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                             </span>
                           </span>
 
-                          <h3 className="mt-5 text-3xl font-black leading-tight tracking-tight md:text-4xl lg:text-5xl">
+                          <h3 className="mt-5 max-w-4xl text-3xl font-black leading-tight tracking-tight md:text-4xl lg:text-5xl">
                             {activePortfolio.title || "Untitled Project"}
                           </h3>
 
                           <p
-                            className={`mt-5 line-clamp-4 text-base font-medium leading-relaxed md:text-lg ${
+                            className={`mt-5 max-w-5xl text-base font-medium leading-relaxed md:text-lg ${
                               isDark ? "text-slate-300" : "text-slate-700"
                             }`}
                           >
