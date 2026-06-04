@@ -370,36 +370,29 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                 <div className="relative aspect-video overflow-hidden rounded-2xl bg-slate-900 md:rounded-[1.5rem]">
                   {selectedPortfolio.media_type === "video" &&
                   selectedPortfolio.media_url ? (
-                    <div className="flex h-full flex-col items-center justify-center px-5 text-center">
-                      <Image
-                        src={formatMediaUrl(selectedPortfolio.media_url, 1200)}
-                        alt={selectedPortfolio.title || "Portfolio video thumbnail"}
-                        fill
-                        sizes="(max-width: 1024px) 92vw, 60vw"
-                        quality={78}
-                        className="object-cover opacity-45"
+                    <>
+                      <iframe
+                        src={getPortfolioVideoPreviewUrl(
+                          selectedPortfolio.media_url,
+                        )}
+                        title={selectedPortfolio.title || "Portfolio video detail"}
+                        className="h-full w-full border-0"
+                        allow="autoplay; fullscreen"
+                        loading="lazy"
+                        allowFullScreen
                       />
-                      <div className="absolute inset-0 bg-black/45" />
-                      <div className="relative z-10 max-w-md">
-                        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-white text-slate-950 shadow-2xl">
-                          <Play size={24} fill="currentColor" />
-                        </div>
-                        <p className="text-lg font-black text-white md:text-xl">
-                          Video dibuka di tab baru agar lebih stabil.
-                        </p>
-                        <p className="mt-2 text-sm font-medium leading-relaxed text-slate-200">
-                          Embed Google Drive kadang gagal dimuat di beberapa browser.
-                        </p>
-                        <a
-                          href={getPortfolioVideoPreviewUrl(selectedPortfolio.media_url)}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={`mt-5 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-xs font-black uppercase tracking-widest text-slate-950 transition hover:bg-cyan-300 ${focusRing}`}
-                        >
-                          Buka Video <ArrowUpRight size={15} />
-                        </a>
-                      </div>
-                    </div>
+
+                      <a
+                        href={getPortfolioVideoPreviewUrl(
+                          selectedPortfolio.media_url,
+                        )}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={`absolute bottom-4 left-4 z-10 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-950 shadow-xl backdrop-blur-md transition hover:bg-cyan-300 ${focusRing}`}
+                      >
+                        Buka di Drive <ArrowUpRight size={14} />
+                      </a>
+                    </>
                   ) : selectedPortfolio.media_url ? (
                     <Image
                       src={formatMediaUrl(selectedPortfolio.media_url, 1200)}
