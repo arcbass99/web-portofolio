@@ -85,7 +85,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
         </div>
 
         {portfolios.length > 0 ? (
-          <div className={`grid grid-cols-1 gap-6 md:gap-8 ${portfolios.length > 1 ? "md:mx-auto md:max-w-[48rem] md:grid-cols-2 lg:mx-0 lg:max-w-none" : "md:max-w-[34rem] lg:max-w-[43rem]"}`}>
+          <div className={`grid w-full max-w-full grid-cols-1 gap-6 md:gap-8 ${portfolios.length > 1 ? "md:mx-auto md:max-w-[56rem] md:grid-cols-2 lg:mx-0" : "md:max-w-[31rem] lg:max-w-[34rem]"}`}>
             {portfolios.map((portfolio, index) => (
               <motion.article
                 key={portfolio.id}
@@ -109,13 +109,13 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                   isDark={isDark}
                   tone="teal"
                   intensity="medium"
-                  className={`p-3 md:p-4 rounded-3xl border backdrop-blur-md shadow-xl transition-all duration-500 ${
+                  className={`w-full max-w-full p-3 md:p-4 rounded-3xl border backdrop-blur-md shadow-xl transition-all duration-500 ${
                     isDark
                       ? "bg-white/5 border-white/10 hover:bg-white/10"
                       : "bg-white/50 border-white/60 hover:bg-white/80"
                   }`}
                 >
-                  <div className="relative aspect-video rounded-2xl overflow-hidden mb-4 md:mb-5">
+                  <div className="relative aspect-video max-w-full rounded-2xl overflow-hidden mb-4 md:mb-5">
                   {portfolio.media_type === "video" && portfolio.media_url ? (
                     <iframe
                       src={getPortfolioVideoPreviewUrl(portfolio.media_url)}
