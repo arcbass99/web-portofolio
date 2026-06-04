@@ -126,7 +126,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
           <div className="flex items-end justify-between gap-4 md:flex-col md:items-end">
             <span
               className={`text-4xl md:text-5xl font-black ${
-                isDark ? "text-white/30" : "text-slate-400"
+                isDark ? "text-white/60" : "text-slate-700"
               }`}
             >
               {totalPortfolios > 0
@@ -206,11 +206,11 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                       <div className="relative aspect-video w-full min-w-0 overflow-hidden rounded-[1.25rem] bg-slate-900">
                         {activePortfolio.media_url ? (
                           <Image
-                            src={formatMediaUrl(activePortfolio.media_url, 1200)}
+                            src={formatMediaUrl(activePortfolio.media_url, 960)}
                             alt={activePortfolio.title || "Portfolio image"}
                             fill
-                            sizes="(max-width: 768px) 92vw, (max-width: 1280px) 88vw, 1080px"
-                            quality={80}
+                            sizes="(max-width: 768px) 92vw, (max-width: 1280px) 88vw, 960px"
+                            quality={76}
                             className="object-cover transition-transform duration-700 group-hover:scale-[1.025]"
                             priority={safeActiveIndex === 0}
                           />
