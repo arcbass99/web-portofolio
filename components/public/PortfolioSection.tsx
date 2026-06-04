@@ -85,7 +85,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
         </div>
 
         {portfolios.length > 0 ? (
-          <div className={`grid grid-cols-1 gap-6 md:gap-8 ${portfolios.length > 1 ? "md:grid-cols-2" : "max-w-[43rem]"}`}>
+          <div className={`grid grid-cols-1 gap-6 md:gap-8 ${portfolios.length > 1 ? "md:mx-auto md:max-w-[48rem] md:grid-cols-2 lg:mx-0 lg:max-w-none" : "md:max-w-[27rem] lg:max-w-[43rem]"}`}>
             {portfolios.map((portfolio, index) => (
               <motion.article
                 key={portfolio.id}

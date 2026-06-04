@@ -31,12 +31,12 @@ export function HeroSection({
       id="home"
       className="flex min-h-[auto] flex-col justify-center px-6 pb-10 pt-24 md:pb-12 md:pt-24 lg:min-h-[66vh] lg:px-12 xl:px-24 max-w-7xl mx-auto"
     >
-      <div className="grid grid-cols-1 items-center gap-8 md:gap-10 lg:grid-cols-[1.618fr_1fr] lg:gap-14">
+      <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-[minmax(0,1.12fr)_minmax(18rem,0.88fr)] md:gap-8 lg:grid-cols-[1.618fr_1fr] lg:gap-14">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="order-2 lg:order-1"
+          className="order-2 md:order-1"
         >
           <span
             className={`inline-block px-4 py-1.5 md:py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 border backdrop-blur-sm ${
@@ -109,7 +109,7 @@ export function HeroSection({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.2 }}
-          className="order-1 mx-auto w-full max-w-sm md:max-w-md lg:order-2 lg:max-w-none"
+          className="order-1 mx-auto w-full max-w-sm md:order-2 md:max-w-[19rem] lg:max-w-none"
         >
           <SpotlightCard
             isDark={isDark}
@@ -127,7 +127,7 @@ export function HeroSection({
                   fill
                   priority
                   fetchPriority="high"
-                  sizes="(max-width: 768px) 92vw, (max-width: 1024px) 80vw, 44vw"
+                  sizes="(max-width: 768px) 92vw, (max-width: 1024px) 34vw, 44vw"
                   quality={82}
                   className="object-cover"
                 />

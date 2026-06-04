@@ -9,7 +9,7 @@ import type {
 } from "../types/content";
 import { LandingPageClient } from "../components/public/LandingPageClient";
 
-export const revalidate = 60;
+export const revalidate = 5;
 
 type PublicData = {
   about: AboutMe | null;
