@@ -210,7 +210,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                             alt={activePortfolio.title || "Portfolio image"}
                             fill
                             sizes="(max-width: 768px) 92vw, (max-width: 1280px) 88vw, 960px"
-                            quality={76}
+                            quality={78}
                             className="object-cover transition-transform duration-700 group-hover:scale-[1.025]"
                             priority={safeActiveIndex === 0}
                           />
