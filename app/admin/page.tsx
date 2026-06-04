@@ -283,6 +283,8 @@ export default function AdminDashboard() {
   };
 
   const handleSignOut = async () => {
+    if (saving) return;
+
     const confirmed = confirm(
       "Logout dari semua perangkat? Kamu perlu login ulang di semua browser/perangkat yang sedang aktif.",
     );
@@ -298,6 +300,8 @@ export default function AdminDashboard() {
   };
 
   const handleSaveAbout = async () => {
+    if (saving) return;
+
     if (!headline.trim() || !description.trim()) {
       showNotice("error", "Headline dan deskripsi bio wajib diisi.");
       return;
@@ -321,6 +325,8 @@ export default function AdminDashboard() {
   };
 
   const handleSaveSocial = async () => {
+    if (saving) return;
+
     if (!newSocialTitle.trim() || !newSocialUrl.trim()) {
       showNotice("error", "Nama dan link media sosial wajib diisi.");
       return;
@@ -374,6 +380,8 @@ export default function AdminDashboard() {
   };
 
   const handleSavePortfolio = async () => {
+    if (saving) return;
+
     if (!pTitle.trim() || !pDriveId.trim()) {
       showNotice("error", "Judul karya dan ID media wajib diisi.");
       return;
@@ -442,6 +450,8 @@ export default function AdminDashboard() {
   };
 
   const handleSaveService = async () => {
+    if (saving) return;
+
     if (!sTitle.trim() || !sTargetUrl.trim()) {
       showNotice("error", "Nama produk/layanan dan link target wajib diisi.");
       return;
@@ -510,6 +520,8 @@ export default function AdminDashboard() {
   };
 
   const handleSaveHighlight = async () => {
+    if (saving) return;
+
     if (!hTitle.trim()) {
       showNotice("error", "Judul track record wajib diisi.");
       return;
@@ -587,8 +599,16 @@ export default function AdminDashboard() {
     table: EditableTable,
     id: number,
     setState: Dispatch<SetStateAction<T[]>>,
+    itemLabel: string,
+    onDeleted?: () => void,
   ) => {
-    if (!confirm("Hapus data ini?")) return;
+    if (saving) return;
+
+    const confirmed = confirm(
+      `Hapus "${itemLabel}"? Tindakan ini tidak bisa dibatalkan dari dashboard.`,
+    );
+
+    if (!confirmed) return;
 
     setSaving(true);
 
@@ -596,7 +616,8 @@ export default function AdminDashboard() {
       await deleteAdminItem(table, id);
 
       setState((current) => current.filter((item) => item.id !== id));
-      showNotice("success", "Data berhasil dihapus.");
+      onDeleted?.();
+      showNotice("success", `"${itemLabel}" berhasil dihapus.`);
     } catch (error) {
       showNotice("error", `Gagal menghapus data: ${getErrorMessage(error)}`);
     } finally {
@@ -668,6 +689,8 @@ export default function AdminDashboard() {
                   "social_links",
                   social.id,
                   setSocials,
+                  social.title || "link sosial ini",
+                  editingSocialId === social.id ? resetSocialForm : undefined,
                 );
               }}
               onEditSocial={handleEditSocial}
@@ -699,6 +722,10 @@ export default function AdminDashboard() {
                   "profile_highlights",
                   highlight.id,
                   setHighlights,
+                  highlight.title || "track record ini",
+                  editingHighlightId === highlight.id
+                    ? resetHighlightForm
+                    : undefined,
                 );
               }}
               onEditHighlight={handleEditHighlight}
@@ -730,6 +757,10 @@ export default function AdminDashboard() {
                   "portfolio",
                   portfolio.id,
                   setPortfolios,
+                  portfolio.title || "karya ini",
+                  editingPortfolioId === portfolio.id
+                    ? resetPortfolioForm
+                    : undefined,
                 );
               }}
               onEditPortfolio={handleEditPortfolio}
@@ -759,6 +790,8 @@ export default function AdminDashboard() {
                   "services",
                   service.id,
                   setServices,
+                  service.title || "produk ini",
+                  editingServiceId === service.id ? resetServiceForm : undefined,
                 );
               }}
               onEditService={handleEditService}

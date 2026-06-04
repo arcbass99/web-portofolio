@@ -83,9 +83,10 @@ export function ServicesPanel({
               <input
                 id="serviceTitle"
                 value={sTitle}
+                disabled={saving}
                 onChange={(event) => setSTitle(event.target.value)}
                 placeholder="Nama Produk / Layanan"
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
               />
             </div>
 
@@ -99,6 +100,7 @@ export function ServicesPanel({
               <textarea
                 id="serviceDescription"
                 value={sDescription}
+                disabled={saving}
                 onChange={(event) => setSDescription(event.target.value)}
                 placeholder="Deskripsi singkat produk"
                 className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 h-24 resize-none"
@@ -115,9 +117,10 @@ export function ServicesPanel({
               <input
                 id="serviceIcon"
                 value={sDriveId}
+                disabled={saving}
                 onChange={(event) => setSDriveId(event.target.value)}
                 placeholder="ID Drive Ikon"
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
               />
 
               {serviceIconInput && (
@@ -154,9 +157,10 @@ export function ServicesPanel({
                 type="number"
                 inputMode="numeric"
                 value={sSortOrder}
+                disabled={saving}
                 onChange={(event) => setSSortOrder(event.target.value)}
                 placeholder="10"
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
               />
               <p className="mt-2 text-xs leading-relaxed text-slate-500">
                 Angka lebih kecil tampil lebih dulu. Gunakan kelipatan 10
@@ -174,9 +178,10 @@ export function ServicesPanel({
               <input
                 id="serviceTargetUrl"
                 value={sTargetUrl}
+                disabled={saving}
                 onChange={(event) => setSTargetUrl(event.target.value)}
                 placeholder="https://..."
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
               />
             </div>
 
@@ -255,7 +260,7 @@ export function ServicesPanel({
                 <button
                   type="button"
                   onClick={() => onEditService(service)}
-                  className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors p-2 ${focusRing}`}
+                  className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
                   aria-label={`Edit ${service.title || "produk"}`}
                 >
                   <Pencil size={16} />
@@ -264,7 +269,7 @@ export function ServicesPanel({
                 <button
                   type="button"
                   onClick={() => onDeleteService(service)}
-                  className={`rounded-xl text-slate-600 hover:text-red-400 transition-colors p-2 ${focusRing}`}
+                  className={`rounded-xl text-slate-600 hover:text-red-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
                   aria-label={`Hapus ${service.title || "produk"}`}
                 >
                   <Trash2 size={18} />

@@ -51,9 +51,14 @@ export function AboutPanel({
                 id="bannerUrl"
                 value={bannerUrl}
                 onChange={(event) => setBannerUrl(event.target.value)}
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm"
+                disabled={saving}
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm disabled:cursor-not-allowed disabled:opacity-60"
                 placeholder="Paste ID Drive..."
               />
+              <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                Isi dengan ID Google Drive atau URL gambar publik. Preview hanya
+                muncul kalau media bisa diakses.
+              </p>
 
               {bannerUrl.trim() && (
                 <div className="mt-4 rounded-3xl border border-white/10 bg-slate-950/40 p-3">
@@ -86,7 +91,8 @@ export function AboutPanel({
                 id="headline"
                 value={headline}
                 onChange={(event) => setHeadline(event.target.value)}
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm"
+                disabled={saving}
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm disabled:cursor-not-allowed disabled:opacity-60"
               />
             </div>
           </div>
@@ -102,7 +108,8 @@ export function AboutPanel({
               id="description"
               value={description}
               onChange={(event) => setDescription(event.target.value)}
-              className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all h-32 text-sm leading-relaxed"
+              disabled={saving}
+              className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all h-32 text-sm leading-relaxed disabled:cursor-not-allowed disabled:opacity-60"
             />
           </div>
         </div>

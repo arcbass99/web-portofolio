@@ -64,8 +64,9 @@ export function SocialsPanel({
                 id="socialTitle"
                 value={newSocialTitle}
                 onChange={(event) => setNewSocialTitle(event.target.value)}
+                disabled={saving}
                 placeholder="Ex: Instagram"
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 text-sm"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 text-sm disabled:cursor-not-allowed disabled:opacity-60"
               />
             </div>
 
@@ -80,8 +81,9 @@ export function SocialsPanel({
                 id="socialUrl"
                 value={newSocialUrl}
                 onChange={(event) => setNewSocialUrl(event.target.value)}
+                disabled={saving}
                 placeholder="https://..."
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 text-sm"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 text-sm disabled:cursor-not-allowed disabled:opacity-60"
               />
             </div>
 
@@ -145,7 +147,7 @@ export function SocialsPanel({
                 <button
                   type="button"
                   onClick={() => onEditSocial(social)}
-                  className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors p-2 ${focusRing}`}
+                  className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
                   aria-label={`Edit ${social.title || "link sosial"}`}
                 >
                   <Pencil size={16} />

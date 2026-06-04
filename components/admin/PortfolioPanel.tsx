@@ -96,12 +96,13 @@ export function PortfolioPanel({
                 <select
                   id="portfolioMediaType"
                   value={pMediaType}
+                  disabled={saving}
                   onChange={(event) =>
                     setPMediaType(event.target.value as PortfolioMediaType)
                   }
                   aria-label="Pilih tipe media portfolio"
                   title="Pilih tipe media portfolio"
-                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <option value="image">Gambar</option>
                   <option value="video">Video</option>
@@ -118,6 +119,7 @@ export function PortfolioPanel({
                 <input
                   id="portfolioMedia"
                   value={pDriveId}
+                  disabled={saving}
                   onChange={(event) => setPDriveId(event.target.value)}
                   placeholder="ID Drive / Link Gambar"
                   className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
@@ -135,6 +137,7 @@ export function PortfolioPanel({
                           title="Preview video portfolio"
                           className="h-full w-full border-0"
                           allow="autoplay"
+                          loading="lazy"
                         />
                       ) : (
                         <img
@@ -164,6 +167,7 @@ export function PortfolioPanel({
                   type="number"
                   inputMode="numeric"
                   value={pSortOrder}
+                  disabled={saving}
                   onChange={(event) => setPSortOrder(event.target.value)}
                   placeholder="10"
                   className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
@@ -184,6 +188,7 @@ export function PortfolioPanel({
                 <input
                   id="portfolioTitle"
                   value={pTitle}
+                  disabled={saving}
                   onChange={(event) => setPTitle(event.target.value)}
                   placeholder="Judul Karya"
                   className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
@@ -200,6 +205,7 @@ export function PortfolioPanel({
                 <textarea
                   id="portfolioDescription"
                   value={pDesc}
+                  disabled={saving}
                   onChange={(event) => setPDesc(event.target.value)}
                   placeholder="Deskripsi Singkat"
                   className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 h-24 resize-none"
@@ -216,6 +222,7 @@ export function PortfolioPanel({
                 <input
                   id="portfolioTags"
                   value={pTags}
+                  disabled={saving}
                   onChange={(event) => setPTags(event.target.value)}
                   placeholder="Ex: Web, UI/UX"
                   className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
@@ -297,8 +304,9 @@ export function PortfolioPanel({
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     type="button"
+                    disabled={saving}
                     onClick={() => onEditPortfolio(portfolio)}
-                    className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors p-2 ${focusRing}`}
+                    className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
                     aria-label={`Edit ${portfolio.title || "portfolio"}`}
                   >
                     <Pencil size={16} />
@@ -306,8 +314,9 @@ export function PortfolioPanel({
 
                   <button
                     type="button"
+                    disabled={saving}
                     onClick={() => onDeletePortfolio(portfolio)}
-                    className={`rounded-xl text-slate-600 hover:text-red-400 transition-colors p-2 ${focusRing}`}
+                    className={`rounded-xl text-slate-600 hover:text-red-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
                     aria-label={`Hapus ${portfolio.title || "portfolio"}`}
                   >
                     <Trash2 size={16} />

@@ -134,12 +134,13 @@ export function TrackRecordPanel({
               <select
                 id="highlightCategory"
                 value={hCategory}
+                disabled={saving}
                 onChange={(event) =>
                   setHCategory(event.target.value as ProfileHighlightCategory)
                 }
                 aria-label="Pilih kategori track record"
                 title="Pilih kategori track record"
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {categoryOrder.map((category) => (
                   <option key={category} value={category}>
@@ -160,9 +161,10 @@ export function TrackRecordPanel({
                 <input
                   id="highlightPeriod"
                   value={hPeriod}
+                  disabled={saving}
                   onChange={(event) => setHPeriod(event.target.value)}
                   placeholder="2024–2026"
-                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
                 />
               </div>
             )}
@@ -178,9 +180,10 @@ export function TrackRecordPanel({
                 <input
                   id="highlightImage"
                   value={hImageUrl}
+                  disabled={saving}
                   onChange={(event) => setHImageUrl(event.target.value)}
                   placeholder="ID Drive / Link Gambar"
-                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
                 />
 
                 {imagePreviewUrl && (
@@ -215,9 +218,10 @@ export function TrackRecordPanel({
               <input
                 id="highlightTitle"
                 value={hTitle}
+                  disabled={saving}
                 onChange={(event) => setHTitle(event.target.value)}
                 placeholder={isSkill ? "Analytical Thinking" : "Judul item"}
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
               />
             </div>
 
@@ -232,6 +236,7 @@ export function TrackRecordPanel({
                 <textarea
                   id="highlightDescription"
                   value={hDescription}
+                  disabled={saving}
                   onChange={(event) => setHDescription(event.target.value)}
                   placeholder="Deskripsi singkat"
                   className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 h-24 resize-none"
@@ -251,9 +256,10 @@ export function TrackRecordPanel({
                 type="number"
                 inputMode="numeric"
                 value={hSortOrder}
+                  disabled={saving}
                 onChange={(event) => setHSortOrder(event.target.value)}
                 placeholder="10"
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
               />
               <p className="mt-2 text-xs leading-relaxed text-slate-500">
                 Angka lebih kecil tampil lebih dulu. Gunakan 10, 20, 30 agar
@@ -361,7 +367,7 @@ export function TrackRecordPanel({
                         <button
                           type="button"
                           onClick={() => onEditHighlight(highlight)}
-                          className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors p-2 ${focusRing}`}
+                          className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
                           aria-label={`Edit ${highlight.title || "track record"}`}
                         >
                           <Pencil size={16} />
@@ -370,7 +376,7 @@ export function TrackRecordPanel({
                         <button
                           type="button"
                           onClick={() => onDeleteHighlight(highlight)}
-                          className={`rounded-xl text-slate-600 hover:text-red-400 transition-colors p-2 ${focusRing}`}
+                          className={`rounded-xl text-slate-600 hover:text-red-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
                           aria-label={`Hapus ${highlight.title || "track record"}`}
                         >
                           <Trash2 size={18} />
