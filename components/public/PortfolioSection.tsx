@@ -85,7 +85,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
         </div>
 
         {portfolios.length > 0 ? (
-          <div className={`grid grid-cols-1 gap-6 md:gap-8 ${portfolios.length > 1 ? "md:mx-auto md:max-w-[48rem] md:grid-cols-2 lg:mx-0 lg:max-w-none" : "md:max-w-[27rem] lg:max-w-[43rem]"}`}>
+          <div className={`grid grid-cols-1 gap-6 md:gap-8 ${portfolios.length > 1 ? "md:mx-auto md:max-w-[48rem] md:grid-cols-2 lg:mx-0 lg:max-w-none" : "md:max-w-[34rem] lg:max-w-[43rem]"}`}>
             {portfolios.map((portfolio, index) => (
               <motion.article
                 key={portfolio.id}
@@ -152,13 +152,13 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                   )}
                 </div>
 
-                <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 px-2 md:px-4 pb-2">
-                  <div>
-                    <h3 className="text-xl md:text-2xl font-bold mb-1 md:mb-2">
+                <div className="flex flex-col gap-3 px-2 md:px-4 pb-2 lg:flex-row lg:items-start lg:justify-between lg:gap-4">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-xl font-bold leading-tight md:text-[1.35rem] lg:text-2xl mb-1 md:mb-2">
                       {portfolio.title || "Untitled Project"}
                     </h3>
                     <p
-                      className={`line-clamp-2 max-w-sm text-sm md:text-base font-medium ${
+                      className={`line-clamp-2 max-w-none text-sm md:text-sm lg:text-base font-medium ${
                         isDark ? "text-slate-300" : "text-slate-700"
                       }`}
                     >
@@ -167,7 +167,7 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                   </div>
 
                   <span
-                    className={`self-start px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider border whitespace-nowrap ${
+                    className={`self-start max-w-full truncate px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider border whitespace-nowrap ${
                       isDark
                         ? "bg-white/5 border-white/10"
                         : "bg-white/50 border-slate-200"
