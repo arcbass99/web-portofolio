@@ -2,8 +2,14 @@
 
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  Film,
+  X,
+} from "lucide-react";
+import { useEffect, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { formatMediaUrl } from "../../lib/media";
 import { SpotlightCard } from "../ui/SpotlightCard";
 import type { PortfolioItem } from "../../types/content";
@@ -26,9 +32,12 @@ const getPortfolioVideoPreviewUrl = (mediaUrl?: string | null) => {
   return `https://drive.google.com/file/d/${mediaUrl}/preview`;
 };
 
+const formatSlideNumber = (value: number) => String(value).padStart(2, "0");
+
 export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) {
   const [selectedPortfolio, setSelectedPortfolio] =
     useState<PortfolioItem | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -58,8 +67,48 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
     setSelectedPortfolio(null);
   };
 
+  const totalPortfolios = portfolios.length;
+  const safeActiveIndex =
+    totalPortfolios === 0 ? 0 : Math.min(activeIndex, totalPortfolios - 1);
+  const activePortfolio = portfolios[safeActiveIndex];
+  const canNavigate = totalPortfolios > 1;
+
+  const goToPreviousPortfolio = () => {
+    if (!canNavigate) return;
+
+    setActiveIndex(
+      safeActiveIndex === 0 ? totalPortfolios - 1 : safeActiveIndex - 1,
+    );
+  };
+
+  const goToNextPortfolio = () => {
+    if (!canNavigate) return;
+
+    setActiveIndex(
+      safeActiveIndex === totalPortfolios - 1 ? 0 : safeActiveIndex + 1,
+    );
+  };
+
+  const handleCarouselKeyDown = (
+    event: ReactKeyboardEvent<HTMLDivElement>,
+  ) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      goToPreviousPortfolio();
+      return;
+    }
+
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      goToNextPortfolio();
+    }
+  };
+
   return (
-    <section id="portfolio" className="pt-8 pb-10 md:pt-16 md:pb-16 px-6 lg:px-12 xl:px-24">
+    <section
+      id="portfolio"
+      className="pt-8 pb-10 md:pt-16 md:pb-16 px-6 lg:px-12 xl:px-24"
+    >
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-7 md:mb-10 gap-4">
           <div>
@@ -71,114 +120,194 @@ export function PortfolioSection({ portfolios, isDark }: PortfolioSectionProps) 
                 isDark ? "text-slate-300" : "text-slate-700"
               }`}
             >
-              Kumpulan karya visual, desain, dan eksperimen digital yang sedang saya kembangkan.
+              Kumpulan karya visual, desain, dan eksperimen digital yang sedang
+              saya kembangkan.
             </p>
           </div>
 
-          <span
-            className={`text-4xl md:text-5xl font-black ${
-              isDark ? "text-white/30" : "text-slate-400"
-            }`}
-          >
-            / 0{portfolios.length}
-          </span>
+          <div className="flex items-center gap-3 md:gap-4">
+            <span
+              className={`text-4xl md:text-5xl font-black ${
+                isDark ? "text-white/30" : "text-slate-400"
+              }`}
+            >
+              {totalPortfolios > 0
+                ? `${formatSlideNumber(safeActiveIndex + 1)} / ${formatSlideNumber(totalPortfolios)}`
+                : "/ 00"}
+            </span>
+
+            {canNavigate && (
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={goToPreviousPortfolio}
+                  aria-label="Lihat karya sebelumnya"
+                  className={`inline-flex h-11 w-11 items-center justify-center rounded-full border backdrop-blur-md transition-all hover:-translate-y-0.5 ${focusRing} ${
+                    isDark
+                      ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
+                      : "border-white/70 bg-white/70 text-slate-800 hover:bg-white"
+                  }`}
+                >
+                  <ArrowLeft size={18} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={goToNextPortfolio}
+                  aria-label="Lihat karya berikutnya"
+                  className={`inline-flex h-11 w-11 items-center justify-center rounded-full border backdrop-blur-md transition-all hover:-translate-y-0.5 ${focusRing} ${
+                    isDark
+                      ? "border-white/10 bg-white/5 text-white hover:bg-white/10"
+                      : "border-white/70 bg-white/70 text-slate-800 hover:bg-white"
+                  }`}
+                >
+                  <ArrowRight size={18} />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
-        {portfolios.length > 0 ? (
-          <div className={`grid w-full max-w-full grid-cols-1 gap-6 md:gap-8 ${portfolios.length > 1 ? "md:mx-auto md:max-w-[56rem] md:grid-cols-2 lg:mx-0" : "md:max-w-[31rem] lg:max-w-[34rem]"}`}>
-            {portfolios.map((portfolio, index) => (
+        {activePortfolio ? (
+          <div
+            className={`w-full max-w-6xl mx-auto ${focusRing}`}
+            role="region"
+            aria-label="Carousel karya pilihan"
+            aria-roledescription="carousel"
+            tabIndex={0}
+            onKeyDown={handleCarouselKeyDown}
+          >
+            <AnimatePresence mode="wait" initial={false}>
               <motion.article
-                key={portfolio.id}
+                key={activePortfolio.id}
                 initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ delay: index * 0.1 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.22 }}
                 role="button"
                 tabIndex={0}
-                onClick={() => openPortfolioDetail(portfolio)}
+                onClick={() => openPortfolioDetail(activePortfolio)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter" || event.key === " ") {
                     event.preventDefault();
-                    openPortfolioDetail(portfolio);
+                    openPortfolioDetail(activePortfolio);
                   }
                 }}
-                aria-label={`Lihat detail ${portfolio.title || "portfolio"}`}
+                aria-label={`Lihat detail ${
+                  activePortfolio.title || "portfolio"
+                }`}
                 className={`group cursor-pointer rounded-3xl ${focusRing}`}
               >
                 <SpotlightCard
                   isDark={isDark}
                   tone="teal"
                   intensity="medium"
-                  className={`w-full max-w-full p-3 md:p-4 rounded-3xl border backdrop-blur-md shadow-xl transition-all duration-500 ${
+                  className={`w-full rounded-3xl border p-3 shadow-2xl backdrop-blur-md transition-all duration-500 md:p-4 ${
                     isDark
                       ? "bg-white/5 border-white/10 hover:bg-white/10"
-                      : "bg-white/50 border-white/60 hover:bg-white/80"
+                      : "bg-white/55 border-white/70 hover:bg-white/80"
                   }`}
                 >
-                  <div className="relative aspect-video max-w-full rounded-2xl overflow-hidden mb-4 md:mb-5">
-                  {portfolio.media_type === "video" && portfolio.media_url ? (
-                    <iframe
-                      src={getPortfolioVideoPreviewUrl(portfolio.media_url)}
-                      title={portfolio.title || "Portfolio video preview"}
-                      className="w-full h-full border-0 pointer-events-none"
-                      allow="autoplay"
-                      loading="lazy"
-                      tabIndex={-1}
-                    />
-                  ) : portfolio.media_url ? (
-                    <div className="relative w-full h-full">
-                      <Image
-                        src={formatMediaUrl(portfolio.media_url, 900)}
-                        alt={portfolio.title || "Portfolio image"}
-                        fill
-                        sizes="(max-width: 768px) 92vw, (max-width: 1024px) 44vw, 40vw"
-                        quality={78}
-                        className="object-cover group-hover:scale-105 transition-transform duration-700"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-center justify-center">
-                        <ArrowUpRight
-                          className="text-white opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-500 shadow-xl"
-                          size={40}
-                        />
+                  <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.38fr_1fr] lg:gap-8">
+                    <div className="relative aspect-video overflow-hidden rounded-2xl bg-slate-200/60 lg:min-h-[22rem]">
+                      {activePortfolio.media_url ? (
+                        <div className="relative h-full w-full">
+                          <Image
+                            src={formatMediaUrl(activePortfolio.media_url, 1200)}
+                            alt={activePortfolio.title || "Portfolio image"}
+                            fill
+                            sizes="(max-width: 768px) 92vw, (max-width: 1280px) 58vw, 52vw"
+                            quality={82}
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+
+                          <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/25" />
+
+                          {activePortfolio.media_type === "video" && (
+                            <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-xs font-black uppercase tracking-widest text-white backdrop-blur-md">
+                              <Film size={14} />
+                              Video
+                            </div>
+                          )}
+
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <ArrowUpRight
+                              className="translate-y-4 text-white opacity-0 shadow-xl transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100"
+                              size={42}
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex h-full flex-col items-center justify-center bg-slate-200/50 px-6 text-center text-slate-600">
+                          <ArrowUpRight size={28} className="mb-3 opacity-60" />
+                          <p className="text-sm font-bold">
+                            Media karya belum tersedia
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col justify-between gap-7 px-2 pb-2 md:px-4 lg:px-1 lg:py-3">
+                      <div>
+                        <span
+                          className={`inline-flex max-w-full rounded-full border px-4 py-1.5 text-[10px] font-black uppercase tracking-widest ${
+                            isDark
+                              ? "bg-white/5 border-white/10 text-cyan-200"
+                              : "bg-white/70 border-slate-200 text-teal-800"
+                          }`}
+                        >
+                          <span className="truncate">
+                            {activePortfolio.tags || "Project"}
+                          </span>
+                        </span>
+
+                        <h3 className="mt-5 text-3xl font-black leading-tight tracking-tight md:text-4xl lg:text-5xl">
+                          {activePortfolio.title || "Untitled Project"}
+                        </h3>
+
+                        <p
+                          className={`mt-5 line-clamp-5 text-sm font-medium leading-relaxed md:text-base ${
+                            isDark ? "text-slate-300" : "text-slate-700"
+                          }`}
+                        >
+                          {activePortfolio.description ||
+                            "Belum ada deskripsi."}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap items-center justify-between gap-4">
+                        <p
+                          className={`text-xs font-black uppercase tracking-[0.22em] ${
+                            isDark ? "text-cyan-200" : "text-teal-800"
+                          }`}
+                        >
+                          Klik untuk detail
+                        </p>
+
+                        {canNavigate && (
+                          <div className="flex gap-1.5" aria-hidden="true">
+                            {portfolios.map((portfolio, index) => (
+                              <span
+                                key={portfolio.id}
+                                className={`h-1.5 rounded-full transition-all ${
+                                  index === safeActiveIndex
+                                    ? isDark
+                                      ? "w-8 bg-cyan-300"
+                                      : "w-8 bg-teal-600"
+                                    : isDark
+                                      ? "w-2 bg-white/20"
+                                      : "w-2 bg-slate-300"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-slate-200/50 px-6 text-center text-slate-600">
-                      <ArrowUpRight size={28} className="mb-3 opacity-60" />
-                      <p className="text-sm font-bold">
-                        Media karya belum tersedia
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex flex-col gap-3 px-2 md:px-4 pb-2 lg:flex-row lg:items-start lg:justify-between lg:gap-4">
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-xl font-bold leading-tight md:text-[1.35rem] lg:text-2xl mb-1 md:mb-2">
-                      {portfolio.title || "Untitled Project"}
-                    </h3>
-                    <p
-                      className={`line-clamp-2 max-w-none text-sm md:text-sm lg:text-base font-medium ${
-                        isDark ? "text-slate-300" : "text-slate-700"
-                      }`}
-                    >
-                      {portfolio.description || "Belum ada deskripsi."}
-                    </p>
                   </div>
-
-                  <span
-                    className={`self-start max-w-full truncate px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider border whitespace-nowrap ${
-                      isDark
-                        ? "bg-white/5 border-white/10"
-                        : "bg-white/50 border-slate-200"
-                    }`}
-                  >
-                    {portfolio.tags || "Project"}
-                  </span>
-                </div>
                 </SpotlightCard>
               </motion.article>
-            ))}
+            </AnimatePresence>
           </div>
         ) : (
           <SpotlightCard
