@@ -20,6 +20,7 @@ import { PortfolioPanel } from "../../components/admin/PortfolioPanel";
 import { ServicesPanel } from "../../components/admin/ServicesPanel";
 import { SocialsPanel } from "../../components/admin/SocialsPanel";
 import { TrackRecordPanel } from "../../components/admin/TrackRecordPanel";
+import { DotPatternBackground } from "../../components/ui/DotPatternBackground";
 import {
   createPortfolio,
   createProfileHighlight,
@@ -630,8 +631,12 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-slate-200 font-sans">
-      <AdminMobileHeader
+    <div className="relative min-h-screen bg-black text-white/80 font-sans">
+      <div className="fixed inset-0 z-0">
+        <DotPatternBackground />
+      </div>
+      <div className="relative z-10">
+        <AdminMobileHeader
         focusRing={focusRing}
         isSidebarOpen={isSidebarOpen}
         onOpenSidebar={() => setIsSidebarOpen(true)}
@@ -649,10 +654,10 @@ export default function AdminDashboard() {
       />
 
       <main
-        className="lg:ml-72 min-h-screen px-5 pt-24 pb-28 md:px-8 lg:px-10 lg:py-8"
+        className="lg:ml-72 min-h-screen px-[1.618rem] pt-[6.854rem] pb-[6.854rem] md:px-[2.618rem] lg:px-[2.618rem] lg:py-[2.618rem]"
         aria-busy={saving}
       >
-        <div className="max-w-6xl mx-auto pb-24 lg:pb-0">
+        <div className="max-w-6xl mx-auto pb-[6.854rem] lg:pb-0">
           <AdminNotice
             focusRing={focusRing}
             notice={notice}
@@ -807,6 +812,7 @@ export default function AdminDashboard() {
         menuItems={menuItems}
         onChangeTab={changeTab}
       />
+      </div>
     </div>
   );
 }

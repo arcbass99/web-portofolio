@@ -1,67 +1,97 @@
 "use client";
 
-import { Menu, Moon, Sun } from "lucide-react";
+import { Menu } from "lucide-react";
 
 type PublicNavbarProps = {
-  isDark: boolean;
   focusRing: string;
-  onToggleTheme: () => void;
   onOpenMenu: () => void;
   onLogoClick: () => void;
 };
 
+const navLinks = [
+  { label: "Profil", id: "home" },
+  { label: "Track Record", id: "track-record" },
+  { label: "Karya", id: "portfolio" },
+  { label: "Layanan", id: "services" },
+];
+
 export function PublicNavbar({
-  isDark,
   focusRing,
-  onToggleTheme,
   onOpenMenu,
   onLogoClick,
 }: PublicNavbarProps) {
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <nav
       aria-label="Navigasi utama"
-      className={`fixed top-0 w-full z-40 transition-all duration-300 backdrop-blur-md border-b ${
-        isDark ? "bg-black/20 border-white/5" : "bg-white/30 border-white/50"
-      }`}
+      className="fixed top-4 left-0 right-0 z-50 px-6 md:px-8 lg:px-16"
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-24 py-3.5 md:py-4 flex justify-between items-center">
+      <div className="mx-auto flex max-w-7xl items-center justify-between">
+        {/* Logo — liquid-glass circle */}
         <button
           type="button"
-          className={`font-black text-lg md:text-xl tracking-tighter cursor-pointer rounded-lg ${focusRing}`}
           onClick={onLogoClick}
-          aria-label="I’m Nafis — kembali ke bagian profil utama"
+          className={`liquid-glass flex h-12 w-12 items-center justify-center rounded-full cursor-pointer ${focusRing}`}
+          aria-label="I'm Nafis — kembali ke profil utama"
         >
-          I’m Nafis
-          <span className={isDark ? "text-cyan-400" : "text-teal-600"}>.</span>
+          <span className="font-heading italic text-lg text-white">n</span>
         </button>
 
-        <div className="flex items-center gap-3 md:gap-4">
-          <button
-            type="button"
-            onClick={onToggleTheme}
-            aria-label={isDark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
-            className={`p-2.5 md:p-3 rounded-full backdrop-blur-md border transition-all ${focusRing} ${
-              isDark
-                ? "bg-white/10 border-white/10 text-yellow-300"
-                : "bg-white/50 border-white/50 text-slate-600 hover:bg-white"
-            }`}
-          >
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-
-          <button
-            type="button"
-            onClick={onOpenMenu}
-            aria-label="Buka menu navigasi"
-            className={`p-2.5 md:p-3 rounded-full backdrop-blur-md border transition-all ${focusRing} ${
-              isDark
-                ? "bg-white/10 border-white/10 hover:bg-white/20"
-                : "bg-white/50 border-white/50 hover:bg-white"
-            }`}
-          >
-            <Menu size={18} />
-          </button>
+        {/* Center navigation — desktop only */}
+        <div className="hidden lg:flex items-center">
+          <div className="liquid-glass flex items-center rounded-full px-1.5 py-1.5">
+            {navLinks.map((link) => (
+              <button
+                key={link.id}
+                type="button"
+                onClick={() => scrollTo(link.id)}
+                className="cursor-pointer px-3 py-2 text-sm font-medium text-white/90 font-body transition-colors hover:text-white rounded-full"
+              >
+                {link.label}
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={() => {
+                document
+                  .querySelector("footer")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="ml-1 flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-4 py-2 text-sm font-medium text-black transition-all hover:bg-white/90"
+            >
+              Hubungi
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M7 17L17 7M7 7h10v10"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
+
+        {/* Mobile menu button */}
+        <button
+          type="button"
+          onClick={onOpenMenu}
+          className={`liquid-glass flex h-12 w-12 items-center justify-center rounded-full lg:hidden cursor-pointer ${focusRing}`}
+          aria-label="Buka menu navigasi"
+        >
+          <Menu size={18} className="text-white" />
+        </button>
+
+        {/* Desktop spacer for balance */}
+        <div className="hidden lg:block h-12 w-12" aria-hidden="true" />
       </div>
     </nav>
   );

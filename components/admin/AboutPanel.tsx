@@ -30,14 +30,14 @@ export function AboutPanel({
 }: AboutPanelProps) {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h1 className="text-2xl md:text-4xl font-black mb-2 text-white">
+      <h1 className="text-3xl md:text-5xl font-heading italic font-black mb-2 text-white">
         Profil Utama
       </h1>
-      <p className="text-slate-500 text-sm md:text-base mb-6">
+      <p className="text-white/60 text-sm md:text-base mb-6">
         Kelola identitas dan teks utama di landing page.
       </p>
 
-      <div className="bg-slate-900/50 border border-white/5 rounded-3xl p-5 md:p-7 space-y-6 backdrop-blur-xl">
+      <div className="liquid-glass-strong border border-white/10 bg-[#0a0a0a]/80 shadow-2xl shadow-black/50 rounded-3xl p-5 md:p-7 space-y-6 backdrop-blur-xl">
         <div className="space-y-4">
           <div className="grid grid-cols-1 gap-5">
             <div>
@@ -52,27 +52,27 @@ export function AboutPanel({
                 value={bannerUrl}
                 onChange={(event) => setBannerUrl(event.target.value)}
                 disabled={saving}
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl outline-none focus-visible:border-white/40 focus:border-white/40 transition-colors text-sm disabled:cursor-not-allowed disabled:opacity-60"
                 placeholder="Paste ID Drive..."
               />
-              <p className="mt-2 text-xs leading-relaxed text-slate-500">
+              <p className="mt-2 text-xs leading-relaxed text-white/60">
                 Isi dengan ID Google Drive atau URL gambar publik. Preview hanya
                 muncul kalau media bisa diakses.
               </p>
 
               {bannerUrl.trim() && (
-                <div className="mt-4 rounded-3xl border border-white/10 bg-slate-950/40 p-3">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                <div className="mt-4 rounded-3xl border border-white/10 bg-black/40 p-3 liquid-glass">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-white/60">
                     Preview Banner
                   </p>
-                  <div className="mt-3 aspect-[4/3] overflow-hidden rounded-2xl bg-slate-800">
+                  <div className="mt-3 aspect-[4/3] overflow-hidden rounded-2xl bg-white/5">
                     <img
                       src={formatMediaUrl(bannerUrl, 600)}
                       alt="Preview banner profil"
                       className="h-full w-full object-cover"
                     />
                   </div>
-                  <p className="mt-3 text-xs leading-relaxed text-slate-500">
+                  <p className="mt-3 text-xs leading-relaxed text-white/60">
                     Preview ini membantu memastikan ID Drive banner sudah benar
                     sebelum profil disimpan.
                   </p>
@@ -92,7 +92,7 @@ export function AboutPanel({
                 value={headline}
                 onChange={(event) => setHeadline(event.target.value)}
                 disabled={saving}
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all text-sm disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl outline-none focus-visible:border-white/40 focus:border-white/40 transition-colors text-sm disabled:cursor-not-allowed disabled:opacity-60"
               />
             </div>
           </div>
@@ -109,7 +109,7 @@ export function AboutPanel({
               value={description}
               onChange={(event) => setDescription(event.target.value)}
               disabled={saving}
-              className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus:border-cyan-500 transition-all h-32 text-sm leading-relaxed disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl outline-none focus-visible:border-white/40 focus:border-white/40 transition-colors h-32 text-sm leading-relaxed disabled:cursor-not-allowed disabled:opacity-60"
             />
           </div>
         </div>
@@ -118,7 +118,7 @@ export function AboutPanel({
           type="button"
           onClick={onSave}
           disabled={saving}
-          className={`bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-6 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all disabled:opacity-50 ${focusRing}`}
+          className={`bg-white hover:bg-gray-200 text-black px-6 py-3.5 rounded-xl font-bold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${focusRing}`}
         >
           {saving ? "Menyimpan..." : "Update Profil"}
         </button>

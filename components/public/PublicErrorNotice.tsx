@@ -2,10 +2,9 @@
 
 type PublicErrorNoticeProps = {
   error: string | null;
-  isDark: boolean;
 };
 
-export function PublicErrorNotice({ error, isDark }: PublicErrorNoticeProps) {
+export function PublicErrorNotice({ error }: PublicErrorNoticeProps) {
   if (!error) return null;
 
   return (
@@ -13,11 +12,7 @@ export function PublicErrorNotice({ error, isDark }: PublicErrorNoticeProps) {
       <div
         role="status"
         aria-live="polite"
-        className={`rounded-3xl border p-5 text-sm font-semibold leading-relaxed shadow-sm backdrop-blur-md ${
-          isDark
-            ? "border-amber-400/20 bg-amber-400/10 text-amber-100"
-            : "border-amber-200 bg-amber-50 text-amber-900"
-        }`}
+        className="liquid-glass rounded-2xl p-5 text-sm font-medium leading-relaxed text-amber-200/90 font-body"
       >
         Beberapa data belum berhasil dimuat. Halaman tetap ditampilkan dengan
         fallback sementara. Detail: {error}

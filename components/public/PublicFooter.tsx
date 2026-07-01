@@ -1,10 +1,9 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
-import { SpotlightCard } from "../ui/SpotlightCard";
+import Link from "next/link";
 
 type PublicFooterProps = {
-  isDark: boolean;
   contactHref: string;
   contactLabel: string;
   isExternalContact: boolean;
@@ -12,7 +11,6 @@ type PublicFooterProps = {
 };
 
 export function PublicFooter({
-  isDark,
   contactHref,
   contactLabel,
   isExternalContact,
@@ -20,40 +18,31 @@ export function PublicFooter({
 }: PublicFooterProps) {
   return (
     <footer
-      className={`py-10 md:py-14 px-6 text-center border-t backdrop-blur-sm ${
-        isDark ? "border-white/10 bg-black/25" : "border-white/60 bg-white/30"
-      }`}
+      className="py-10 md:py-14 px-6 text-center border-t backdrop-blur-sm border-white/10 bg-black/25"
     >
-      <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-6 md:mb-8">
+      <h2 className="font-heading italic text-white text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-6 md:mb-8">
         Mari mulai kolaborasi.
       </h2>
 
-      <SpotlightCard
-        as="a"
+      <a
         href={contactHref}
         target={isExternalContact ? "_blank" : undefined}
         rel={isExternalContact ? "noreferrer" : undefined}
         aria-label={contactLabel}
-        isDark={isDark}
-        tone="cyan"
-        intensity="medium"
-        className={`inline-flex items-center gap-2 px-7 py-3 md:px-9 md:py-4 rounded-full font-bold text-sm transition-all shadow-xl border ${focusRing} ${
-          isDark
-            ? "bg-white text-black hover:bg-cyan-400 border-white"
-            : "bg-slate-900 text-white hover:bg-teal-600 border-slate-900"
-        }`}
+        className={`liquid-glass-strong inline-flex items-center gap-2 px-7 py-3 md:px-9 md:py-4 rounded-full font-bold text-sm transition-transform hover:scale-105 shadow-xl border border-white/5 text-white ${focusRing}`}
       >
         {contactLabel}
         <ArrowRight size={16} />
-      </SpotlightCard>
+      </a>
 
-      <p
-        className={`mt-8 md:mt-10 text-xs md:text-sm font-bold tracking-widest uppercase ${
-          isDark ? "text-slate-300" : "text-slate-700"
-        }`}
-      >
-        © {new Date().getFullYear()} — I’m Nafis. Dibuat dengan presisi.
-      </p>
+      <div className="mt-8 md:mt-10 flex flex-col items-center justify-center gap-2">
+        <p className="text-xs md:text-sm font-body text-white/50 font-bold tracking-widest uppercase">
+          © {new Date().getFullYear()} — I&apos;m Nafis. Dibuat dengan presisi.
+        </p>
+        <Link href="/admin/login" className="text-[10px] text-white/20 hover:text-white/60 transition-colors uppercase tracking-widest font-bold">
+          Admin Console
+        </Link>
+      </div>
     </footer>
   );
 }

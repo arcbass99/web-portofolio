@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PUBLIC_FOCUS_RING } from "../../lib/constants";
 import type {
   AboutMe,
@@ -9,7 +9,6 @@ import type {
   ServiceItem,
   SocialLink,
 } from "../../types/content";
-import { PublicBackground } from "./PublicBackground";
 import { PublicErrorNotice } from "./PublicErrorNotice";
 import { PublicFooter } from "./PublicFooter";
 import { PublicMenuOverlay } from "./PublicMenuOverlay";
@@ -36,8 +35,19 @@ export function LandingPageClient({
   highlights,
   publicError,
 }: LandingPageClientProps) {
-  const [isDark, setIsDark] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === "IMG" || target.tagName === "VIDEO") {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("contextmenu", handleContextMenu);
+    return () => document.removeEventListener("contextmenu", handleContextMenu);
+  }, []);
 
   const focusRing = PUBLIC_FOCUS_RING;
 
@@ -110,23 +120,14 @@ export function LandingPageClient({
     : "Jelajahi Profil";
 
   return (
-    <div
-      className={`relative min-h-screen overflow-hidden font-sans transition-colors duration-700 ${
-        isDark ? "bg-[#0B0C10] text-white" : "bg-[#F8FAFC] text-slate-900"
-      }`}
-    >
-      <PublicBackground isDark={isDark} />
-
+    <div className="relative min-h-screen bg-black text-white font-body overflow-x-clip">
       <PublicNavbar
-        isDark={isDark}
         focusRing={focusRing}
-        onToggleTheme={() => setIsDark((current) => !current)}
         onOpenMenu={() => setIsMenuOpen(true)}
         onLogoClick={() => scrollToSection("home")}
       />
 
       <PublicMenuOverlay
-        isDark={isDark}
         isOpen={isMenuOpen}
         highlightsCount={highlights.length}
         servicesCount={services.length}
@@ -136,39 +137,44 @@ export function LandingPageClient({
       />
 
       <main id="main-content" className="relative z-10">
-        <PublicErrorNotice error={publicError} isDark={isDark} />
-
-        <HeroSection
-          about={about}
-          socials={socials}
-          contactHref={contactHref}
-          contactLabel={contactLabel}
-          isDark={isDark}
-          isExternalContact={isExternalContact}
-          focusRing={focusRing}
-        />
-
-        {highlights.length > 0 && (
-          <TrackRecordSection highlights={highlights} isDark={isDark} />
+        {publicError && (
+          <div className="absolute top-24 left-0 right-0 z-50">
+            <PublicErrorNotice error={publicError} />
+          </div>
         )}
 
-        <PortfolioSection portfolios={portfolios} isDark={isDark} />
-
-        {services.length > 0 && (
-          <ServicesSection
-            services={services}
-            isDark={isDark}
+        {/* Hero Section (Delayed Parallax) */}
+        <div className="sticky top-[-60vh] lg:top-[-40vh] z-0">
+          <HeroSection
+            about={about}
+            socials={socials}
+            portfolioCount={portfolios.length}
+            contactHref={contactHref}
+            contactLabel={contactLabel}
+            isExternalContact={isExternalContact}
             focusRing={focusRing}
           />
-        )}
+        </div>
 
-        <PublicFooter
-          isDark={isDark}
-          contactHref={contactHref}
-          contactLabel={contactLabel}
-          isExternalContact={isExternalContact}
-          focusRing={focusRing}
-        />
+        {/* Foreground Content */}
+        <div className="relative z-10 bg-black shadow-[0_-20px_50px_rgba(0,0,0,0.8)] rounded-t-[2.5rem]">
+          {highlights.length > 0 && (
+            <TrackRecordSection highlights={highlights} />
+          )}
+
+          <PortfolioSection portfolios={portfolios} />
+
+          {services.length > 0 && (
+            <ServicesSection services={services} focusRing={focusRing} />
+          )}
+
+          <PublicFooter
+            contactHref={contactHref}
+            contactLabel={contactLabel}
+            isExternalContact={isExternalContact}
+            focusRing={focusRing}
+          />
+        </div>
       </main>
     </div>
   );

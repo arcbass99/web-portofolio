@@ -63,13 +63,13 @@ export function PortfolioPanel({
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h1 className="text-2xl md:text-4xl font-black mb-6 text-white">
+      <h1 className="text-3xl md:text-5xl font-heading italic font-black mb-6 text-white">
         Karya
       </h1>
 
       <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.618fr)] gap-5 md:gap-5">
         <div className="space-y-4">
-          <div className="bg-slate-900 border border-white/5 p-5 rounded-3xl sticky top-24">
+          <div className="liquid-glass-strong border border-white/10 bg-[#0a0a0a]/80 shadow-2xl shadow-black/50 p-5 rounded-3xl xl:sticky xl:top-24">
             <h3 className="font-black text-[10px] uppercase tracking-widest text-cyan-500 mb-6">
               {editingPortfolioId !== null ? "Edit Karya" : "Tambah Karya"}
             </h3>
@@ -79,7 +79,7 @@ export function PortfolioPanel({
                 <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">
                   Mode Edit Karya
                 </p>
-                <p className="mt-1 text-xs text-slate-400">
+                <p className="mt-1 text-xs text-white/60">
                   Kamu sedang mengubah data karya yang sudah tersimpan.
                 </p>
               </div>
@@ -102,7 +102,7 @@ export function PortfolioPanel({
                   }
                   aria-label="Pilih tipe media portfolio"
                   title="Pilih tipe media portfolio"
-                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl text-sm outline-none focus-visible:border-white/40 focus:border-white/40 disabled:cursor-not-allowed disabled:opacity-60 transition-colors"
                 >
                   <option value="image">Gambar</option>
                   <option value="video">Video</option>
@@ -122,15 +122,15 @@ export function PortfolioPanel({
                   disabled={saving}
                   onChange={(event) => setPDriveId(event.target.value)}
                   placeholder="ID Drive / Link Gambar"
-                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                  className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl text-sm outline-none focus-visible:border-white/40 focus:border-white/40 transition-colors"
                 />
 
                 {mediaInput && (
-                  <div className="mt-4 rounded-3xl border border-white/10 bg-slate-950/40 p-3">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                  <div className="mt-4 rounded-3xl border border-white/10 bg-black/40 p-3 liquid-glass">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-white/60">
                       Preview Media
                     </p>
-                    <div className="mt-3 aspect-video overflow-hidden rounded-2xl bg-slate-800">
+                    <div className="mt-3 aspect-video overflow-hidden rounded-2xl bg-white/5">
                       {pMediaType === "video" ? (
                         <iframe
                           src={portfolioVideoPreviewUrl}
@@ -147,7 +147,7 @@ export function PortfolioPanel({
                         />
                       )}
                     </div>
-                    <p className="mt-3 text-xs leading-relaxed text-slate-500">
+                    <p className="mt-3 text-xs leading-relaxed text-white/60">
                       Preview ini belum menyimpan data. Gunakan untuk memastikan
                       media yang dipilih sudah sesuai.
                     </p>
@@ -170,9 +170,9 @@ export function PortfolioPanel({
                   disabled={saving}
                   onChange={(event) => setPSortOrder(event.target.value)}
                   placeholder="10"
-                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                  className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl text-sm outline-none focus-visible:border-white/40 focus:border-white/40 transition-colors"
                 />
-                <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                <p className="mt-2 text-xs leading-relaxed text-white/60">
                   Angka lebih kecil tampil lebih dulu. Gunakan kelipatan 10
                   seperti 10, 20, 30 agar mudah menyisipkan karya baru.
                 </p>
@@ -191,7 +191,7 @@ export function PortfolioPanel({
                   disabled={saving}
                   onChange={(event) => setPTitle(event.target.value)}
                   placeholder="Judul Karya"
-                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                  className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl text-sm outline-none focus-visible:border-white/40 focus:border-white/40 transition-colors"
                 />
               </div>
 
@@ -208,7 +208,7 @@ export function PortfolioPanel({
                   disabled={saving}
                   onChange={(event) => setPDesc(event.target.value)}
                   placeholder="Deskripsi Singkat"
-                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 h-24 resize-none"
+                  className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl text-sm outline-none focus-visible:border-white/40 focus:border-white/40 h-24 resize-none transition-colors"
                 />
               </div>
 
@@ -225,7 +225,7 @@ export function PortfolioPanel({
                   disabled={saving}
                   onChange={(event) => setPTags(event.target.value)}
                   placeholder="Ex: Web, UI/UX"
-                  className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+                  className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl text-sm outline-none focus-visible:border-white/40 focus:border-white/40 transition-colors"
                 />
               </div>
 
@@ -233,7 +233,7 @@ export function PortfolioPanel({
                 type="button"
                 onClick={onSavePortfolio}
                 disabled={saving}
-                className={`w-full bg-cyan-500 text-slate-900 p-3.5 rounded-2xl font-black text-xs uppercase tracking-widest disabled:opacity-50 ${focusRing}`}
+                className={`w-full bg-white text-black p-3.5 rounded-xl font-bold text-sm disabled:opacity-50 transition-colors hover:bg-gray-200 ${focusRing}`}
               >
                 {saving
                   ? "Menyimpan..."
@@ -247,7 +247,7 @@ export function PortfolioPanel({
                   type="button"
                   onClick={onCancelEdit}
                   disabled={saving}
-                  className={`w-full bg-white/5 hover:bg-white/10 text-slate-300 p-3.5 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50 ${focusRing}`}
+                  className={`w-full liquid-glass-strong bg-white/10 text-white hover:bg-white/20 p-3.5 rounded-xl font-bold text-sm uppercase border border-white/10 disabled:opacity-50 transition-colors ${focusRing}`}
                 >
                   Batal Edit
                 </button>
@@ -258,11 +258,11 @@ export function PortfolioPanel({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {portfolios.length === 0 && (
-            <div className="md:col-span-2 rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-8 text-center">
-              <p className="text-sm font-bold text-slate-300">
+            <div className="md:col-span-2 rounded-3xl border border-dashed border-[#333] bg-[#0a0a0a]/50 p-8 text-center liquid-glass">
+              <p className="text-sm font-bold text-white/80">
                 Belum ada karya.
               </p>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-white/60">
                 Tambahkan karya pertama agar section portfolio tidak kosong.
               </p>
             </div>
@@ -271,9 +271,9 @@ export function PortfolioPanel({
           {portfolios.map((portfolio) => (
             <div
               key={portfolio.id}
-              className="bg-slate-900/50 border border-white/5 rounded-3xl overflow-hidden group"
+              className="liquid-glass-strong border border-[#333] bg-black/60 rounded-3xl overflow-hidden group"
             >
-              <div className="aspect-video bg-slate-800 relative overflow-hidden">
+              <div className="aspect-video bg-black relative overflow-hidden">
                 {portfolio.media_type === "video" ? (
                   <Film
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/20"
@@ -296,7 +296,7 @@ export function PortfolioPanel({
                   <p className="text-[10px] uppercase font-black text-cyan-500 tracking-tighter truncate">
                     {portfolio.tags || "Project"}
                   </p>
-                  <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-slate-600">
+                  <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-white/80">
                     Urutan {portfolio.sort_order ?? 100}
                   </p>
                 </div>
@@ -306,7 +306,7 @@ export function PortfolioPanel({
                     type="button"
                     disabled={saving}
                     onClick={() => onEditPortfolio(portfolio)}
-                    className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
+                    className={`rounded-xl text-white/60 hover:text-cyan-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
                     aria-label={`Edit ${portfolio.title || "portfolio"}`}
                   >
                     <Pencil size={16} />
@@ -316,7 +316,7 @@ export function PortfolioPanel({
                     type="button"
                     disabled={saving}
                     onClick={() => onDeletePortfolio(portfolio)}
-                    className={`rounded-xl text-slate-600 hover:text-red-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
+                    className={`rounded-xl text-white/60 hover:text-red-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
                     aria-label={`Hapus ${portfolio.title || "portfolio"}`}
                   >
                     <Trash2 size={16} />

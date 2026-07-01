@@ -1,15 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Instrument_Serif, Barlow } from "next/font/google";
 import "./globals.css";
 
-const jakarta = Plus_Jakarta_Sans({
+const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
   display: "swap",
+  variable: "--font-instrument-serif",
+});
+
+const barlow = Barlow({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  display: "swap",
+  variable: "--font-barlow",
 });
 
 const siteUrl = "https://im-nafis.vercel.app";
-const siteName = "I’m Nafis";
-const siteTitle = "I’m Nafis — Profil, Track Record & Karya Digital";
+const siteName = "I'm Nafis";
+const siteTitle = "I'm Nafis — Profil, Track Record & Karya Digital";
 const siteDescription =
   "Profil digital Nafis yang menampilkan perjalanan akademik, track record, karya pilihan, produk digital, dan ruang kolaborasi kreatif.";
 const ogImage = "/og-image.png";
@@ -51,7 +61,7 @@ export const metadata: Metadata = {
         url: ogImage,
         width: 1200,
         height: 630,
-        alt: "I’m Nafis — Profil, Track Record, dan Karya Digital",
+        alt: "I'm Nafis — Profil, Track Record, dan Karya Digital",
       },
     ],
   },
@@ -66,17 +76,19 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0f766e",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="id" className="scroll-smooth" data-scroll-behavior="smooth">
-      <body className={jakarta.className}>{children}</body>
+    <html
+      lang="id"
+      className={`${instrumentSerif.variable} ${barlow.variable}`}
+    >
+      <body className="font-sans antialiased min-h-screen">{children}</body>
     </html>
   );
 }

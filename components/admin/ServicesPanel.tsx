@@ -55,19 +55,19 @@ export function ServicesPanel({
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h1 className="text-2xl md:text-4xl font-black mb-6 text-white">
+      <h1 className="text-3xl md:text-5xl font-heading italic font-black mb-6 text-white">
         Produk Digital
       </h1>
 
       <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.618fr)] gap-5 md:gap-5">
         <div className="">
-          <div className="bg-slate-900 border border-white/5 p-5 rounded-3xl space-y-4">
+          <div className="liquid-glass-strong border border-white/10 bg-[#0a0a0a]/80 shadow-2xl shadow-black/50 p-5 rounded-3xl space-y-4 xl:sticky xl:top-24">
             {editingServiceId !== null && (
               <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4">
                 <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">
                   Mode Edit Produk
                 </p>
-                <p className="mt-1 text-xs text-slate-400">
+                <p className="mt-1 text-xs text-white/60">
                   Kamu sedang mengubah data produk/layanan yang sudah tersimpan.
                 </p>
               </div>
@@ -86,7 +86,7 @@ export function ServicesPanel({
                 disabled={saving}
                 onChange={(event) => setSTitle(event.target.value)}
                 placeholder="Nama Produk / Layanan"
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl text-sm outline-none focus-visible:border-white/40 focus:border-white/40 disabled:cursor-not-allowed disabled:opacity-60 transition-colors"
               />
             </div>
 
@@ -103,7 +103,7 @@ export function ServicesPanel({
                 disabled={saving}
                 onChange={(event) => setSDescription(event.target.value)}
                 placeholder="Deskripsi singkat produk"
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 h-24 resize-none"
+                className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl text-sm outline-none focus-visible:border-white/40 focus:border-white/40 h-24 resize-none transition-colors"
               />
             </div>
 
@@ -120,23 +120,23 @@ export function ServicesPanel({
                 disabled={saving}
                 onChange={(event) => setSDriveId(event.target.value)}
                 placeholder="ID Drive Ikon"
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl text-sm outline-none focus-visible:border-white/40 focus:border-white/40 disabled:cursor-not-allowed disabled:opacity-60 transition-colors"
               />
 
               {serviceIconInput && (
-                <div className="mt-4 rounded-3xl border border-white/10 bg-slate-950/40 p-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                <div className="mt-4 rounded-3xl border border-white/10 bg-black/40 p-4 liquid-glass">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-white/60">
                     Preview Ikon
                   </p>
                   <div className="mt-3 flex items-center gap-4">
-                    <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-800">
+                    <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white/5">
                       <img
                         src={serviceIconPreviewUrl}
                         alt="Preview ikon produk"
                         className="h-full w-full object-cover"
                       />
                     </div>
-                    <p className="text-xs leading-relaxed text-slate-500">
+                    <p className="text-xs leading-relaxed text-white/60">
                       Pastikan ikon terlihat jelas di ukuran kecil sebelum
                       produk disimpan.
                     </p>
@@ -160,9 +160,9 @@ export function ServicesPanel({
                 disabled={saving}
                 onChange={(event) => setSSortOrder(event.target.value)}
                 placeholder="10"
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl text-sm outline-none focus-visible:border-white/40 focus:border-white/40 disabled:cursor-not-allowed disabled:opacity-60 transition-colors"
               />
-              <p className="mt-2 text-xs leading-relaxed text-slate-500">
+              <p className="mt-2 text-xs leading-relaxed text-white/60">
                 Angka lebih kecil tampil lebih dulu. Gunakan kelipatan 10
                 seperti 10, 20, 30 agar mudah menyisipkan produk baru.
               </p>
@@ -181,7 +181,7 @@ export function ServicesPanel({
                 disabled={saving}
                 onChange={(event) => setSTargetUrl(event.target.value)}
                 placeholder="https://..."
-                className="w-full bg-slate-800/50 border border-white/10 p-3.5 rounded-2xl text-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl text-sm outline-none focus-visible:border-white/40 focus:border-white/40 disabled:cursor-not-allowed disabled:opacity-60 transition-colors"
               />
             </div>
 
@@ -190,7 +190,7 @@ export function ServicesPanel({
                 type="button"
                 onClick={onSaveService}
                 disabled={saving}
-                className={`w-full bg-cyan-500 text-slate-900 p-3.5 rounded-2xl font-black text-xs uppercase disabled:opacity-50 ${focusRing}`}
+                className={`w-full bg-white hover:bg-gray-200 text-black p-3.5 rounded-xl font-bold text-sm disabled:opacity-50 transition-colors ${focusRing}`}
               >
                 {saving
                   ? "Menyimpan..."
@@ -204,7 +204,7 @@ export function ServicesPanel({
                   type="button"
                   onClick={onCancelEdit}
                   disabled={saving}
-                  className={`w-full bg-white/5 hover:bg-white/10 text-slate-300 p-3.5 rounded-2xl font-black text-xs uppercase border border-white/10 disabled:opacity-50 ${focusRing}`}
+                  className={`w-full liquid-glass-strong bg-white/10 text-white hover:bg-white/20 p-3.5 rounded-xl font-bold text-sm uppercase border border-white/10 disabled:opacity-50 transition-colors ${focusRing}`}
                 >
                   Batal Edit
                 </button>
@@ -215,11 +215,11 @@ export function ServicesPanel({
 
         <div className="space-y-3">
           {services.length === 0 && (
-            <div className="rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-8 text-center">
-              <p className="text-sm font-bold text-slate-300">
+            <div className="rounded-3xl border border-dashed border-[#333] bg-[#0a0a0a]/50 p-8 text-center liquid-glass">
+              <p className="text-sm font-bold text-white/80">
                 Belum ada produk.
               </p>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-white/60">
                 Tambahkan produk/layanan agar section Produk Digital bisa tampil di homepage.
               </p>
             </div>
@@ -228,10 +228,10 @@ export function ServicesPanel({
           {services.map((service) => (
             <div
               key={service.id}
-              className="bg-slate-900/50 border border-white/5 p-4 rounded-2xl flex items-center justify-between gap-4"
+              className="liquid-glass-strong border border-[#333] bg-black/60 p-4 rounded-2xl flex items-center justify-between gap-4"
             >
               <div className="flex items-center gap-4 min-w-0">
-                <div className="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center overflow-hidden shrink-0">
+                <div className="w-10 h-10 bg-black/50 rounded-xl flex items-center justify-center overflow-hidden shrink-0">
                   {service.image_url ? (
                     <img
                       src={formatMediaUrl(service.image_url, 256)}
@@ -239,7 +239,7 @@ export function ServicesPanel({
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <Globe size={20} />
+                    <Globe size={20} className="text-white/60" />
                   )}
                 </div>
 
@@ -247,10 +247,10 @@ export function ServicesPanel({
                   <h4 className="font-bold text-sm text-white">
                     {service.title || "Untitled Service"}
                   </h4>
-                  <p className="text-xs text-slate-500 line-clamp-2 max-w-xl">
+                  <p className="text-xs text-white/60 line-clamp-2 max-w-xl">
                     {service.description || "Belum ada deskripsi."}
                   </p>
-                  <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-slate-600">
+                  <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-white/80">
                     Urutan {service.sort_order ?? 100}
                   </p>
                 </div>
@@ -260,7 +260,7 @@ export function ServicesPanel({
                 <button
                   type="button"
                   onClick={() => onEditService(service)}
-                  className={`rounded-xl text-slate-500 hover:text-cyan-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
+                  className={`rounded-xl text-white/60 hover:text-cyan-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
                   aria-label={`Edit ${service.title || "produk"}`}
                 >
                   <Pencil size={16} />
@@ -269,7 +269,7 @@ export function ServicesPanel({
                 <button
                   type="button"
                   onClick={() => onDeleteService(service)}
-                  className={`rounded-xl text-slate-600 hover:text-red-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
+                  className={`rounded-xl text-white/60 hover:text-red-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
                   aria-label={`Hapus ${service.title || "produk"}`}
                 >
                   <Trash2 size={18} />

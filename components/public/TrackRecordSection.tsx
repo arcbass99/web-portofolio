@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 import { Award, GraduationCap, Sparkles, Users } from "lucide-react";
 import { formatMediaUrl } from "../../lib/media";
-import { SpotlightCard } from "../ui/SpotlightCard";
 import type {
   ProfileHighlight,
   ProfileHighlightCategory,
@@ -13,7 +12,6 @@ import type {
 
 type TrackRecordSectionProps = {
   highlights: ProfileHighlight[];
-  isDark: boolean;
 };
 
 const categoryOrder: ProfileHighlightCategory[] = [
@@ -38,7 +36,6 @@ const sortByOrder = (items: ProfileHighlight[]) => {
 
 export function TrackRecordSection({
   highlights,
-  isDark,
 }: TrackRecordSectionProps) {
   const grouped = categoryOrder.reduce(
     (result, category) => {
@@ -68,62 +65,50 @@ export function TrackRecordSection({
       <div className="max-w-7xl mx-auto">
         <div className="mb-7 md:mb-10 max-w-3xl">
           <span
-            className={`inline-flex rounded-full border px-4 py-1.5 text-[10px] font-black uppercase tracking-widest ${
-              isDark
-                ? "border-cyan-400/30 bg-cyan-400/15 text-cyan-200"
-                : "border-teal-300 bg-teal-50 text-teal-800"
-            }`}
+            className="liquid-glass rounded-full inline-flex border border-cyan-400/30 bg-cyan-400/15 px-[1.618rem] py-[0.618rem] text-[0.618rem] font-body font-black uppercase tracking-widest text-cyan-200"
           >
             Track Record
           </span>
 
-          <h2 className="mt-4 text-3xl md:text-5xl font-black tracking-tight leading-tight">
+          <h2 className="mt-[1.618rem] text-[2.618rem] md:text-[4.236rem] font-heading italic font-black tracking-tight leading-tight text-white">
             Jejak akademik, prestasi, dan proses kreatif.
           </h2>
 
-          <p
-            className={`mt-4 text-base md:text-lg font-medium leading-relaxed ${
-              isDark ? "text-slate-300" : "text-slate-700"
-            }`}
-          >
+          <p className="mt-[1rem] text-[1rem] font-body font-medium leading-relaxed text-white/80 text-justify md:text-left">
             Ringkasan perjalanan yang membentuk cara saya berpikir, memimpin,
             dan membuat karya digital.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 md:gap-7 xl:grid-cols-[1.618fr_1fr]">
-          <div className="space-y-5 md:space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-[1.618rem] items-start">
+          {/* Kiri: Pendidikan & Keahlian */}
+          <div className="flex flex-col gap-[1.618rem]">
             {hasEducation && (
               <TimelineBlock
                 title="Riwayat Pendidikan"
                 icon={<GraduationCap size={22} />}
                 items={grouped.education}
-                isDark={isDark}
               />
             )}
+            {hasSkills && (
+              <SkillBlock
+                items={grouped.skill}
+              />
+            )}
+          </div>
 
+          {/* Kanan: Pencapaian & Kepemimpinan */}
+          <div className="flex flex-col gap-[1.618rem]">
+            {hasAchievements && (
+              <AchievementBlock
+                items={grouped.achievement}
+              />
+            )}
             {hasLeadership && (
               <TimelineBlock
                 title="Kepemimpinan & Organisasi"
                 icon={<Users size={22} />}
                 items={grouped.leadership}
-                isDark={isDark}
-              />
-            )}
-          </div>
-
-          <div className="space-y-5 md:space-y-6">
-            {hasAchievements && (
-              <AchievementBlock
-                items={grouped.achievement}
-                isDark={isDark}
-              />
-            )}
-
-            {hasSkills && (
-              <SkillBlock
-                items={grouped.skill}
-                isDark={isDark}
               />
             )}
           </div>
@@ -137,276 +122,230 @@ type TimelineBlockProps = {
   title: string;
   icon: ReactNode;
   items: ProfileHighlight[];
-  isDark: boolean;
 };
 
-function TimelineBlock({ title, icon, items, isDark }: TimelineBlockProps) {
+function TimelineBlock({ title, icon, items }: TimelineBlockProps) {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
+      className="h-full"
     >
-      <SpotlightCard
-        isDark={isDark}
-        tone="cyan"
-        intensity="subtle"
-        className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
-          isDark
-            ? "border-white/10 bg-white/5"
-            : "border-white/60 bg-white/50"
-        }`}
+      <div
+        className="liquid-glass rounded-[2rem] border border-white/5 bg-white/5 p-[1.618rem] backdrop-blur-md shadow-xl h-full flex flex-col transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] group relative overflow-hidden"
       >
-        <div className="flex items-center gap-3 mb-5">
-        <span
-          className={`inline-flex h-10 w-10 items-center justify-center rounded-2xl ${
-            isDark
-              ? "bg-cyan-400/10 text-cyan-300"
-              : "bg-teal-100 text-teal-700"
-          }`}
-        >
-          {icon}
-        </span>
-        <h3 className="text-2xl md:text-[1.7rem] font-black tracking-tight">
-          {title}
-        </h3>
-      </div>
-
-      <div className="relative space-y-4 md:space-y-5">
-        <div
-          className={`absolute left-[0.72rem] top-2 bottom-2 w-px ${
-            isDark ? "bg-white/10" : "bg-slate-200"
-          }`}
-          aria-hidden="true"
-        />
-
-        {items.map((item, index) => (
-          <div key={item.id} className="relative pl-10">
+        {/* Cinematic Glow Effect */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-cyan-400/20 blur-[50px] rounded-full" />
+          <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-violet-500/20 blur-[50px] rounded-full" />
+        </div>
+        
+        <div className="relative z-10 flex flex-col h-full">
+          <div className="flex items-center gap-[1rem] mb-[1.618rem]">
             <span
-              className={`absolute left-0 top-1.5 z-10 h-6 w-6 rounded-full border-4 ${
-                isDark
-                  ? "border-[#0B0C10] bg-cyan-400"
-                  : "border-white bg-teal-500"
-              }`}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-300"
+            >
+              {icon}
+            </span>
+            <h3 className="text-[1.618rem] font-heading italic font-black tracking-tight text-white">
+              {title}
+            </h3>
+          </div>
+
+          <div className="relative space-y-[1.618rem]">
+            <div
+              className="absolute left-[0.72rem] top-2 bottom-2 w-px bg-white/10"
               aria-hidden="true"
             />
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ delay: index * 0.08 }}
-              className="min-w-0"
-            >
-              {item.period && (
-                <p
-                  className={`mb-1 text-xs font-black uppercase tracking-widest ${
-                    isDark ? "text-cyan-200" : "text-teal-800"
-                  }`}
+            {items.map((item, index) => (
+              <div key={item.id} className="relative pl-10">
+                <span
+                  className="absolute left-0 top-1.5 z-10 h-6 w-6 rounded-full border-4 border-black bg-cyan-400"
+                  aria-hidden="true"
+                />
+
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ delay: index * 0.08 }}
+                  className="min-w-0"
                 >
-                  {item.period}
-                </p>
-              )}
-
-              <div className="flex items-start gap-4">
-                {item.image_url && (
-                  <div className="relative mt-1 h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-slate-200">
-                    <Image
-                      src={formatMediaUrl(item.image_url, 256)}
-                      alt={item.title || "Track record image"}
-                      fill
-                      sizes="56px"
-                      quality={72}
-                      className="object-cover"
-                    />
-                  </div>
-                )}
-
-                <div className="min-w-0">
-                  <h4 className="text-base md:text-[1.05rem] font-black leading-snug">
-                    {item.title}
-                  </h4>
-
-                  {item.description && (
-                    <p
-                      className={`mt-1.5 text-sm leading-relaxed font-medium ${
-                        isDark ? "text-slate-300" : "text-slate-700"
-                      }`}
-                    >
-                      {item.description}
+                  {item.period && (
+                    <p className="mb-[0.618rem] text-[0.618rem] font-body font-black uppercase tracking-widest text-cyan-200">
+                      {item.period}
                     </p>
                   )}
-                </div>
+
+                  <div className="flex items-start gap-[1rem]">
+                    {item.image_url && (
+                      <div className="relative mt-1 h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-slate-200">
+                        <Image
+                          src={formatMediaUrl(item.image_url, 256)}
+                          alt={item.title || "Track record image"}
+                          fill
+                          sizes="56px"
+                          quality={72}
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+
+                    <div className="min-w-0">
+                      <h4 className="text-[1rem] font-heading italic font-black leading-snug text-white">
+                        {item.title}
+                      </h4>
+
+                      {item.description && (
+                        <p className="mt-[0.618rem] text-[1rem] leading-relaxed font-body font-medium text-white/80 text-justify">
+                          {item.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
               </div>
-            </motion.div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
-      </SpotlightCard>
     </motion.div>
   );
 }
 
 type AchievementBlockProps = {
   items: ProfileHighlight[];
-  isDark: boolean;
 };
 
-function AchievementBlock({ items, isDark }: AchievementBlockProps) {
+function AchievementBlock({ items }: AchievementBlockProps) {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
+      className="h-full"
     >
-      <SpotlightCard
-        isDark={isDark}
-        tone="amber"
-        intensity="subtle"
-        className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
-          isDark
-            ? "border-white/10 bg-white/5"
-            : "border-white/60 bg-white/50"
-        }`}
+      <div
+        className="liquid-glass rounded-[2rem] border border-white/5 bg-white/5 p-[1.618rem] backdrop-blur-md shadow-xl h-full flex flex-col transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] group relative overflow-hidden"
       >
-        <div className="flex items-center gap-3 mb-5">
-        <span
-          className={`inline-flex h-10 w-10 items-center justify-center rounded-2xl ${
-            isDark
-              ? "bg-amber-400/10 text-amber-300"
-              : "bg-amber-100 text-amber-700"
-          }`}
-        >
-          <Award size={22} />
-        </span>
-        <h3 className="text-2xl md:text-[1.7rem] font-black tracking-tight">
-          Pencapaian Utama
-        </h3>
-      </div>
+        {/* Cinematic Glow Effect */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-amber-400/20 blur-[50px] rounded-full" />
+          <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-rose-500/20 blur-[50px] rounded-full" />
+        </div>
 
-      <div className="space-y-3.5">
-        {items.map((item, index) => (
-          <motion.article
-            key={item.id}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ delay: index * 0.08 }}
-            className="rounded-2xl"
-          >
-            <SpotlightCard
-              isDark={isDark}
-              tone="amber"
-              intensity="subtle"
-              className={`rounded-2xl border p-3.5 md:p-4 ${
-                isDark
-                  ? "border-white/10 bg-black/20"
-                  : "border-slate-200 bg-white/70"
-              }`}
+        <div className="relative z-10 flex flex-col h-full">
+          <div className="flex items-center gap-[1rem] mb-[1.618rem]">
+            <span
+              className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-400/10 text-amber-300"
             >
-              <div className="flex items-start gap-4">
-              {item.image_url && (
-                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-slate-200">
-                  <Image
-                    src={formatMediaUrl(item.image_url, 256)}
-                    alt={item.title || "Achievement image"}
-                    fill
-                    sizes="56px"
-                    quality={72}
-                    className="object-cover"
-                  />
+              <Award size={22} />
+            </span>
+            <h3 className="text-[1.618rem] font-heading italic font-black tracking-tight text-white">
+              Pencapaian Utama
+            </h3>
+          </div>
+
+          <div className="space-y-[1.618rem]">
+            {items.map((item, index) => (
+              <motion.article
+                key={item.id}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ delay: index * 0.08 }}
+                className="rounded-2xl"
+              >
+                <div
+                  className="liquid-glass rounded-2xl border border-white/5 bg-black/20 p-[1rem]"
+                >
+                  <div className="flex items-start gap-[1rem]">
+                    {item.image_url && (
+                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-slate-200">
+                        <Image
+                          src={formatMediaUrl(item.image_url, 256)}
+                          alt={item.title || "Achievement image"}
+                          fill
+                          sizes="56px"
+                          quality={72}
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+
+                    <div>
+                      {item.period && (
+                        <p className="mb-[0.618rem] text-[0.618rem] font-body font-black uppercase tracking-widest text-amber-200">
+                          {item.period}
+                        </p>
+                      )}
+
+                      <h4 className="text-[1rem] font-heading italic font-black leading-snug text-white">{item.title}</h4>
+
+                      {item.description && (
+                        <p className="mt-[0.618rem] text-[1rem] leading-relaxed font-body font-medium text-white/80 text-justify">
+                          {item.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              )}
-
-              <div>
-                {item.period && (
-                  <p
-                    className={`mb-1 text-[10px] font-black uppercase tracking-widest ${
-                      isDark ? "text-amber-200" : "text-amber-800"
-                    }`}
-                  >
-                    {item.period}
-                  </p>
-                )}
-
-                <h4 className="font-black leading-snug">{item.title}</h4>
-
-                {item.description && (
-                  <p
-                    className={`mt-1.5 text-sm leading-relaxed font-medium ${
-                      isDark ? "text-slate-300" : "text-slate-700"
-                    }`}
-                  >
-                    {item.description}
-                  </p>
-                )}
-              </div>
-              </div>
-            </SpotlightCard>
-          </motion.article>
-        ))}
+              </motion.article>
+            ))}
+          </div>
+        </div>
       </div>
-      </SpotlightCard>
     </motion.div>
   );
 }
 
 type SkillBlockProps = {
   items: ProfileHighlight[];
-  isDark: boolean;
 };
 
-function SkillBlock({ items, isDark }: SkillBlockProps) {
+function SkillBlock({ items }: SkillBlockProps) {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
+      className="h-full"
     >
-      <SpotlightCard
-        isDark={isDark}
-        tone="violet"
-        intensity="subtle"
-        className={`rounded-3xl border p-5 md:p-6 backdrop-blur-md shadow-xl ${
-          isDark
-            ? "border-white/10 bg-white/5"
-            : "border-white/60 bg-white/50"
-        }`}
+      <div
+        className="liquid-glass rounded-[2rem] border border-white/5 bg-white/5 p-[1.618rem] backdrop-blur-md shadow-xl h-full flex flex-col transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] group relative overflow-hidden"
       >
-        <div className="flex items-center gap-3 mb-5">
-        <span
-          className={`inline-flex h-10 w-10 items-center justify-center rounded-2xl ${
-            isDark
-              ? "bg-violet-400/10 text-violet-300"
-              : "bg-violet-100 text-violet-700"
-          }`}
-        >
-          <Sparkles size={22} />
-        </span>
-        <h3 className="text-2xl md:text-[1.7rem] font-black tracking-tight">
-          Keahlian Inti
-        </h3>
-      </div>
+        {/* Cinematic Glow Effect */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-violet-400/20 blur-[50px] rounded-full" />
+          <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-fuchsia-500/20 blur-[50px] rounded-full" />
+        </div>
 
-      <div className="flex flex-wrap gap-2.5 md:gap-3">
-        {items.map((item) => (
-          <SpotlightCard
-            as="span"
-            key={item.id}
-            isDark={isDark}
-            tone="violet"
-            intensity="subtle"
-            className={`rounded-full border px-4 py-2 text-xs md:text-sm font-black ${
-              isDark
-                ? "border-white/10 bg-white/5 text-slate-200"
-                : "border-slate-300 bg-white/80 text-slate-800"
-            }`}
-          >
-            {item.title}
-          </SpotlightCard>
-        ))}
+        <div className="relative z-10 flex flex-col h-full">
+          <div className="flex items-center gap-[1rem] mb-[1.618rem]">
+            <span
+              className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-violet-400/10 text-violet-300"
+            >
+              <Sparkles size={22} />
+            </span>
+            <h3 className="text-[1.618rem] font-heading italic font-black tracking-tight text-white">
+              Keahlian Inti
+            </h3>
+          </div>
+
+          <div className="flex flex-wrap gap-[1rem]">
+            {items.map((item) => (
+              <span
+                key={item.id}
+                className="liquid-glass rounded-full border border-white/5 bg-white/5 px-[1.618rem] py-[0.618rem] text-[1rem] font-body font-black text-slate-200"
+              >
+                {item.title}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
-      </SpotlightCard>
     </motion.div>
   );
 }

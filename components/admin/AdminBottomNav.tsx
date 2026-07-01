@@ -17,7 +17,7 @@ export function AdminBottomNav({
 }: AdminBottomNavProps) {
   return (
     <nav
-      className="fixed bottom-0 z-50 grid w-full grid-flow-col auto-cols-fr gap-1 border-t border-white/5 bg-slate-950/95 px-1.5 py-2.5 backdrop-blur-xl lg:hidden"
+      className="fixed bottom-0 z-50 grid w-full grid-flow-col auto-cols-fr gap-1 border-t border-[#333] bg-[#0a0a0a]/90 px-1.5 py-2.5 backdrop-blur-3xl lg:hidden liquid-glass-strong"
       aria-label="Navigasi bawah admin"
     >
       {menuItems.map((item) => {
@@ -32,7 +32,7 @@ export function AdminBottomNav({
             aria-label={`Buka tab ${item.label}`}
             title={`Buka tab ${item.label}`}
             className={`flex min-w-0 flex-col items-center gap-1 rounded-xl px-1 py-2 transition-all ${focusRing} ${
-              isActive ? "text-cyan-300" : "text-slate-400"
+              isActive ? "text-white" : "text-white/40 hover:text-white"
             }`}
           >
             {item.icon}

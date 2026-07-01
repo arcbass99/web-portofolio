@@ -1,150 +1,219 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { ArrowRight, ExternalLink } from "lucide-react";
-import { formatMediaUrl } from "../../lib/media";
-import { SpotlightCard } from "../ui/SpotlightCard";
+import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { ArrowUpRight, Play } from "lucide-react";
 import type { AboutMe, SocialLink } from "../../types/content";
+import { formatMediaUrl } from "../../lib/media";
+import { BlurText } from "./BlurText";
+import { LiquidShaderBackground } from "../ui/LiquidShaderBackground";
 
 type HeroSectionProps = {
   about: AboutMe | null;
   socials: SocialLink[];
+  portfolioCount: number;
   contactHref: string;
   contactLabel: string;
-  isDark: boolean;
   isExternalContact: boolean;
   focusRing: string;
 };
 
+const blurFadeIn = (delay: number) => ({
+  initial: { filter: "blur(10px)", opacity: 0, y: 20 },
+  animate: { filter: "blur(0px)", opacity: 1, y: 0 },
+  transition: { duration: 0.6, ease: "easeOut" as const, delay },
+});
+
+function TiltCard({ children }: { children: React.ReactNode }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    x.set(mouseX / width - 0.5);
+    y.set(mouseY / height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <div
+      style={{ perspective: 1200 }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative flex items-center justify-center w-full h-full"
+    >
+      <motion.div
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        className="relative w-full h-full will-change-transform"
+      >
+        <motion.div
+          style={{ transform: "translateZ(60px)" }}
+          className="w-full h-full"
+        >
+          {children}
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
+
 export function HeroSection({
   about,
   socials,
+  portfolioCount,
   contactHref,
   contactLabel,
-  isDark,
   isExternalContact,
   focusRing,
 }: HeroSectionProps) {
+  const scrollToPortfolio = () => {
+    document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section
       id="home"
-      className="flex min-h-[auto] flex-col justify-center px-6 pb-10 pt-24 md:pb-12 md:pt-24 lg:min-h-[66vh] lg:px-12 xl:px-24 max-w-7xl mx-auto"
+      className="relative flex min-h-screen w-full flex-col overflow-hidden bg-black"
     >
-      <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-[minmax(0,1.12fr)_minmax(18rem,0.88fr)] md:gap-8 lg:grid-cols-[1.618fr_1fr] lg:gap-14">
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className="order-2 md:order-1"
-        >
-          <span
-            className={`inline-block px-4 py-1.5 md:py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 border backdrop-blur-sm ${
-              isDark
-                ? "bg-cyan-400/15 text-cyan-300 border-cyan-400/30"
-                : "bg-teal-100/80 text-teal-800 border-teal-300/70"
-            }`}
-          >
-            Terbuka untuk Kolaborasi
-          </span>
+      {/* ── Liquid Shader Background ── */}
+      <LiquidShaderBackground />
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[1.08] mb-5 md:mb-7">
-            {about?.headline || "Belajar, berkarya, dan membangun solusi digital."}
+      {/* ── Main Content (Side-by-Side) ── */}
+      <div className="relative z-10 mx-auto grid w-full max-w-[1200px] flex-1 grid-cols-1 items-center gap-12 lg:gap-16 px-6 md:px-12 lg:grid-cols-[55%_40%] pt-28 pb-[80vh] lg:pb-8 min-h-screen">
+        
+        {/* ── Left Column: Text ── */}
+        <div className="flex flex-col items-start text-left">
+          {/* Badge */}
+          <motion.div {...blurFadeIn(0.4)} className="mb-[1.618rem]">
+            <div className="liquid-glass flex items-center gap-[0.618rem] rounded-full px-[1.618rem] py-[0.618rem] pr-[1.618rem] border border-white/5">
+              <span className="rounded-full bg-white px-[1rem] py-[0.382rem] text-[0.618rem] font-semibold text-black font-body uppercase tracking-widest">
+                Status
+              </span>
+              <span className="text-[1rem] text-white/90 font-body">
+                Open for Collaboration
+              </span>
+            </div>
+          </motion.div>
+
+          {/* Headline */}
+          <h1 className="text-[2.618rem] md:text-[4.236rem] lg:text-[6.854rem] font-heading italic text-white leading-[0.85] tracking-[-3px] max-w-2xl">
+            <BlurText text={about?.headline || "Hai, saya Nafis"} />
           </h1>
 
-          <p
-            className={`text-base md:text-lg leading-relaxed max-w-xl mb-7 md:mb-8 font-medium ${
-              isDark ? "text-slate-300" : "text-slate-700"
-            }`}
+          {/* Subheading */}
+          <motion.p
+            {...blurFadeIn(0.8)}
+            className="mt-[1.618rem] max-w-lg text-[1rem] text-white/70 font-body font-light leading-relaxed text-justify"
           >
             {about?.description ||
-              "Saya memadukan minat pada biologi, riset, desain visual, dan teknologi untuk membuat karya digital yang rapi, berguna, dan terus berkembang."}
-          </p>
+              "Memadukan pola pikir analitis dari Biologi dengan eksplorasi web, AI, dan desain untuk menerjemahkan masalah rumit menjadi solusi digital yang presisi."}
+          </motion.p>
 
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-wrap items-center gap-3">
-              <a
-                href={contactHref}
-                target={isExternalContact ? "_blank" : undefined}
-                rel={isExternalContact ? "noreferrer" : undefined}
-                aria-label={contactLabel}
-                className={`inline-flex items-center gap-2 px-5 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl border shadow-lg font-black text-xs md:text-sm uppercase tracking-widest hover:-translate-y-1 transition-all duration-300 ${focusRing} ${
-                  isDark
-                    ? "bg-cyan-400 text-slate-950 border-cyan-400 hover:bg-white hover:border-white"
-                    : "bg-slate-900 text-white border-slate-900 hover:bg-teal-600 hover:border-teal-600"
-                }`}
-              >
-                {contactLabel}
-                <ArrowRight size={16} />
-              </a>
-            </div>
-
-            {socials.length > 0 && (
-              <div className="flex flex-wrap items-center gap-3">
-                {socials.map((social) => (
-                  <a
-                    key={social.id}
-                    href={social.url || "#"}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`Buka ${social.title || "link social"} di tab baru`}
-                    className={`flex items-center gap-2 px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl backdrop-blur-md border shadow-sm hover:-translate-y-1 transition-all duration-300 ${focusRing} ${
-                      isDark
-                        ? "bg-white/5 border-white/10 hover:bg-white/10 text-white"
-                        : "bg-white/60 border-white/40 hover:bg-white text-slate-800"
-                    }`}
-                  >
-                    <span className="text-xs md:text-sm font-bold tracking-wide">
-                      {social.title || "Link"}
-                    </span>
-                    <ExternalLink size={16} className="opacity-70" />
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.2 }}
-          className="order-1 mx-auto w-full max-w-sm md:order-2 md:max-w-[19rem] lg:max-w-none"
-        >
-          <SpotlightCard
-            isDark={isDark}
-            tone="cyan"
-            intensity="strong"
-            className={`aspect-[5/6] rounded-3xl md:rounded-[2rem] shadow-2xl border backdrop-blur-xl p-2 ${
-              isDark ? "bg-white/5 border-white/10" : "bg-white/40 border-white/50"
-            }`}
+          {/* CTAs */}
+          <motion.div
+            {...blurFadeIn(1.1)}
+            className="mt-[1.618rem] flex flex-wrap items-center gap-[1.618rem]"
           >
-            <div className="relative w-full h-full rounded-2xl md:rounded-[1.5rem] overflow-hidden bg-slate-200/50">
-              {about?.banner_url ? (
-                <Image
-                  src={formatMediaUrl(about.banner_url, 900)}
-                  alt="Foto profil Nafis"
-                  fill
-                  priority
-                  fetchPriority="high"
-                  sizes="(max-width: 768px) 92vw, (max-width: 1024px) 34vw, 44vw"
-                  quality={82}
-                  className="object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center bg-slate-900 text-center text-white">
-                  <p className="text-4xl md:text-6xl font-black tracking-tighter">
-                    I’m Nafis<span className="text-teal-400">.</span>
-                  </p>
-                  <p className="mt-3 text-xs md:text-sm font-bold uppercase tracking-[0.25em] text-slate-300">
-                    Track Record & Karya
-                  </p>
+            <a
+              href={contactHref}
+              target={isExternalContact ? "_blank" : undefined}
+              rel={isExternalContact ? "noopener noreferrer" : undefined}
+              className={`liquid-glass-strong flex items-center gap-[0.618rem] rounded-full px-[1.618rem] py-[1rem] text-[1rem] font-medium text-white font-body transition-transform hover:scale-105 border border-white/5 ${focusRing}`}
+            >
+              {contactLabel}
+              <ArrowUpRight className="h-[1.618rem] w-[1.618rem]" />
+            </a>
+            <button
+              type="button"
+              onClick={scrollToPortfolio}
+              className="flex cursor-pointer items-center gap-[0.618rem] text-[1rem] font-medium text-white/80 font-body transition-colors hover:text-white"
+            >
+              Lihat Karya
+              <Play className="h-[1rem] w-[1rem]" fill="currentColor" />
+            </button>
+          </motion.div>
+        </div>
+
+        {/* ── Right Column: Photo & Socials ── */}
+        <div className="flex flex-col items-center justify-center lg:items-end w-full">
+          {/* 3D Profile Picture */}
+          <motion.div
+            {...blurFadeIn(0.5)}
+            className="w-[260px] md:w-[300px] lg:w-[320px] aspect-[4/5]"
+          >
+            {about?.banner_url && (
+              <TiltCard>
+                <div className="relative w-full h-full rounded-[2.1rem] bg-gradient-to-tr from-cyan-400/40 via-violet-500/40 to-cyan-300/40 p-[2px] shadow-[0_20px_60px_-10px_rgba(0,0,0,0.5),0_0_60px_10px_rgba(88,28,135,0.2),0_0_120px_30px_rgba(30,64,175,0.1)] group transition-all duration-700 hover:p-[3px] hover:from-cyan-400 hover:via-violet-500 hover:to-cyan-300">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-violet-500 to-cyan-300 blur-xl opacity-20 transition-opacity duration-700 group-hover:opacity-60 rounded-[2.1rem]" />
+                  
+                  <div className="liquid-glass relative z-10 w-full h-full rounded-[2rem] border border-white/10 overflow-hidden bg-black/80 backdrop-blur-xl">
+                    <Image
+                      src={formatMediaUrl(about.banner_url, 800)}
+                      alt="Foto profil Nafis"
+                      fill
+                      priority
+                      className="object-cover rounded-[2rem] transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
                 </div>
-              )}
-            </div>
-          </SpotlightCard>
-        </motion.div>
+              </TiltCard>
+            )}
+          </motion.div>
+
+          {/* Social Links */}
+          {socials.length > 0 && (
+            <motion.div
+              {...blurFadeIn(1.3)}
+              className="mt-10 flex flex-col items-center lg:items-end gap-3 w-full max-w-[320px]"
+            >
+              <div className="liquid-glass rounded-full px-[1.618rem] py-[0.618rem] border border-white/5 w-fit">
+                <span className="text-[0.618rem] font-medium text-white/80 font-body uppercase tracking-widest">
+                  Temukan saya di
+                </span>
+              </div>
+              <div className="relative w-[110%] lg:w-[120%] overflow-hidden mt-[1rem] py-[1.618rem] -my-[1.618rem] [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] pointer-events-none">
+                <style>{`
+                  @keyframes marquee-scroll {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                  }
+                  .animate-marquee {
+                    animation: marquee-scroll 45s linear infinite;
+                  }
+                `}</style>
+                <div className="flex w-max items-center gap-24 pr-24 animate-marquee hover:[animation-play-state:paused] group/marquee pointer-events-auto">
+                  {Array.from({ length: 12 }).flatMap(() => socials).map((link, idx) => (
+                    <a
+                      key={`${link.id}-${idx}`}
+                      href={link.url || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-heading italic text-[1.618rem] md:text-[2.618rem] text-white/70 tracking-tight transition-all duration-300 group-hover/marquee:opacity-30 hover:!opacity-100 hover:!text-cyan-300 hover:drop-shadow-[0_0_16px_rgba(34,211,238,1)]"
+                    >
+                      {link.title}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </div>
       </div>
+
     </section>
   );
 }
