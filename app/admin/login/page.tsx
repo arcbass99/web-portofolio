@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { DotPatternBackground } from "../../../components/ui/DotPatternBackground";
 import { getAdminSession } from "../../../lib/admin-data";
-import { ADMIN_FOCUS_RING } from "../../../lib/constants";
 import { supabase } from "../../../lib/supabase";
 
 export default function AdminLogin() {

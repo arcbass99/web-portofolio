@@ -51,18 +51,16 @@ function TiltCard({ children }: { children: React.ReactNode }) {
 
   return (
     <div
-      style={{ perspective: 1200 }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative flex items-center justify-center w-full h-full"
+      className="relative flex items-center justify-center w-full h-full [perspective:1200px]"
     >
       <motion.div
-        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        className="relative w-full h-full will-change-transform"
+        style={{ rotateX, rotateY }}
+        className="relative w-full h-full will-change-transform [transform-style:preserve-3d]"
       >
         <motion.div
-          style={{ transform: "translateZ(60px)" }}
-          className="w-full h-full"
+          className="w-full h-full [transform:translateZ(60px)]"
         >
           {children}
         </motion.div>
@@ -74,7 +72,7 @@ function TiltCard({ children }: { children: React.ReactNode }) {
 export function HeroSection({
   about,
   socials,
-  portfolioCount,
+  portfolioCount: _portfolioCount,
   contactHref,
   contactLabel,
   isExternalContact,
@@ -83,6 +81,9 @@ export function HeroSection({
   const scrollToPortfolio = () => {
     document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth" });
   };
+
+  // Mark prop as intentionally unused to satisfy linting
+  void _portfolioCount;
 
   return (
     <section
