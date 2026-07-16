@@ -5,6 +5,7 @@ import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { ArrowUpRight, Play } from "lucide-react";
 import type { AboutMe, SocialLink } from "../../types/content";
 import { formatMediaUrl } from "../../lib/media";
+import { smoothScrollToId } from "../../lib/smoothScroll";
 import { BlurText } from "./BlurText";
 import { LiquidShaderBackground } from "../ui/LiquidShaderBackground";
 
@@ -79,7 +80,7 @@ export function HeroSection({
   focusRing,
 }: HeroSectionProps) {
   const scrollToPortfolio = () => {
-    document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth" });
+    smoothScrollToId("portfolio");
   };
 
   // Mark prop as intentionally unused to satisfy linting

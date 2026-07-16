@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { PUBLIC_FOCUS_RING } from "../../lib/constants";
+import { smoothScrollToId, smoothScrollTo } from "../../lib/smoothScroll";
 import type {
   AboutMe,
   PortfolioItem,
@@ -38,15 +39,26 @@ export function LandingPageClient({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
+    const mediaTags = new Set(["IMG", "VIDEO", "CANVAS", "IFRAME"]);
     const handleContextMenu = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (target.tagName === "IMG" || target.tagName === "VIDEO") {
+      if (mediaTags.has(target.tagName)) {
+        e.preventDefault();
+      }
+    };
+    const handleDragStart = (e: DragEvent) => {
+      const target = e.target as HTMLElement;
+      if (mediaTags.has(target.tagName)) {
         e.preventDefault();
       }
     };
 
     document.addEventListener("contextmenu", handleContextMenu);
-    return () => document.removeEventListener("contextmenu", handleContextMenu);
+    document.addEventListener("dragstart", handleDragStart);
+    return () => {
+      document.removeEventListener("contextmenu", handleContextMenu);
+      document.removeEventListener("dragstart", handleDragStart);
+    };
   }, []);
 
   const focusRing = PUBLIC_FOCUS_RING;
@@ -55,7 +67,11 @@ export function LandingPageClient({
     setIsMenuOpen(false);
 
     setTimeout(() => {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      if (id === "home") {
+        smoothScrollTo(0);
+      } else {
+        smoothScrollToId(id);
+      }
     }, 100);
   };
 
@@ -123,8 +139,8 @@ export function LandingPageClient({
     <div className="relative min-h-screen bg-black text-white font-body overflow-x-clip">
       <PublicNavbar
         focusRing={focusRing}
+        bannerUrl={about?.banner_url || ""}
         onOpenMenu={() => setIsMenuOpen(true)}
-        onLogoClick={() => scrollToSection("home")}
       />
 
       <PublicMenuOverlay

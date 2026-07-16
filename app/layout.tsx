@@ -86,7 +86,7 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={`${instrumentSerif.variable} ${barlow.variable}`}
+      className={`${instrumentSerif.variable} ${barlow.variable} scroll-smooth`}
     >
       <body className="font-sans antialiased min-h-screen">{children}</body>
     </html>
