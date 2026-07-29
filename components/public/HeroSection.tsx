@@ -95,31 +95,31 @@ export function HeroSection({
       <LiquidShaderBackground />
 
       {/* ── Main Content (Side-by-Side) ── */}
-      <div className="relative z-10 mx-auto grid w-full max-w-[1200px] flex-1 grid-cols-1 items-center gap-12 lg:gap-16 px-6 md:px-12 lg:grid-cols-[55%_40%] pt-28 pb-[80vh] lg:pb-8 min-h-screen">
+      <div className="relative z-10 mx-auto grid w-full max-w-[1200px] flex-1 grid-cols-1 items-center gap-12 lg:gap-16 px-6 md:px-12 lg:grid-cols-[55%_40%] pt-28 pb-12 lg:pb-8 min-h-screen">
         
         {/* ── Left Column: Text ── */}
         <div className="flex flex-col items-start text-left">
           {/* Badge */}
-          <motion.div {...blurFadeIn(0.4)} className="mb-[1.618rem]">
-            <div className="liquid-glass flex items-center gap-[0.618rem] rounded-full px-[1.618rem] py-[0.618rem] pr-[1.618rem] border border-white/5">
-              <span className="rounded-full bg-white px-[1rem] py-[0.382rem] text-[0.618rem] font-semibold text-black font-body uppercase tracking-widest">
+          <motion.div {...blurFadeIn(0.4)} className="mb-8">
+            <div className="liquid-glass flex items-center gap-3 rounded-full px-6 py-2 border border-white/5">
+              <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-black font-body uppercase tracking-widest">
                 Status
               </span>
-              <span className="text-[1rem] text-white/90 font-body">
+              <span className="text-base text-white/90 font-body">
                 Open for Collaboration
               </span>
             </div>
           </motion.div>
 
           {/* Headline */}
-          <h1 className="text-[2.618rem] md:text-[4.236rem] lg:text-[6.854rem] font-heading italic text-white leading-[0.85] tracking-[-3px] max-w-2xl">
+          <h1 className="text-4xl md:text-7xl lg:text-[6.854rem] font-heading italic text-white leading-[0.85] tracking-[-1px] md:tracking-[-3px] max-w-2xl">
             <BlurText text={about?.headline || "Hai, saya Nafis"} />
           </h1>
 
           {/* Subheading */}
           <motion.p
             {...blurFadeIn(0.8)}
-            className="mt-[1.618rem] max-w-lg text-[1rem] text-white/70 font-body font-light leading-relaxed text-justify"
+            className="mt-8 max-w-[65ch] text-base text-white/70 font-body font-light leading-relaxed text-justify md:text-left"
           >
             {about?.description ||
               "Memadukan pola pikir analitis dari Biologi dengan eksplorasi web, AI, dan desain untuk menerjemahkan masalah rumit menjadi solusi digital yang presisi."}
@@ -128,24 +128,24 @@ export function HeroSection({
           {/* CTAs */}
           <motion.div
             {...blurFadeIn(1.1)}
-            className="mt-[1.618rem] flex flex-wrap items-center gap-[1.618rem]"
+            className="mt-10 flex flex-wrap items-center gap-6"
           >
             <a
               href={contactHref}
               target={isExternalContact ? "_blank" : undefined}
               rel={isExternalContact ? "noopener noreferrer" : undefined}
-              className={`liquid-glass-strong flex items-center gap-[0.618rem] rounded-full px-[1.618rem] py-[1rem] text-[1rem] font-medium text-white font-body transition-transform hover:scale-105 border border-white/5 ${focusRing}`}
+              className={`liquid-glass-strong flex items-center gap-3 rounded-full px-6 py-3 md:px-8 md:py-4 text-sm md:text-base font-medium text-white font-body transition-transform hover:scale-105 border border-white/5 ${focusRing}`}
             >
               {contactLabel}
-              <ArrowUpRight className="h-[1.618rem] w-[1.618rem]" />
+              <ArrowUpRight className="h-6 w-6" />
             </a>
             <button
               type="button"
               onClick={scrollToPortfolio}
-              className="flex cursor-pointer items-center gap-[0.618rem] text-[1rem] font-medium text-white/80 font-body transition-colors hover:text-white"
+              className="flex cursor-pointer items-center gap-3 text-base font-medium text-white/80 font-body transition-colors hover:text-white"
             >
               Lihat Karya
-              <Play className="h-[1rem] w-[1rem]" fill="currentColor" />
+              <Play className="h-5 w-5" fill="currentColor" />
             </button>
           </motion.div>
         </div>
@@ -182,12 +182,12 @@ export function HeroSection({
               {...blurFadeIn(1.3)}
               className="mt-10 flex flex-col items-center lg:items-end gap-3 w-full max-w-[320px]"
             >
-              <div className="liquid-glass rounded-full px-[1.618rem] py-[0.618rem] border border-white/5 w-fit">
-                <span className="text-[0.618rem] font-medium text-white/80 font-body uppercase tracking-widest">
+              <div className="liquid-glass rounded-full px-6 py-2 border border-white/5 w-fit">
+                <span className="text-xs font-medium text-white/80 font-body uppercase tracking-widest">
                   Temukan saya di
                 </span>
               </div>
-              <div className="relative w-[110%] lg:w-[120%] overflow-hidden mt-[1rem] py-[1.618rem] -my-[1.618rem] [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] pointer-events-none">
+              <div className="relative w-[110%] lg:w-[120%] overflow-hidden mt-4 py-8 -my-8 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] pointer-events-none">
                 <style>{`
                   @keyframes marquee-scroll {
                     0% { transform: translateX(0); }
@@ -204,7 +204,7 @@ export function HeroSection({
                       href={link.url || "#"}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-heading italic text-[1.618rem] md:text-[2.618rem] text-white/70 tracking-tight transition-all duration-300 group-hover/marquee:opacity-30 hover:!opacity-100 hover:!text-cyan-300 hover:drop-shadow-[0_0_16px_rgba(34,211,238,1)]"
+                      className="font-heading italic text-3xl md:text-5xl text-white/70 tracking-tight transition-all duration-300 group-hover/marquee:opacity-30 hover:!opacity-100 hover:!text-cyan-300 hover:drop-shadow-[0_0_16px_rgba(34,211,238,1)]"
                     >
                       {link.title}
                     </a>
@@ -216,6 +216,8 @@ export function HeroSection({
         </div>
       </div>
 
+      {/* Spacer to push the sticky section's bottom edge down */}
+      <div className="h-[30vh] lg:h-[40vh] w-full shrink-0" />
     </section>
   );
 }

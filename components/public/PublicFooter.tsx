@@ -29,7 +29,7 @@ export function PublicFooter({
         target={isExternalContact ? "_blank" : undefined}
         rel={isExternalContact ? "noreferrer" : undefined}
         aria-label={contactLabel}
-        className={`liquid-glass-strong inline-flex items-center gap-2 px-7 py-3 md:px-9 md:py-4 rounded-full font-bold text-sm transition-transform hover:scale-105 shadow-xl border border-white/5 text-white ${focusRing}`}
+        className={`liquid-glass-strong inline-flex items-center gap-2 px-5 py-3 md:px-9 md:py-4 rounded-full font-bold text-sm transition-transform hover:scale-105 active:scale-95 shadow-xl border border-white/5 text-white ${focusRing}`}
       >
         {contactLabel}
         <ArrowRight size={16} />

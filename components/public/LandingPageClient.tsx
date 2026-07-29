@@ -160,7 +160,7 @@ export function LandingPageClient({
         )}
 
         {/* Hero Section (Delayed Parallax) */}
-        <div className="sticky top-[-60vh] lg:top-[-40vh] z-0">
+        <div className="sticky top-[-90vh] lg:top-[-40vh] z-0">
           <HeroSection
             about={about}
             socials={socials}

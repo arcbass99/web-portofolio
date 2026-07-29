@@ -25,27 +25,7 @@ export function PublicNavbar({
   onOpenMenu,
 }: PublicNavbarProps) {
   const [showPhoto, setShowPhoto] = useState(false);
-  const observerRef = useRef<IntersectionObserver | null>(null);
-
-  useEffect(() => {
-    const trackRecordEl = document.getElementById("track-record");
-    if (!trackRecordEl || !bannerUrl) return;
-
-    observerRef.current = new IntersectionObserver(
-      ([entry]) => {
-        setShowPhoto(entry.isIntersecting);
-      },
-      { threshold: 0, rootMargin: "-60px 0px 0px 0px" },
-    );
-
-    observerRef.current.observe(trackRecordEl);
-
-    return () => {
-      observerRef.current?.disconnect();
-    };
-  }, [bannerUrl]);
-
-  // Fallback: also track scroll position beyond hero
+  // Track scroll position to show/hide profile photo
   useEffect(() => {
     if (!bannerUrl) return;
 
@@ -73,7 +53,8 @@ export function PublicNavbar({
   return (
     <nav
       aria-label="Navigasi utama"
-      className="fixed top-4 left-0 right-0 z-50 px-6 md:px-8 lg:px-16"
+      className="fixed left-0 right-0 z-50 px-6 md:px-8 lg:px-16"
+      style={{ top: "max(1rem, env(safe-area-inset-top, 1rem))" }}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         {/* Logo — liquid-glass circle → transitions to profile photo */}
