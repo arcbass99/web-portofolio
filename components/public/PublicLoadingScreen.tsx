@@ -10,7 +10,7 @@ export function PublicLoadingScreen() {
         Memuat Im Nafis
       </p>
       <p className="mt-3 max-w-sm text-sm font-medium leading-relaxed text-slate-500">
-        Menyiapkan profil, track record, karya, dan produk digital Nafis.
+        Menyiapkan profil, track record, karya, dan produk & layanan Nafis.
       </p>
     </div>
   );

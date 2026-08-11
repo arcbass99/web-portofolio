@@ -23,12 +23,12 @@ export function ServicesSection({
       <div className="mb-10 md:mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
 
-          <h2 className="font-heading italic text-white text-3xl md:text-5xl leading-[0.9] tracking-[-1px] md:tracking-[-3px]">
-            Produk Digital
+          <h2 className="font-heading italic font-black text-white text-3xl md:text-5xl leading-tight tracking-wide">
+            Produk dan Layanan
           </h2>
         </div>
         <p className="max-w-xs text-base font-body text-white/60 text-justify md:text-right">
-          Akses langsung ke berbagai produk, kelas, dan layanan digital yang saya sediakan.
+          Akses langsung ke berbagai produk dan layanan digital yang saya sediakan.
         </p>
       </div>
 

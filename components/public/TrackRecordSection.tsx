@@ -153,8 +153,8 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
 
         <div className="mb-10 max-w-3xl">
 
-          <h2 className="text-3xl md:text-5xl font-heading italic font-black tracking-tight leading-tight text-white">
-            Jejak akademik, prestasi, dan proses kreatif.
+          <h2 className="text-3xl md:text-5xl font-heading italic font-black tracking-wide leading-tight text-white">
+            Track Record
           </h2>
 
           <p className="mt-4 max-w-[65ch] text-base font-body font-medium leading-relaxed text-white/80 text-justify md:text-left">
@@ -197,14 +197,14 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
 
             let x = "0%";
             let scale = 1;
-            let opacity = 1;
+            let filter = "brightness(1) grayscale(0)";
             let zIndex = 10;
             let rotateY = 0;
 
             if (distance !== 0) {
               x = `${distance * 50}%`;
               scale = 0.85;
-              opacity = 0.4;
+              filter = "brightness(0.3) grayscale(0.5)";
               zIndex = 5 - Math.abs(distance);
               rotateY = distance < 0 ? 15 : -15;
             }
@@ -221,7 +221,7 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                     ? `translate(-50%, -50%)`
                     : `translate(calc(-50% + ${distance * 55}%), -50%) scale(${scale}) rotateY(${rotateY}deg)`,
                   zIndex: zIndex,
-                  opacity: opacity
+                  filter: filter
                 }}
               >
                 <motion.div

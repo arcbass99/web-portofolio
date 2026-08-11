@@ -25,9 +25,9 @@ export function PublicMenuOverlay({
     ...(highlightsCount > 0
       ? [{ id: "track-record", label: "Track Record" }]
       : []),
-    { id: "portfolio", label: "Karya Pilihan" },
+    { id: "portfolio", label: "Karya" },
     ...(servicesCount > 0
-      ? [{ id: "services", label: "Produk Digital" }]
+      ? [{ id: "services", label: "Produk dan Layanan" }]
       : []),
   ];
 

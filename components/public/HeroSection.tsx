@@ -112,7 +112,7 @@ export function HeroSection({
           </motion.div>
 
           {/* Headline */}
-          <h1 className="text-4xl md:text-7xl lg:text-[6.854rem] font-heading italic text-white leading-[0.85] tracking-[-1px] md:tracking-[-3px] max-w-2xl">
+          <h1 className="text-4xl md:text-6xl lg:text-[5rem] font-heading italic text-white leading-[0.85] tracking-[-1px] md:tracking-[-3px] max-w-2xl">
             <BlurText text={about?.headline || "Hai, saya Nafis"} />
           </h1>
 

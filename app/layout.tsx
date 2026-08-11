@@ -69,7 +69,11 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
+    creator: "@imnafis",
     images: [ogImage],
+  },
+  verification: {
+    google: "google41d246e98420bdc6",
   },
 };
 

@@ -120,8 +120,8 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-16 gap-4 relative z-30">
           <div>
-            <h2 className="text-3xl md:text-5xl font-heading italic font-black tracking-tight mb-2 md:mb-4 text-white">
-              Karya Pilihan
+            <h2 className="text-3xl md:text-5xl font-heading italic font-black tracking-wide mb-2 md:mb-4 text-white">
+              Karya
             </h2>
             <p className="mt-4 max-w-[65ch] text-base font-body font-medium leading-relaxed text-white/80 text-justify md:text-left">
               Kumpulan karya visual, desain, dan eksperimen digital yang sedang saya kembangkan.
@@ -216,7 +216,7 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
         ) : (
           <div className="liquid-glass rounded-3xl md:rounded-[2.5rem] border p-12 md:p-20 text-center backdrop-blur-md bg-white/5 border-white/5 text-white/80">
             <p className="text-2xl font-heading italic font-black text-white">
-              Karya pilihan sedang disiapkan.
+              Karya sedang disiapkan.
             </p>
             <p className="mt-4 text-base font-body font-medium leading-relaxed">
               Portfolio akan tampil di sini setelah data karya ditambahkan dari
