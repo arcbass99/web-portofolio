@@ -19,16 +19,16 @@
   --font-heading: "Google Sans", system-ui, -apple-system, sans-serif;
   --font-body: "Google Sans Text", "Google Sans", system-ui, -apple-system, sans-serif;
 
-  /* Text sizes */
-  --text-caption: 12px;
-  --text-body-sm: 14px;
-  --text-body: 16px;
-  --text-subheading: 20px;
-  --text-heading-sm: 22px;
-  --text-heading: 26px;
-  --text-heading-lg: 34px;
-  --text-display: 48px;
-  --text-hero: 56px;
+  /* Text sizes — refined & compact */
+  --text-caption: 11px;
+  --text-body-sm: 13px;
+  --text-body: 15px;
+  --text-subheading: 18px;
+  --text-heading-sm: 20px;
+  --text-heading: 24px;
+  --text-heading-lg: 30px;
+  --text-display: 40px;
+  --text-hero: 48px;
 
   /* Radii */
   --radius-sm: 1px;
@@ -78,6 +78,15 @@
   backdrop-filter: blur(36px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Solid Frost: Opaque, non-see-through surface with luxury frosted rim */
+.solid-frost {
+  background: #141619;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   position: relative;
   overflow: hidden;
 }

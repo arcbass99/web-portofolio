@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { formatMediaUrl } from "../../lib/media";
 import type { ServiceItem } from "../../types/content";
+import { AmbientAuroraOrb } from "../ui/AmbientAuroraOrb";
 
 type ServicesSectionProps = {
   services: ServiceItem[];
@@ -18,80 +19,90 @@ export function ServicesSection({
   return (
     <section
       id="services"
-      className="py-8 md:py-12 px-6 lg:px-12 xl:px-24 max-w-7xl mx-auto"
+      className="relative py-8 md:py-14 px-6 lg:px-12 max-w-6xl mx-auto scroll-mt-24 overflow-hidden"
     >
-      <div className="mb-10 md:mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <h2 className="font-heading font-semibold text-white text-3xl md:text-5xl leading-tight tracking-tight">
-            Produk dan Layanan
-          </h2>
+      {/* Moving gradient light in empty space */}
+      <AmbientAuroraOrb
+        variant="violet"
+        size="sm"
+        className="top-8 right-12 opacity-35"
+        duration={21}
+      />
+
+      <div className="relative z-10">
+        <div className="mb-8 md:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <h2 className="font-heading font-semibold text-white text-2xl md:text-3xl lg:text-4xl leading-tight tracking-tight">
+              Produk dan Layanan
+            </h2>
+          </div>
+          <p className="max-w-xs text-xs sm:text-sm font-body text-white/70 text-justify md:text-right">
+            Akses langsung ke berbagai produk dan layanan digital yang saya sediakan.
+          </p>
         </div>
-        <p className="max-w-xs text-base font-body text-white/70 text-justify md:text-right">
-          Akses langsung ke berbagai produk dan layanan digital yang saya sediakan.
-        </p>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-        {services.map((service, index) => (
-          <motion.div
-            key={service.id}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ delay: index * 0.1 }}
-            className="h-full"
-          >
-            <a
-              href={service.target_url || "#"}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`Kunjungi ${service.title || "produk"}`}
-              className={`group relative liquid-glass rounded-[2rem] p-6 md:p-8 flex flex-col gap-8 items-start overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] border border-white/10 active:scale-[0.97] ${focusRing}`}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
+          {services.map((service, index) => (
+            <motion.div
+              key={service.id}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: index * 0.1 }}
+              className="h-full"
             >
-              {/* Subtle Aurora Glow Effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-                <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/20 blur-[50px] rounded-full" />
-                <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-violet-500/20 blur-[50px] rounded-full" />
-              </div>
-
-              {/* Icon */}
-              <div className="relative z-10 liquid-glass rounded-2xl h-14 w-14 flex items-center justify-center border border-white/10 bg-white/5 shadow-xl transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">
-                {service.image_url ? (
-                  <div className="relative h-7 w-7">
-                    <Image
-                      src={formatMediaUrl(service.image_url, 256)}
-                      alt={service.title || "Service icon"}
-                      fill
-                      sizes="28px"
-                      quality={72}
-                      className="object-contain"
-                    />
-                  </div>
-                ) : (
-                  <ArrowRight
-                    className="text-white/80"
-                    size={22}
-                  />
-                )}
-              </div>
-
-              {/* Bottom */}
-              <div className="relative z-10 w-full">
-                <h3 className="font-heading font-semibold text-white text-2xl tracking-tight leading-none transition-colors duration-300 group-hover:text-blue-200">
-                  {service.title || "Produk"}
-                </h3>
-                <p className="mt-3 text-sm text-white/70 font-body leading-relaxed max-w-[32ch]">
-                  {service.description ||
-                    "Klik untuk melihat detail penawaran ini."}
-                </p>
-                
-                <div className="mt-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-blue-400 opacity-100 md:opacity-0 md:-translate-y-2 transition-all duration-500 md:group-hover:opacity-100 md:group-hover:translate-y-0">
-                  Kunjungi <ArrowRight size={14} />
+              <a
+                href={service.target_url || "#"}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Kunjungi ${service.title || "produk"}`}
+                className={`group relative solid-frost rounded-[1.6rem] p-5 md:p-6 flex flex-col gap-6 items-start overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_45px_rgba(0,0,0,0.85)] border border-white/12 bg-[#141619] active:scale-[0.98] ${focusRing}`}
+              >
+                {/* Subtle Aurora Glow Effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                  <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/15 blur-[45px] rounded-full" />
+                  <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-violet-500/15 blur-[45px] rounded-full" />
                 </div>
-              </div>
-            </a>
-          </motion.div>
-        ))}
+
+                {/* Icon */}
+                <div className="relative z-10 rounded-xl h-11 w-11 flex items-center justify-center border border-white/10 bg-white/5 shadow-md transition-transform duration-500 group-hover:scale-105">
+                  {service.image_url ? (
+                    <div className="relative h-6 w-6">
+                      <Image
+                        src={formatMediaUrl(service.image_url, 128)}
+                        alt={service.title || "Service icon"}
+                        fill
+                        sizes="24px"
+                        quality={72}
+                        className="object-contain"
+                      />
+                    </div>
+                  ) : (
+                    <ArrowRight
+                      className="text-white/80"
+                      size={18}
+                    />
+                  )}
+                </div>
+
+                {/* Bottom */}
+                <div className="relative z-10 w-full">
+                  <h3 className="font-heading font-semibold text-white text-lg tracking-tight leading-snug transition-colors duration-300 group-hover:text-blue-200">
+                    {service.title || "Produk"}
+                  </h3>
+                  <p className="mt-2 text-xs text-white/70 font-body leading-relaxed max-w-[30ch]">
+                    {service.description ||
+                      "Klik untuk melihat detail penawaran ini."}
+                  </p>
+                  
+                  <div className="mt-3.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-blue-400 opacity-100 md:opacity-0 md:-translate-y-1 transition-all duration-300 md:group-hover:opacity-100 md:group-hover:translate-y-0">
+                    Kunjungi <ArrowRight size={13} />
+                  </div>
+                </div>
+              </a>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

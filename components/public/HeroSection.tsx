@@ -8,6 +8,7 @@ import { formatMediaUrl } from "../../lib/media";
 import { smoothScrollToId } from "../../lib/smoothScroll";
 import { BlurText } from "./BlurText";
 import { LiquidShaderBackground } from "../ui/LiquidShaderBackground";
+import { AmbientAuroraOrb } from "../ui/AmbientAuroraOrb";
 
 type HeroSectionProps = {
   about: AboutMe | null;
@@ -20,9 +21,9 @@ type HeroSectionProps = {
 };
 
 const blurFadeIn = (delay: number) => ({
-  initial: { filter: "blur(10px)", opacity: 0, y: 20 },
+  initial: { filter: "blur(10px)", opacity: 0, y: 15 },
   animate: { filter: "blur(0px)", opacity: 1, y: 0 },
-  transition: { duration: 0.6, ease: "easeOut" as const, delay },
+  transition: { duration: 0.55, ease: "easeOut" as const, delay },
 });
 
 function TiltCard({ children }: { children: React.ReactNode }) {
@@ -32,8 +33,8 @@ function TiltCard({ children }: { children: React.ReactNode }) {
   const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
   const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["12deg", "-12deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-12deg", "12deg"]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -63,7 +64,7 @@ function TiltCard({ children }: { children: React.ReactNode }) {
         className="relative w-full h-full will-change-transform [transform-style:preserve-3d]"
       >
         <motion.div
-          className="w-full h-full [transform:translateZ(60px)]"
+          className="w-full h-full [transform:translateZ(45px)]"
         >
           {children}
         </motion.div>
@@ -91,35 +92,49 @@ export function HeroSection({
   return (
     <section
       id="home"
-      className="relative flex min-h-screen w-full flex-col overflow-hidden bg-[#0b0d0e]"
+      className="relative flex min-h-[90vh] w-full flex-col overflow-hidden bg-[#0b0d0e]"
     >
       {/* ── Liquid Shader Background ── */}
       <LiquidShaderBackground />
 
-      {/* ── Main Content (Side-by-Side) ── */}
-      <div className="relative z-10 mx-auto grid w-full max-w-[1200px] flex-1 grid-cols-1 items-center gap-12 lg:gap-16 px-6 md:px-12 lg:grid-cols-[55%_40%] pt-28 pb-12 lg:pb-8 min-h-screen">
+      {/* Subtle Ambient Cosmic Orbs in negative space */}
+      <AmbientAuroraOrb
+        variant="violet"
+        size="md"
+        className="-top-12 -left-12 opacity-70"
+        duration={22}
+      />
+      <AmbientAuroraOrb
+        variant="blue"
+        size="sm"
+        className="bottom-20 right-10 opacity-50"
+        duration={26}
+      />
+
+      {/* ── Main Content (Side-by-Side, Refined Proportions) ── */}
+      <div className="relative z-10 mx-auto grid w-full max-w-[1100px] flex-1 grid-cols-1 items-center gap-10 lg:gap-14 px-6 md:px-10 lg:grid-cols-[58%_38%] pt-24 pb-8 lg:pb-6 min-h-[90vh]">
         
         {/* ── Left Column: Text ── */}
         <div className="flex flex-col items-start text-left">
           {/* Status Badge */}
-          <motion.div {...blurFadeIn(0.4)} className="mb-8">
-            <div className="liquid-glass flex items-center gap-2.5 rounded-full px-4 py-1.5 border border-white/10">
+          <motion.div {...blurFadeIn(0.35)} className="mb-6">
+            <div className="liquid-glass flex items-center gap-2.5 rounded-full px-3.5 py-1.5 border border-white/10">
               <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs font-medium uppercase tracking-wider text-white/90 font-body">
+              <span className="text-[11px] font-medium uppercase tracking-wider text-white/90 font-body">
                 Open for Collaboration
               </span>
             </div>
           </motion.div>
 
-          {/* Headline */}
-          <h1 className="text-4xl md:text-6xl lg:text-[4.75rem] font-heading font-semibold text-white leading-[1.05] tracking-tight max-w-2xl">
+          {/* Headline (Refined Scale) */}
+          <h1 className="text-3xl sm:text-5xl lg:text-[4rem] font-heading font-semibold text-white leading-[1.08] tracking-tight max-w-2xl">
             <BlurText text={about?.headline || "Hai, saya Nafis"} />
           </h1>
 
-          {/* Subheading */}
+          {/* Subheading (Refined Scale) */}
           <motion.p
-            {...blurFadeIn(0.8)}
-            className="mt-6 max-w-[65ch] text-base md:text-lg text-white/70 font-body leading-relaxed text-justify md:text-left"
+            {...blurFadeIn(0.7)}
+            className="mt-5 max-w-[58ch] text-sm sm:text-base text-white/70 font-body leading-relaxed text-justify md:text-left"
           >
             {about?.description ||
               "Memadukan pola pikir analitis dari Biologi dengan eksplorasi web, AI, dan desain untuk menerjemahkan masalah rumit menjadi solusi digital yang presisi."}
@@ -127,48 +142,48 @@ export function HeroSection({
 
           {/* CTAs */}
           <motion.div
-            {...blurFadeIn(1.1)}
-            className="mt-10 flex flex-wrap items-center gap-6"
+            {...blurFadeIn(0.95)}
+            className="mt-8 flex flex-wrap items-center gap-4"
           >
             <a
               href={contactHref}
               target={isExternalContact ? "_blank" : undefined}
               rel={isExternalContact ? "noopener noreferrer" : undefined}
-              className={`liquid-glass-strong flex items-center gap-3 rounded-full px-6 py-3 md:px-8 md:py-4 text-sm md:text-base font-medium text-white font-body transition-transform hover:scale-105 border border-white/10 ${focusRing}`}
+              className={`liquid-glass-strong flex items-center gap-2.5 rounded-full px-5 py-2.5 sm:px-6 sm:py-3 text-xs sm:text-sm font-medium text-white font-body transition-transform hover:scale-105 border border-white/10 ${focusRing}`}
             >
               {contactLabel}
-              <ArrowUpRight className="h-5 w-5" />
+              <ArrowUpRight className="h-4 w-4" />
             </a>
             <button
               type="button"
               onClick={scrollToPortfolio}
-              className="flex cursor-pointer items-center gap-3 text-base font-medium text-white/80 font-body transition-colors hover:text-white"
+              className="flex cursor-pointer items-center gap-2 text-xs sm:text-sm font-medium text-white/80 font-body transition-colors hover:text-white"
             >
               Lihat Karya
-              <Play className="h-5 w-5" fill="currentColor" />
+              <Play className="h-4 w-4" fill="currentColor" />
             </button>
           </motion.div>
         </div>
 
         {/* ── Right Column: Photo & Socials ── */}
         <div className="flex flex-col items-center justify-center lg:items-end w-full">
-          {/* 3D Profile Picture */}
+          {/* 3D Profile Picture (Refined Scale) */}
           <motion.div
-            {...blurFadeIn(0.5)}
-            className="w-[260px] md:w-[300px] lg:w-[320px] aspect-[4/5]"
+            {...blurFadeIn(0.45)}
+            className="w-[210px] sm:w-[240px] lg:w-[260px] aspect-[4/5]"
           >
             {about?.banner_url && (
               <TiltCard>
-                <div className="relative w-full h-full rounded-[2.1rem] bg-gradient-to-tr from-blue-500/30 via-violet-500/30 to-emerald-400/30 p-[2px] shadow-[0_20px_60px_-10px_rgba(0,0,0,0.6),0_0_60px_10px_rgba(66,133,244,0.15)] group transition-all duration-700 hover:from-blue-400 hover:via-violet-400 hover:to-emerald-300">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-500 via-violet-500 to-emerald-400 blur-xl opacity-20 transition-opacity duration-700 group-hover:opacity-40 rounded-[2.1rem]" />
+                <div className="relative w-full h-full rounded-[1.75rem] bg-gradient-to-tr from-blue-500/30 via-violet-500/30 to-emerald-400/30 p-[2px] shadow-[0_16px_50px_-10px_rgba(0,0,0,0.7),0_0_40px_8px_rgba(66,133,244,0.12)] group transition-all duration-700 hover:from-blue-400 hover:via-violet-400 hover:to-emerald-300">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-500 via-violet-500 to-emerald-400 blur-xl opacity-20 transition-opacity duration-700 group-hover:opacity-40 rounded-[1.75rem]" />
                   
-                  <div className="liquid-glass relative z-10 w-full h-full rounded-[2rem] border border-white/10 overflow-hidden bg-black/80 backdrop-blur-xl">
+                  <div className="liquid-glass relative z-10 w-full h-full rounded-[1.65rem] border border-white/10 overflow-hidden bg-black/80 backdrop-blur-xl">
                     <Image
-                      src={formatMediaUrl(about.banner_url, 800)}
+                      src={formatMediaUrl(about.banner_url, 600)}
                       alt="Foto profil Nafis"
                       fill
                       priority
-                      className="object-cover rounded-[2rem] transition-transform duration-700 group-hover:scale-105"
+                      className="object-cover rounded-[1.65rem] transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>
                 </div>
@@ -179,15 +194,15 @@ export function HeroSection({
           {/* Social Links */}
           {socials.length > 0 && (
             <motion.div
-              {...blurFadeIn(1.3)}
-              className="mt-10 flex flex-col items-center lg:items-end gap-3 w-full max-w-[320px]"
+              {...blurFadeIn(1.1)}
+              className="mt-7 flex flex-col items-center lg:items-end gap-2.5 w-full max-w-[280px]"
             >
-              <div className="liquid-glass rounded-full px-5 py-1.5 border border-white/10 w-fit">
-                <span className="text-xs font-medium text-white/70 font-body uppercase tracking-wider">
+              <div className="liquid-glass rounded-full px-4 py-1 border border-white/10 w-fit">
+                <span className="text-[10px] font-medium text-white/70 font-body uppercase tracking-wider">
                   Temukan saya di
                 </span>
               </div>
-              <div className="relative w-[110%] lg:w-[120%] overflow-hidden mt-4 py-8 -my-8 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] pointer-events-none">
+              <div className="relative w-[110%] lg:w-[120%] overflow-hidden mt-2 py-4 -my-4 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] pointer-events-none">
                 <style>{`
                   @keyframes marquee-scroll {
                     0% { transform: translateX(0); }
@@ -197,7 +212,7 @@ export function HeroSection({
                     animation: marquee-scroll 45s linear infinite;
                   }
                 `}</style>
-                <div className="flex w-max items-center gap-24 pr-24 animate-marquee hover:[animation-play-state:paused] group/marquee pointer-events-auto">
+                <div className="flex w-max items-center gap-16 pr-16 animate-marquee hover:[animation-play-state:paused] group/marquee pointer-events-auto">
                   {Array.from({ length: 12 }).flatMap(() => socials).map((link, idx) => {
                     const isExternal = Boolean(link.url && (link.url.startsWith("http://") || link.url.startsWith("https://")));
                     return (
@@ -206,7 +221,7 @@ export function HeroSection({
                         href={link.url || "#"}
                         target={isExternal ? "_blank" : undefined}
                         rel={isExternal ? "noopener noreferrer" : undefined}
-                        className="font-heading font-medium text-3xl md:text-5xl text-white/70 tracking-tight transition-all duration-300 group-hover/marquee:opacity-30 hover:!opacity-100 hover:!text-blue-400 hover:drop-shadow-[0_0_16px_rgba(66,133,244,0.6)]"
+                        className="font-heading font-medium text-xl md:text-2xl text-white/70 tracking-tight transition-all duration-300 group-hover/marquee:opacity-30 hover:!opacity-100 hover:!text-blue-400 hover:drop-shadow-[0_0_14px_rgba(66,133,244,0.5)]"
                       >
                         {link.title}
                       </a>
@@ -219,8 +234,8 @@ export function HeroSection({
         </div>
       </div>
 
-      {/* Spacer to push the sticky section's bottom edge down */}
-      <div className="h-[30vh] lg:h-[40vh] w-full shrink-0" />
+      {/* Compact Spacer to balance parallax transition */}
+      <div className="h-[16vh] lg:h-[22vh] w-full shrink-0" />
     </section>
   );
 }

@@ -10,6 +10,7 @@ import type {
   ProfileHighlight,
   ProfileHighlightCategory,
 } from "../../types/content";
+import { AmbientAuroraOrb } from "../ui/AmbientAuroraOrb";
 
 type TrackRecordSectionProps = {
   highlights: ProfileHighlight[];
@@ -42,19 +43,19 @@ const categoryConfig: Record<
   { icon: ReactNode; bg: string; text: string; title: string }
 > = {
   education: {
-    icon: <GraduationCap size={22} />,
+    icon: <GraduationCap size={18} />,
     bg: "bg-blue-400",
     text: "text-blue-400",
     title: "Education",
   },
   achievement: {
-    icon: <Award size={22} />,
+    icon: <Award size={18} />,
     bg: "bg-amber-400",
     text: "text-amber-400",
     title: "Achievements",
   },
   leadership: {
-    icon: <Users size={22} />,
+    icon: <Users size={18} />,
     bg: "bg-violet-400",
     text: "text-violet-400",
     title: "Leadership",
@@ -126,7 +127,15 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
   const repeatedSkills = Array(20).fill(skillsString).join("             ✦             ");
 
   return (
-    <section id="track-record" className="py-10 md:py-16 overflow-hidden">
+    <section id="track-record" className="relative py-8 md:py-14 overflow-hidden scroll-mt-20">
+      {/* Moving gradient light in empty header space */}
+      <AmbientAuroraOrb
+        variant="cyan"
+        size="sm"
+        className="top-6 right-8 md:right-24 opacity-40"
+        duration={20}
+      />
+
       <style>{`
         @keyframes wavy-marquee {
           0% { startOffset: 0%; }
@@ -135,7 +144,6 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
         .animate-wavy-marquee {
           animation: wavy-marquee 40s linear infinite;
         }
-        /* Fallback for browsers that don't support startOffset animation in CSS */
         @supports not (startOffset: 0%) {
           .animate-wavy-marquee {
             animation: none;
@@ -143,31 +151,31 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
         }
       `}</style>
 
-      {/* Header section */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-24">
-        <div className="mb-10">
-          <span className="liquid-glass rounded-full inline-flex border border-white/10 px-4 py-1.5 text-xs font-body font-medium uppercase tracking-wider text-white/80">
+      {/* Header section (Refined Scale) */}
+      <div className="max-w-6xl mx-auto px-6 lg:px-12 relative z-10">
+        <div className="mb-6">
+          <span className="liquid-glass rounded-full inline-flex border border-white/10 px-3.5 py-1 text-[11px] font-body font-medium uppercase tracking-wider text-white/80">
             Track Record
           </span>
         </div>
 
-        <div className="mb-10 max-w-3xl">
-          <h2 className="text-3xl md:text-5xl font-heading font-semibold tracking-tight leading-tight text-white">
+        <div className="mb-8 max-w-2xl">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-heading font-semibold tracking-tight leading-tight text-white">
             Perjalanan &amp; Pengalaman
           </h2>
 
-          <p className="mt-4 max-w-[65ch] text-base font-body leading-relaxed text-white/70 text-justify md:text-left">
+          <p className="mt-3 max-w-[60ch] text-xs sm:text-sm font-body leading-relaxed text-white/70 text-justify md:text-left">
             Ringkasan perjalanan yang membentuk cara saya berpikir, memimpin,
             dan membuat karya digital.
           </p>
         </div>
       </div>
 
-      {/* 3D Cover Flow Carousel */}
+      {/* 3D Cover Flow Carousel (Solid Frost Cards) */}
       {activeCategories.length > 0 && (
         <>
         <div
-          className="relative flex h-[400px] w-full items-center justify-center overflow-hidden perspective-[1000px] mt-8"
+          className="relative flex h-[340px] w-full items-center justify-center overflow-hidden perspective-[1000px] mt-4"
           style={{ perspective: "1000px" }}
           onTouchStart={(e) => {
             if (e.touches[0]) {
@@ -181,7 +189,6 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
             if (!touchStartRef.current || !e.changedTouches[0]) return;
             const dx = e.changedTouches[0].clientX - touchStartRef.current.x;
             const dy = e.changedTouches[0].clientY - touchStartRef.current.y;
-            // Only count horizontal swipes (more horizontal than vertical)
             if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
               if (dx < 0 && activeIndex < activeCategories.length - 1) {
                 setActiveIndex(activeIndex + 1);
@@ -200,29 +207,30 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
             if (!topItem) return null;
 
             let scale = 1;
-            let filter = "brightness(1) grayscale(0)";
+            let filter = "brightness(1)";
             let zIndex = 10;
             let rotateY = 0;
 
             if (distance !== 0) {
-              scale = 0.85;
-              filter = "brightness(0.3) grayscale(0.5)";
+              scale = 0.88;
+              filter = "brightness(0.35) saturate(0.7)";
               zIndex = 5 - Math.abs(distance);
-              rotateY = distance < 0 ? 15 : -15;
+              rotateY = distance < 0 ? 12 : -12;
             }
 
             return (
               <div
                 key={cat}
-                className="absolute left-1/2 top-1/2 w-[280px] sm:w-[320px] h-[320px] transition-all duration-500 ease-in-out"
+                className="absolute left-1/2 top-1/2 w-[250px] sm:w-[280px] h-[280px] transition-all duration-500 ease-in-out"
                 style={{ 
                   transformOrigin: "center center",
                   backfaceVisibility: "hidden",
-                  transform: `translate3d(calc(-50% + ${distance * 140}px), -50%, ${isActive ? "0px" : "-100px"}) rotateY(${rotateY}deg) scale(${scale})`,
+                  transform: `translate3d(calc(-50% + ${distance * 125}px), -50%, ${isActive ? "0px" : "-90px"}) rotateY(${rotateY}deg) scale(${scale})`,
                   zIndex,
                   filter,
                 }}
               >
+                {/* Solid Frost Card (Opaque #141619, does NOT leak background through) */}
                 <motion.div
                   layoutId={`category-card-${cat}`}
                   onClick={() => {
@@ -232,36 +240,36 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                       setActiveIndex(idx);
                     }
                   }}
-                  className="liquid-glass relative w-full h-full rounded-[2rem] p-6 flex flex-col justify-between overflow-hidden cursor-pointer shadow-2xl border border-white/10 group"
+                  className="solid-frost relative w-full h-full rounded-[1.75rem] p-5 flex flex-col justify-between overflow-hidden cursor-pointer shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-white/12 bg-[#141619] group"
                 >
-                  {/* Subtle Aurora Glow Effect */}
+                  {/* Subtle Aurora Glow on hover */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-                    <div className={`absolute -top-24 -right-24 w-48 h-48 blur-[50px] rounded-full ${cat === 'education' ? 'bg-blue-500/20' : cat === 'achievement' ? 'bg-amber-400/20' : 'bg-violet-400/20'}`} />
-                    <div className={`absolute -bottom-24 -left-24 w-48 h-48 blur-[50px] rounded-full ${cat === 'education' ? 'bg-violet-500/20' : cat === 'achievement' ? 'bg-rose-500/20' : 'bg-emerald-500/20'}`} />
+                    <div className={`absolute -top-20 -right-20 w-40 h-40 blur-[45px] rounded-full ${cat === 'education' ? 'bg-blue-500/15' : cat === 'achievement' ? 'bg-amber-400/15' : 'bg-violet-400/15'}`} />
+                    <div className={`absolute -bottom-20 -left-20 w-40 h-40 blur-[45px] rounded-full ${cat === 'education' ? 'bg-violet-500/15' : cat === 'achievement' ? 'bg-rose-500/15' : 'bg-emerald-500/15'}`} />
                   </div>
 
-                  <div className="flex items-center gap-3 relative z-10">
+                  <div className="flex items-center gap-2.5 relative z-10">
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center text-black shadow-lg flex-shrink-0 ${categoryConfig[cat].bg}`}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-black shadow-md flex-shrink-0 ${categoryConfig[cat].bg}`}
                     >
                       {categoryConfig[cat].icon}
                     </div>
-                    <h3 className="text-xl font-heading font-semibold text-white tracking-tight truncate">
+                    <h3 className="text-base font-heading font-semibold text-white tracking-tight truncate">
                       {categoryConfig[cat].title}
                     </h3>
                   </div>
 
-                  <div className="mt-4 flex-1 flex flex-col gap-3 relative z-10 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+                  <div className="mt-3 flex-1 flex flex-col gap-2.5 relative z-10 overflow-y-auto pr-1.5 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
                     {grouped[cat].map((item) => (
                       <div key={item.id} className="flex flex-col">
                         {item.period && (
                           <span
-                            className={`text-[10px] font-body font-semibold uppercase tracking-wider mb-1 ${categoryConfig[cat].text}`}
+                            className={`text-[9px] font-body font-semibold uppercase tracking-wider mb-0.5 ${categoryConfig[cat].text}`}
                           >
                             {item.period}
                           </span>
                         )}
-                        <h4 className="text-sm sm:text-base font-heading font-medium text-white leading-tight line-clamp-1">
+                        <h4 className="text-xs sm:text-sm font-heading font-medium text-white leading-snug line-clamp-1">
                           {item.title}
                         </h4>
                       </div>
@@ -275,9 +283,9 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                         setExpandedCategory(cat);
                       }}
                       aria-label={`Buka detail kategori ${categoryConfig[cat].title}`}
-                      className="absolute bottom-6 right-6 p-2.5 bg-white/10 rounded-full hover:bg-white/20 transition-colors text-white backdrop-blur-md z-20"
+                      className="absolute bottom-5 right-5 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors text-white backdrop-blur-md z-20"
                     >
-                      <Maximize2 size={18} />
+                      <Maximize2 size={15} />
                     </button>
                   )}
                 </motion.div>
@@ -287,15 +295,15 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
         </div>
 
         {/* Dot Indicator */}
-        <div className="flex items-center justify-center gap-2 mt-6">
+        <div className="flex items-center justify-center gap-1.5 mt-4">
           {activeCategories.map((cat, idx) => (
             <button
               key={`dot-${cat}`}
               onClick={() => setActiveIndex(idx)}
               className={`rounded-full transition-all duration-300 ${
                 idx === activeIndex
-                  ? `w-8 h-2 ${categoryConfig[cat].bg}`
-                  : "w-2 h-2 bg-white/20 hover:bg-white/40"
+                  ? `w-6 h-1.5 ${categoryConfig[cat].bg}`
+                  : "w-1.5 h-1.5 bg-white/20 hover:bg-white/40"
               }`}
               aria-label={`Lihat ${categoryConfig[cat].title}`}
             />
@@ -304,53 +312,53 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
         </>
       )}
 
-      {/* Modal Morphing */}
+      {/* Modal Morphing (Solid Frost Elevated) */}
       <AnimatePresence>
         {expandedCategory && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/75 backdrop-blur-md"
+              className="absolute inset-0 bg-black/80 backdrop-blur-md"
               onClick={() => setExpandedCategory(null)}
             />
             <motion.div
               layoutId={`category-card-${expandedCategory}`}
-              className="bg-[#131314] border border-white/10 w-full max-w-4xl max-h-[85vh] rounded-[2rem] p-6 md:p-10 relative z-10 shadow-2xl flex flex-col"
+              className="bg-[#141619] border border-white/12 w-full max-w-3xl max-h-[82vh] rounded-[1.75rem] p-5 md:p-8 relative z-10 shadow-2xl flex flex-col"
             >
               <button
                 onClick={() => setExpandedCategory(null)}
                 aria-label="Tutup detail kategori"
-                className="absolute top-6 right-6 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors text-white z-20"
+                className="absolute top-5 right-5 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors text-white z-20"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
 
-              <div className="flex items-center gap-4 mb-10">
+              <div className="flex items-center gap-3 mb-6">
                 <div
-                  className={`w-14 h-14 rounded-full flex items-center justify-center text-black ${categoryConfig[expandedCategory].bg}`}
+                  className={`w-11 h-11 rounded-full flex items-center justify-center text-black ${categoryConfig[expandedCategory].bg}`}
                 >
                   {categoryConfig[expandedCategory].icon}
                 </div>
-                <h2 className="text-3xl font-heading font-semibold text-white tracking-tight">
+                <h2 className="text-2xl font-heading font-semibold text-white tracking-tight">
                   {categoryConfig[expandedCategory].title}
                 </h2>
               </div>
 
-              <div className="space-y-8 overflow-y-auto flex-1 pr-2">
+              <div className="space-y-6 overflow-y-auto flex-1 pr-2">
                 {grouped[expandedCategory].map((item) => (
                   <div
                     key={item.id}
-                    className="flex flex-col md:flex-row gap-6 border-b border-white/10 pb-8 last:border-0 last:pb-0"
+                    className="flex flex-col md:flex-row gap-5 border-b border-white/10 pb-6 last:border-0 last:pb-0"
                   >
                     {item.image_url && (
-                      <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-white/5">
+                      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white/5">
                         <Image
-                          src={formatMediaUrl(item.image_url, 256)}
+                          src={formatMediaUrl(item.image_url, 200)}
                           alt={item.title || "Timeline image"}
                           fill
-                          sizes="96px"
+                          sizes="80px"
                           className="object-cover"
                         />
                       </div>
@@ -358,16 +366,16 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                     <div className="flex-1">
                       {item.period && (
                         <p
-                          className={`text-sm font-body font-semibold uppercase tracking-wider mb-2 ${categoryConfig[expandedCategory].text}`}
+                          className={`text-xs font-body font-semibold uppercase tracking-wider mb-1.5 ${categoryConfig[expandedCategory].text}`}
                         >
                           {item.period}
                         </p>
                       )}
-                      <h4 className="text-2xl font-heading font-semibold text-white leading-tight mb-3">
+                      <h4 className="text-lg md:text-xl font-heading font-semibold text-white leading-tight mb-2">
                         {item.title}
                       </h4>
                       {item.description && (
-                        <p className="text-base leading-relaxed font-body text-white/70">
+                        <p className="text-xs sm:text-sm leading-relaxed font-body text-white/70">
                           {item.description}
                         </p>
                       )}
@@ -382,9 +390,9 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
 
       {/* Wavy SVG Marquee (Skills) */}
       {hasSkills && (
-        <div className="mt-4 md:mt-6 w-full overflow-hidden relative">
+        <div className="mt-3 md:mt-5 w-full overflow-hidden relative">
           <div
-            className="w-full relative h-[100px]"
+            className="w-full relative h-[80px]"
             style={{
               maskImage:
                 "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
@@ -395,19 +403,19 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
             <svg
               width="100%"
               height="100%"
-              viewBox="0 0 3000 100"
+              viewBox="0 0 3000 80"
               preserveAspectRatio="xMidYMid slice"
               className="absolute top-0 left-0 w-full h-full min-w-[3000px]"
             >
               <path
                 id="curve"
-                d="M 0 50 Q 250 10 500 50 T 1000 50 T 1500 50 T 2000 50 T 2500 50 T 3000 50"
+                d="M 0 40 Q 250 8 500 40 T 1000 40 T 1500 40 T 2000 40 T 2500 40 T 3000 40"
                 fill="transparent"
                 stroke="transparent"
               />
               <text
                 fill="rgba(255,255,255,0.4)"
-                fontSize="15"
+                fontSize="13"
                 fontWeight="500"
                 fontFamily="Google Sans Text, system-ui, sans-serif"
                 className="uppercase tracking-widest"

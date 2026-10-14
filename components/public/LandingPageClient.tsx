@@ -18,6 +18,7 @@ import { HeroSection } from "./HeroSection";
 import { PortfolioSection } from "./PortfolioSection";
 import { ServicesSection } from "./ServicesSection";
 import { TrackRecordSection } from "./TrackRecordSection";
+import { AmbientAuroraOrb } from "../ui/AmbientAuroraOrb";
 
 type LandingPageClientProps = {
   about: AboutMe | null;
@@ -169,7 +170,7 @@ export function LandingPageClient({
 
       <main id="main-content" className="relative z-10">
         {publicError && (
-          <div className="absolute top-24 left-0 right-0 z-50">
+          <div className="absolute top-20 left-0 right-0 z-50">
             <PublicErrorNotice error={publicError} />
           </div>
         )}
@@ -188,7 +189,15 @@ export function LandingPageClient({
         </div>
 
         {/* Foreground Content */}
-        <div className="relative z-10 bg-[#0b0d0e] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] rounded-t-[2.5rem]">
+        <div className="relative z-10 bg-[#0b0d0e] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] rounded-t-[2rem]">
+          {/* Subtle Ambient Cosmic Orb between sections */}
+          <AmbientAuroraOrb
+            variant="emerald"
+            size="sm"
+            className="top-1/3 -right-16 opacity-30"
+            duration={28}
+          />
+
           {highlights.length > 0 && (
             <TrackRecordSection highlights={highlights} />
           )}

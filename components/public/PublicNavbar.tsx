@@ -41,7 +41,6 @@ export function PublicNavbar({
     const handleScroll = () => {
       const trackRecordEl = document.getElementById("track-record");
       if (!trackRecordEl) {
-        // If track record doesn't exist, check portfolio
         const portfolioEl = document.getElementById("portfolio");
         if (portfolioEl) {
           setShowPhoto(portfolioEl.getBoundingClientRect().top <= 80);
@@ -64,32 +63,32 @@ export function PublicNavbar({
     }
   };
 
-  const profileImageUrl = bannerUrl ? formatMediaUrl(bannerUrl, 96) : "";
+  const profileImageUrl = bannerUrl ? formatMediaUrl(bannerUrl, 80) : "";
 
   return (
     <nav
       aria-label="Navigasi utama"
-      className="fixed left-0 right-0 z-50 px-6 md:px-8 lg:px-16"
-      style={{ top: "max(1rem, env(safe-area-inset-top, 1rem))" }}
+      className="fixed left-0 right-0 z-50 px-4 md:px-8 lg:px-12"
+      style={{ top: "max(0.75rem, env(safe-area-inset-top, 0.75rem))" }}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between">
+      <div className="mx-auto flex max-w-6xl items-center justify-between">
         {/* Logo — liquid-glass circle → transitions to profile photo */}
         <button
           type="button"
           onClick={() => scrollTo("home")}
-          className={`relative flex h-12 w-12 items-center justify-center rounded-full cursor-pointer transition-all duration-500 ${focusRing}`}
+          className={`relative flex h-10 w-10 items-center justify-center rounded-full cursor-pointer transition-all duration-500 ${focusRing}`}
           aria-label="I'm Nafis — kembali ke profil utama"
           style={{
-            background: "rgba(255, 255, 255, 0.03)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
+            background: "rgba(255, 255, 255, 0.04)",
+            backdropFilter: "blur(14px)",
+            WebkitBackdropFilter: "blur(14px)",
             boxShadow:
-              "inset 0 1px 1px rgba(255,255,255,0.1), 0 0 0 1px rgba(255,255,255,0.08)",
+              "inset 0 1px 1px rgba(255,255,255,0.12), 0 0 0 1px rgba(255,255,255,0.08)",
           }}
         >
           {/* "n" text — fades out when photo appears */}
           <span
-            className={`font-heading font-semibold text-lg text-white absolute inset-0 flex items-center justify-center transition-all duration-500 ${
+            className={`font-heading font-semibold text-base text-white absolute inset-0 flex items-center justify-center transition-all duration-500 ${
               showPhoto ? "opacity-0 scale-75" : "opacity-100 scale-100"
             }`}
           >
@@ -107,23 +106,23 @@ export function PublicNavbar({
                 src={profileImageUrl}
                 alt="Foto profil"
                 fill
-                sizes="48px"
+                sizes="40px"
                 className="object-cover rounded-full"
               />
             </span>
           )}
         </button>
 
-        {/* Center navigation — desktop only */}
+        {/* Center navigation — desktop only (Compact Pill) */}
         <div className="hidden lg:flex items-center">
           <div
-            className="flex items-center rounded-full px-1.5 py-1.5"
+            className="flex items-center rounded-full px-1 py-1"
             style={{
-              background: "rgba(255, 255, 255, 0.03)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
+              background: "rgba(255, 255, 255, 0.04)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
               boxShadow:
-                "inset 0 1px 1px rgba(255,255,255,0.1), 0 0 0 1px rgba(255,255,255,0.08)",
+                "inset 0 1px 1px rgba(255,255,255,0.12), 0 0 0 1px rgba(255,255,255,0.08)",
             }}
           >
             {navLinks.map((link) => (
@@ -131,7 +130,7 @@ export function PublicNavbar({
                 key={link.id}
                 type="button"
                 onClick={() => scrollTo(link.id)}
-                className="cursor-pointer px-3 py-2 text-sm font-medium text-white/90 font-body transition-colors hover:text-white rounded-full"
+                className="cursor-pointer px-3 py-1.5 text-xs font-medium text-white/90 font-body transition-colors hover:text-white rounded-full"
               >
                 {link.label}
               </button>
@@ -141,11 +140,11 @@ export function PublicNavbar({
               onClick={() => {
                 smoothScrollToElement(document.querySelector("footer"));
               }}
-              className="ml-1 flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-4 py-2 text-sm font-medium text-black transition-all hover:bg-white/90"
+              className="ml-1 flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-3.5 py-1.5 text-xs font-medium text-black transition-all hover:bg-white/90"
             >
               Hubungi
               <svg
-                className="h-4 w-4"
+                className="h-3.5 w-3.5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -165,21 +164,21 @@ export function PublicNavbar({
         <button
           type="button"
           onClick={onOpenMenu}
-          className={`flex h-12 w-12 items-center justify-center rounded-full lg:hidden cursor-pointer ${focusRing}`}
+          className={`flex h-10 w-10 items-center justify-center rounded-full lg:hidden cursor-pointer ${focusRing}`}
           style={{
-            background: "rgba(255, 255, 255, 0.03)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
+            background: "rgba(255, 255, 255, 0.04)",
+            backdropFilter: "blur(14px)",
+            WebkitBackdropFilter: "blur(14px)",
             boxShadow:
-              "inset 0 1px 1px rgba(255,255,255,0.1), 0 0 0 1px rgba(255,255,255,0.08)",
+              "inset 0 1px 1px rgba(255,255,255,0.12), 0 0 0 1px rgba(255,255,255,0.08)",
           }}
           aria-label="Buka menu navigasi"
         >
-          <Menu size={18} className="text-white" />
+          <Menu size={16} className="text-white" />
         </button>
 
         {/* Desktop spacer for balance */}
-        <div className="hidden lg:block h-12 w-12" aria-hidden="true" />
+        <div className="hidden lg:block h-10 w-10" aria-hidden="true" />
       </div>
     </nav>
   );
