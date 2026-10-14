@@ -91,7 +91,7 @@ export function HeroSection({
   return (
     <section
       id="home"
-      className="relative flex min-h-screen w-full flex-col overflow-hidden bg-black"
+      className="relative flex min-h-screen w-full flex-col overflow-hidden bg-[#0b0d0e]"
     >
       {/* ── Liquid Shader Background ── */}
       <LiquidShaderBackground />
@@ -101,27 +101,25 @@ export function HeroSection({
         
         {/* ── Left Column: Text ── */}
         <div className="flex flex-col items-start text-left">
-          {/* Badge */}
+          {/* Status Badge */}
           <motion.div {...blurFadeIn(0.4)} className="mb-8">
-            <div className="liquid-glass flex items-center gap-3 rounded-full px-6 py-2 border border-white/5">
-              <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-black font-body uppercase tracking-widest">
-                Status
-              </span>
-              <span className="text-base text-white/90 font-body">
+            <div className="liquid-glass flex items-center gap-2.5 rounded-full px-4 py-1.5 border border-white/10">
+              <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-xs font-medium uppercase tracking-wider text-white/90 font-body">
                 Open for Collaboration
               </span>
             </div>
           </motion.div>
 
           {/* Headline */}
-          <h1 className="text-4xl md:text-6xl lg:text-[5rem] font-heading italic text-white leading-[0.85] tracking-[-1px] md:tracking-[-3px] max-w-2xl">
+          <h1 className="text-4xl md:text-6xl lg:text-[4.75rem] font-heading font-semibold text-white leading-[1.05] tracking-tight max-w-2xl">
             <BlurText text={about?.headline || "Hai, saya Nafis"} />
           </h1>
 
           {/* Subheading */}
           <motion.p
             {...blurFadeIn(0.8)}
-            className="mt-8 max-w-[65ch] text-base text-white/70 font-body font-light leading-relaxed text-justify md:text-left"
+            className="mt-6 max-w-[65ch] text-base md:text-lg text-white/70 font-body leading-relaxed text-justify md:text-left"
           >
             {about?.description ||
               "Memadukan pola pikir analitis dari Biologi dengan eksplorasi web, AI, dan desain untuk menerjemahkan masalah rumit menjadi solusi digital yang presisi."}
@@ -136,10 +134,10 @@ export function HeroSection({
               href={contactHref}
               target={isExternalContact ? "_blank" : undefined}
               rel={isExternalContact ? "noopener noreferrer" : undefined}
-              className={`liquid-glass-strong flex items-center gap-3 rounded-full px-6 py-3 md:px-8 md:py-4 text-sm md:text-base font-medium text-white font-body transition-transform hover:scale-105 border border-white/5 ${focusRing}`}
+              className={`liquid-glass-strong flex items-center gap-3 rounded-full px-6 py-3 md:px-8 md:py-4 text-sm md:text-base font-medium text-white font-body transition-transform hover:scale-105 border border-white/10 ${focusRing}`}
             >
               {contactLabel}
-              <ArrowUpRight className="h-6 w-6" />
+              <ArrowUpRight className="h-5 w-5" />
             </a>
             <button
               type="button"
@@ -161,8 +159,8 @@ export function HeroSection({
           >
             {about?.banner_url && (
               <TiltCard>
-                <div className="relative w-full h-full rounded-[2.1rem] bg-gradient-to-tr from-cyan-400/40 via-violet-500/40 to-cyan-300/40 p-[2px] shadow-[0_20px_60px_-10px_rgba(0,0,0,0.5),0_0_60px_10px_rgba(88,28,135,0.2),0_0_120px_30px_rgba(30,64,175,0.1)] group transition-all duration-700 hover:from-cyan-400 hover:via-violet-500 hover:to-cyan-300">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-violet-500 to-cyan-300 blur-xl opacity-20 transition-opacity duration-700 group-hover:opacity-60 rounded-[2.1rem]" />
+                <div className="relative w-full h-full rounded-[2.1rem] bg-gradient-to-tr from-blue-500/30 via-violet-500/30 to-emerald-400/30 p-[2px] shadow-[0_20px_60px_-10px_rgba(0,0,0,0.6),0_0_60px_10px_rgba(66,133,244,0.15)] group transition-all duration-700 hover:from-blue-400 hover:via-violet-400 hover:to-emerald-300">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-500 via-violet-500 to-emerald-400 blur-xl opacity-20 transition-opacity duration-700 group-hover:opacity-40 rounded-[2.1rem]" />
                   
                   <div className="liquid-glass relative z-10 w-full h-full rounded-[2rem] border border-white/10 overflow-hidden bg-black/80 backdrop-blur-xl">
                     <Image
@@ -184,8 +182,8 @@ export function HeroSection({
               {...blurFadeIn(1.3)}
               className="mt-10 flex flex-col items-center lg:items-end gap-3 w-full max-w-[320px]"
             >
-              <div className="liquid-glass rounded-full px-6 py-2 border border-white/5 w-fit">
-                <span className="text-xs font-medium text-white/80 font-body uppercase tracking-widest">
+              <div className="liquid-glass rounded-full px-5 py-1.5 border border-white/10 w-fit">
+                <span className="text-xs font-medium text-white/70 font-body uppercase tracking-wider">
                   Temukan saya di
                 </span>
               </div>
@@ -208,7 +206,7 @@ export function HeroSection({
                         href={link.url || "#"}
                         target={isExternal ? "_blank" : undefined}
                         rel={isExternal ? "noopener noreferrer" : undefined}
-                        className="font-heading italic text-3xl md:text-5xl text-white/70 tracking-tight transition-all duration-300 group-hover/marquee:opacity-30 hover:!opacity-100 hover:!text-cyan-300 hover:drop-shadow-[0_0_16px_rgba(34,211,238,1)]"
+                        className="font-heading font-medium text-3xl md:text-5xl text-white/70 tracking-tight transition-all duration-300 group-hover/marquee:opacity-30 hover:!opacity-100 hover:!text-blue-400 hover:drop-shadow-[0_0_16px_rgba(66,133,244,0.6)]"
                       >
                         {link.title}
                       </a>

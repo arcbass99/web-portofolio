@@ -149,7 +149,7 @@ export function LandingPageClient({
     : "Jelajahi Profil";
 
   return (
-    <div className="relative min-h-screen bg-black text-white font-body overflow-x-clip">
+    <div className="relative min-h-screen bg-[#0b0d0e] text-white font-body overflow-x-clip">
       <PublicNavbar
         focusRing={focusRing}
         bannerUrl={about?.banner_url || ""}
@@ -188,7 +188,7 @@ export function LandingPageClient({
         </div>
 
         {/* Foreground Content */}
-        <div className="relative z-10 bg-black shadow-[0_-20px_50px_rgba(0,0,0,0.8)] rounded-t-[2.5rem]">
+        <div className="relative z-10 bg-[#0b0d0e] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] rounded-t-[2.5rem]">
           {highlights.length > 0 && (
             <TrackRecordSection highlights={highlights} />
           )}

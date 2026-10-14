@@ -22,12 +22,11 @@ export function ServicesSection({
     >
       <div className="mb-10 md:mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-
-          <h2 className="font-heading italic font-black text-white text-3xl md:text-5xl leading-tight tracking-wide">
+          <h2 className="font-heading font-semibold text-white text-3xl md:text-5xl leading-tight tracking-tight">
             Produk dan Layanan
           </h2>
         </div>
-        <p className="max-w-xs text-base font-body text-white/60 text-justify md:text-right">
+        <p className="max-w-xs text-base font-body text-white/70 text-justify md:text-right">
           Akses langsung ke berbagai produk dan layanan digital yang saya sediakan.
         </p>
       </div>
@@ -47,11 +46,11 @@ export function ServicesSection({
               target="_blank"
               rel="noreferrer"
               aria-label={`Kunjungi ${service.title || "produk"}`}
-              className={`group relative liquid-glass rounded-[2rem] p-6 md:p-8 flex flex-col gap-8 items-start overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] border border-white/5 active:scale-[0.97] ${focusRing}`}
+              className={`group relative liquid-glass rounded-[2rem] p-6 md:p-8 flex flex-col gap-8 items-start overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] border border-white/10 active:scale-[0.97] ${focusRing}`}
             >
-              {/* Cinematic Glow Effect */}
+              {/* Subtle Aurora Glow Effect */}
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-                <div className="absolute -top-24 -right-24 w-48 h-48 bg-cyan-400/20 blur-[50px] rounded-full" />
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/20 blur-[50px] rounded-full" />
                 <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-violet-500/20 blur-[50px] rounded-full" />
               </div>
 
@@ -78,15 +77,15 @@ export function ServicesSection({
 
               {/* Bottom */}
               <div className="relative z-10 w-full">
-                <h3 className="font-heading italic text-white text-2xl tracking-[-1px] leading-none transition-colors duration-300 group-hover:text-cyan-100">
+                <h3 className="font-heading font-semibold text-white text-2xl tracking-tight leading-none transition-colors duration-300 group-hover:text-blue-200">
                   {service.title || "Produk"}
                 </h3>
-                <p className="mt-3 text-sm text-white/70 font-body font-light leading-relaxed max-w-[32ch]">
+                <p className="mt-3 text-sm text-white/70 font-body leading-relaxed max-w-[32ch]">
                   {service.description ||
                     "Klik untuk melihat detail penawaran ini."}
                 </p>
                 
-                <div className="mt-4 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-cyan-400 opacity-100 md:opacity-0 md:-translate-y-2 transition-all duration-500 md:group-hover:opacity-100 md:group-hover:translate-y-0">
+                <div className="mt-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-blue-400 opacity-100 md:opacity-0 md:-translate-y-2 transition-all duration-500 md:group-hover:opacity-100 md:group-hover:translate-y-0">
                   Kunjungi <ArrowRight size={14} />
                 </div>
               </div>

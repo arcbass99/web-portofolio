@@ -89,7 +89,7 @@ export function PublicNavbar({
         >
           {/* "n" text — fades out when photo appears */}
           <span
-            className={`font-heading italic text-lg text-white absolute inset-0 flex items-center justify-center transition-all duration-500 ${
+            className={`font-heading font-semibold text-lg text-white absolute inset-0 flex items-center justify-center transition-all duration-500 ${
               showPhoto ? "opacity-0 scale-75" : "opacity-100 scale-100"
             }`}
           >

@@ -12,7 +12,7 @@ type PortfolioSectionProps = {
 };
 
 const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
 
 const formatPortfolioNumber = (value: number) => {
   return String(value).padStart(2, "0");
@@ -33,7 +33,6 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
         const gap = window.innerWidth > 768 ? 24 : 16;
         const scrollAmount = itemWidth + gap;
         
-        // Mematikan snap sementara bisa mengurangi konflik animasi di beberapa browser
         scrollContainerRef.current.style.scrollSnapType = 'none';
         
         scrollContainerRef.current.scrollBy({
@@ -41,7 +40,6 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
           behavior: "smooth",
         });
 
-        // Nyalakan snap kembali setelah animasi selesai (estimasi 500ms)
         setTimeout(() => {
           if (scrollContainerRef.current) {
             scrollContainerRef.current.style.scrollSnapType = '';
@@ -110,10 +108,10 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-16 gap-4 relative z-30">
           <div>
-            <h2 className="text-3xl md:text-5xl font-heading italic font-black tracking-wide mb-2 md:mb-4 text-white">
+            <h2 className="text-3xl md:text-5xl font-heading font-semibold tracking-tight mb-2 md:mb-4 text-white">
               Karya
             </h2>
-            <p className="mt-4 max-w-[65ch] text-base font-body font-medium leading-relaxed text-white/80 text-justify md:text-left">
+            <p className="mt-4 max-w-[65ch] text-base font-body leading-relaxed text-white/70 text-justify md:text-left">
               Kumpulan karya visual, desain, dan eksperimen digital yang sedang saya kembangkan.
             </p>
           </div>
@@ -129,7 +127,7 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
                 <button onClick={() => scrollCarousel("left")} className="p-2 rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors" aria-label="Geser kiri"><ChevronLeft size={24} /></button>
                 <button onClick={() => scrollCarousel("right")} className="p-2 rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors" aria-label="Geser kanan"><ChevronRight size={24} /></button>
               </div>
-              <span className="text-4xl md:text-7xl font-black text-white/60">
+              <span className="text-4xl md:text-7xl font-bold font-heading text-white/40">
                 {totalPortfolios > 0
                   ? formatPortfolioNumber(totalPortfolios)
                   : "00"}
@@ -146,12 +144,12 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
                 key={portfolio.id}
                 onClick={() => openPortfolioDetail(portfolio)}
                 whileHover={{ y: -8 }}
-                className={`w-[85vw] md:w-[400px] flex-shrink-0 snap-center relative liquid-glass rounded-[2rem] flex flex-col p-6 text-left group overflow-hidden border border-white/5 bg-white/5 transition-colors duration-500 ${focusRing}`}
+                className={`w-[85vw] md:w-[400px] flex-shrink-0 snap-center relative liquid-glass rounded-[2rem] flex flex-col p-6 text-left group overflow-hidden border border-white/10 bg-white/5 transition-colors duration-500 ${focusRing}`}
                 aria-label={`Lihat detail ${portfolio.title || "portfolio"}`}
               >
-                {/* Cinematic Glow Effect */}
+                {/* Subtle Aurora Glow Effect */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-                  <div className="absolute -top-24 -right-24 w-48 h-48 bg-cyan-400/20 blur-[50px] rounded-full" />
+                  <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/20 blur-[50px] rounded-full" />
                   <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-violet-500/20 blur-[50px] rounded-full" />
                 </div>
                 
@@ -166,9 +164,9 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
                       className="object-cover transition-transform duration-700 group-hover:scale-[1.05]"
                     />
                   ) : (
-                    <div className="flex h-full flex-col items-center justify-center bg-slate-200/50 px-6 text-center text-slate-600">
+                    <div className="flex h-full flex-col items-center justify-center bg-slate-800/50 px-6 text-center text-slate-400">
                       <ArrowUpRight size={28} className="mb-3 opacity-60" />
-                      <p className="text-sm font-body font-bold">
+                      <p className="text-sm font-body font-medium">
                         Media belum tersedia
                       </p>
                     </div>
@@ -186,17 +184,17 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
                 </div>
 
                 <div className="relative z-10 flex flex-col gap-3 px-2 pb-2">
-                  <span className="inline-flex max-w-full rounded-full border px-3 py-1 text-xs font-body font-black uppercase tracking-widest border-white/5 bg-white/5 text-cyan-300">
+                  <span className="inline-flex max-w-full rounded-full border px-3 py-1 text-xs font-body font-medium uppercase tracking-wider border-white/10 bg-white/5 text-blue-300">
                     <span className="truncate">
                       {portfolio.tags || "Project"}
                     </span>
                   </span>
 
-                  <h3 className="text-xl font-heading italic font-black leading-tight tracking-tight text-white line-clamp-1 transition-colors duration-300 group-hover:text-cyan-100">
+                  <h3 className="text-xl font-heading font-semibold leading-tight tracking-tight text-white line-clamp-1 transition-colors duration-300 group-hover:text-blue-200">
                     {portfolio.title || "Untitled Project"}
                   </h3>
 
-                  <p className="text-sm font-body font-medium leading-relaxed text-white/70 line-clamp-2 text-justify">
+                  <p className="text-sm font-body leading-relaxed text-white/70 line-clamp-2 text-justify">
                     {portfolio.description || "Belum ada deskripsi."}
                   </p>
                 </div>
@@ -204,11 +202,11 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
             ))}
           </div>
         ) : (
-          <div className="liquid-glass rounded-3xl md:rounded-[2.5rem] border p-12 md:p-20 text-center backdrop-blur-md bg-white/5 border-white/5 text-white/80">
-            <p className="text-2xl font-heading italic font-black text-white">
+          <div className="liquid-glass rounded-3xl md:rounded-[2.5rem] border p-12 md:p-20 text-center backdrop-blur-md bg-white/5 border-white/10 text-white/80">
+            <p className="text-2xl font-heading font-semibold text-white">
               Karya sedang disiapkan.
             </p>
-            <p className="mt-4 text-base font-body font-medium leading-relaxed">
+            <p className="mt-4 text-base font-body leading-relaxed text-white/70">
               Portfolio akan tampil di sini setelah data karya ditambahkan dari
               console admin.
             </p>
@@ -236,7 +234,7 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
 
             <motion.div
               layoutId={`portfolio-card-${selectedPortfolio.id}`}
-              className="relative z-10 my-auto w-full max-w-5xl rounded-[2rem] border p-4 shadow-2xl md:p-6 border-white/10 bg-[#050505] text-white flex flex-col max-h-[90vh] overflow-hidden"
+              className="relative z-10 my-auto w-full max-w-5xl rounded-[2rem] border p-4 shadow-2xl md:p-6 border-white/10 bg-[#131314] text-white flex flex-col max-h-[90vh] overflow-hidden"
             >
               <button
                 type="button"
@@ -271,7 +269,7 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
                           )}
                           target="_blank"
                           rel="noreferrer"
-                          className={`absolute bottom-4 left-4 z-10 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-950 shadow-xl backdrop-blur-md transition hover:bg-cyan-300 ${focusRing}`}
+                          className={`absolute bottom-4 left-4 z-10 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-slate-950 shadow-xl backdrop-blur-md transition hover:bg-blue-300 ${focusRing}`}
                         >
                         Buka di Drive <ArrowUpRight size={14} />
                       </a>
@@ -288,7 +286,7 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
                   ) : (
                     <div className="flex h-full flex-col items-center justify-center px-6 text-center text-slate-400">
                       <ArrowUpRight size={32} className="mb-3 opacity-60" />
-                      <p className="text-sm font-body font-bold">
+                      <p className="text-sm font-body font-medium">
                         Media karya belum tersedia
                       </p>
                     </div>
@@ -297,17 +295,17 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
 
                 <div className="flex flex-col justify-between gap-8 p-1 md:p-2">
                   <div>
-                    <span className="inline-flex max-w-full rounded-full border px-4 py-2 text-sm font-body font-black uppercase tracking-widest border-white/5 bg-white/5 text-cyan-300">
+                    <span className="inline-flex max-w-full rounded-full border px-3 py-1 text-xs font-body font-medium uppercase tracking-wider border-white/10 bg-white/5 text-blue-300">
                       <span className="truncate">
                         {selectedPortfolio.tags || "Project"}
                       </span>
                     </span>
 
-                    <h3 className="mt-8 text-3xl md:text-4xl font-heading italic font-black tracking-tight text-white">
+                    <h3 className="mt-6 text-2xl md:text-3xl font-heading font-semibold tracking-tight text-white">
                       {selectedPortfolio.title || "Untitled Project"}
                     </h3>
 
-                    <p className="mt-6 whitespace-pre-line text-base font-body font-medium leading-relaxed text-white/80 text-justify">
+                    <p className="mt-4 whitespace-pre-line text-base font-body leading-relaxed text-white/70 text-justify">
                       {selectedPortfolio.description ||
                         "Belum ada deskripsi detail untuk karya ini."}
                     </p>

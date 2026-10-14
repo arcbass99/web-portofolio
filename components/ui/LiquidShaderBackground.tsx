@@ -35,10 +35,10 @@ const fragmentShaderSource = `
       // Create the shape (distance field) - made larger
       float d = length(p * 0.3) - 0.7;
       
-      // Map colors based on the heavily distorted space
-      vec3 c1 = vec3(0.1, 0.5, 1.0); // Brighter Blue
-      vec3 c2 = vec3(0.9, 0.2, 0.8); // Brighter Magenta/Purple
-      vec3 c3 = vec3(0.0, 0.9, 0.8); // Brighter Cyan/Teal
+      // Map colors based on the heavily distorted space (Google Gemini Cosmic Palette)
+      vec3 c1 = vec3(0.26, 0.52, 0.96); // Google Blue (#4285F4)
+      vec3 c2 = vec3(0.61, 0.45, 0.82); // Gemini Violet (#9B72CF)
+      vec3 c3 = vec3(0.13, 0.69, 0.45); // Emerald Green / Aurora Teal (#20BA73)
       
       float mix1 = sin(p.x * 1.5 + t) * 0.5 + 0.5;
       float mix2 = cos(p.y * 1.5 - t) * 0.5 + 0.5;
@@ -186,13 +186,13 @@ export function LiquidShaderBackground() {
   }, []);
 
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden bg-[#02000A] pointer-events-none">
+    <div className="absolute inset-0 z-0 overflow-hidden bg-[#0b0d0e] pointer-events-none">
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full opacity-40"
       />
       {/* Dark overlay to tone down the brightness */}
-      <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-0 bg-[#0b0d0e]/50" />
     </div>
   );
 }

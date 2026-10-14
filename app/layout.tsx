@@ -93,6 +93,10 @@ export default function RootLayout({
       lang="id"
       className={`${instrumentSerif.variable} ${barlow.variable} scroll-smooth`}
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body className="font-sans antialiased min-h-screen">{children}</body>
     </html>
   );

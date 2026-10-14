@@ -61,7 +61,7 @@ export function PublicMenuOverlay({
           initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
           animate={{ opacity: 1, backdropFilter: "blur(24px)" }}
           exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-          className="fixed inset-0 z-50 flex flex-col justify-center items-center bg-black/85"
+          className="fixed inset-0 z-50 flex flex-col justify-center items-center bg-[#0b0d0e]/90"
         >
           <button
             type="button"
@@ -73,7 +73,7 @@ export function PublicMenuOverlay({
             <X size={24} />
           </button>
 
-          <div className="flex flex-col gap-4 md:gap-6 text-center font-heading italic tracking-tight w-full px-6">
+          <div className="flex flex-col gap-5 md:gap-8 text-center font-heading font-medium tracking-tight w-full px-6">
             {menuItems.map((item, index) => (
               <motion.button
                 type="button"
@@ -83,7 +83,7 @@ export function PublicMenuOverlay({
                 transition={{ delay: index * 0.08 }}
                 onClick={() => onNavigate(item.id)}
                 aria-label={`Buka bagian ${item.label}`}
-                className={`text-4xl md:text-5xl lg:text-6xl text-white rounded-2xl hover:-translate-y-1 transition-all hover:text-white/70 ${focusRing}`}
+                className={`text-4xl md:text-5xl lg:text-6xl text-white rounded-2xl hover:-translate-y-1 transition-all hover:text-blue-300 ${focusRing}`}
               >
                 {item.label}
               </motion.button>

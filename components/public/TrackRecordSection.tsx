@@ -43,8 +43,8 @@ const categoryConfig: Record<
 > = {
   education: {
     icon: <GraduationCap size={22} />,
-    bg: "bg-cyan-400",
-    text: "text-cyan-400",
+    bg: "bg-blue-400",
+    text: "text-blue-400",
     title: "Education",
   },
   achievement: {
@@ -145,18 +145,18 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
 
       {/* Header section */}
       <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-24">
-        <div className="mb-12">
-          <span className="liquid-glass rounded-full inline-flex border border-cyan-400/30 bg-cyan-400/15 px-6 py-2.5 text-xs font-body font-black uppercase tracking-widest text-cyan-200">
-            Bagian 2
+        <div className="mb-10">
+          <span className="liquid-glass rounded-full inline-flex border border-white/10 px-4 py-1.5 text-xs font-body font-medium uppercase tracking-wider text-white/80">
+            Track Record
           </span>
         </div>
 
         <div className="mb-10 max-w-3xl">
-          <h2 className="text-3xl md:text-5xl font-heading italic font-black tracking-wide leading-tight text-white">
-            Track Record
+          <h2 className="text-3xl md:text-5xl font-heading font-semibold tracking-tight leading-tight text-white">
+            Perjalanan &amp; Pengalaman
           </h2>
 
-          <p className="mt-4 max-w-[65ch] text-base font-body font-medium leading-relaxed text-white/80 text-justify md:text-left">
+          <p className="mt-4 max-w-[65ch] text-base font-body leading-relaxed text-white/70 text-justify md:text-left">
             Ringkasan perjalanan yang membentuk cara saya berpikir, memimpin,
             dan membuat karya digital.
           </p>
@@ -218,27 +218,26 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                 style={{ 
                   transformOrigin: "center center",
                   backfaceVisibility: "hidden",
-                  WebkitFontSmoothing: "antialiased",
-                  transform: distance === 0 
-                    ? `translate(-50%, -50%)`
-                    : `translate(calc(-50% + ${distance * 55}%), -50%) scale(${scale}) rotateY(${rotateY}deg)`,
-                  zIndex: zIndex,
-                  filter: filter
+                  transform: `translate3d(calc(-50% + ${distance * 140}px), -50%, ${isActive ? "0px" : "-100px"}) rotateY(${rotateY}deg) scale(${scale})`,
+                  zIndex,
+                  filter,
                 }}
               >
                 <motion.div
                   layoutId={`category-card-${cat}`}
-                  onClick={() => !isActive && setActiveIndex(idx)}
-                  whileHover={{ y: -8 }}
-                  whileTap={isActive ? { scale: 0.96 } : {}}
-                  className={`w-full h-full rounded-[2rem] border border-white/10 bg-zinc-950 flex flex-col p-6 shadow-xl overflow-hidden group ${
-                    !isActive ? "cursor-pointer hover:border-white/20" : ""
-                  }`}
+                  onClick={() => {
+                    if (isActive) {
+                      setExpandedCategory(cat);
+                    } else {
+                      setActiveIndex(idx);
+                    }
+                  }}
+                  className="liquid-glass relative w-full h-full rounded-[2rem] p-6 flex flex-col justify-between overflow-hidden cursor-pointer shadow-2xl border border-white/10 group"
                 >
-                  {/* Cinematic Glow Effect */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-0">
-                    <div className={`absolute -top-24 -right-24 w-48 h-48 blur-[50px] rounded-full ${cat === 'education' ? 'bg-cyan-400/20' : cat === 'achievement' ? 'bg-amber-400/20' : 'bg-violet-400/20'}`} />
-                    <div className={`absolute -bottom-24 -left-24 w-48 h-48 blur-[50px] rounded-full ${cat === 'education' ? 'bg-violet-500/20' : cat === 'achievement' ? 'bg-rose-500/20' : 'bg-fuchsia-500/20'}`} />
+                  {/* Subtle Aurora Glow Effect */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                    <div className={`absolute -top-24 -right-24 w-48 h-48 blur-[50px] rounded-full ${cat === 'education' ? 'bg-blue-500/20' : cat === 'achievement' ? 'bg-amber-400/20' : 'bg-violet-400/20'}`} />
+                    <div className={`absolute -bottom-24 -left-24 w-48 h-48 blur-[50px] rounded-full ${cat === 'education' ? 'bg-violet-500/20' : cat === 'achievement' ? 'bg-rose-500/20' : 'bg-emerald-500/20'}`} />
                   </div>
 
                   <div className="flex items-center gap-3 relative z-10">
@@ -247,7 +246,7 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                     >
                       {categoryConfig[cat].icon}
                     </div>
-                    <h3 className="text-xl font-heading font-black italic text-white uppercase tracking-wider truncate">
+                    <h3 className="text-xl font-heading font-semibold text-white tracking-tight truncate">
                       {categoryConfig[cat].title}
                     </h3>
                   </div>
@@ -257,12 +256,12 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                       <div key={item.id} className="flex flex-col">
                         {item.period && (
                           <span
-                            className={`text-[10px] font-body font-black uppercase tracking-widest mb-1 ${categoryConfig[cat].text}`}
+                            className={`text-[10px] font-body font-semibold uppercase tracking-wider mb-1 ${categoryConfig[cat].text}`}
                           >
                             {item.period}
                           </span>
                         )}
-                        <h4 className="text-sm sm:text-base font-heading italic font-black text-white leading-tight line-clamp-1">
+                        <h4 className="text-sm sm:text-base font-heading font-medium text-white leading-tight line-clamp-1">
                           {item.title}
                         </h4>
                       </div>
@@ -313,12 +312,12 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/75 backdrop-blur-md"
               onClick={() => setExpandedCategory(null)}
             />
             <motion.div
               layoutId={`category-card-${expandedCategory}`}
-              className="bg-[#050505] border border-white/10 w-full max-w-4xl max-h-[85vh] rounded-[2rem] p-6 md:p-10 relative z-10 shadow-2xl flex flex-col"
+              className="bg-[#131314] border border-white/10 w-full max-w-4xl max-h-[85vh] rounded-[2rem] p-6 md:p-10 relative z-10 shadow-2xl flex flex-col"
             >
               <button
                 onClick={() => setExpandedCategory(null)}
@@ -334,7 +333,7 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                 >
                   {categoryConfig[expandedCategory].icon}
                 </div>
-                <h2 className="text-3xl font-heading font-black italic text-white uppercase tracking-wider">
+                <h2 className="text-3xl font-heading font-semibold text-white tracking-tight">
                   {categoryConfig[expandedCategory].title}
                 </h2>
               </div>
@@ -346,7 +345,7 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                     className="flex flex-col md:flex-row gap-6 border-b border-white/10 pb-8 last:border-0 last:pb-0"
                   >
                     {item.image_url && (
-                      <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-slate-200/10">
+                      <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-white/5">
                         <Image
                           src={formatMediaUrl(item.image_url, 256)}
                           alt={item.title || "Timeline image"}
@@ -359,16 +358,16 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                     <div className="flex-1">
                       {item.period && (
                         <p
-                          className={`text-sm font-body font-black uppercase tracking-widest mb-2 ${categoryConfig[expandedCategory].text}`}
+                          className={`text-sm font-body font-semibold uppercase tracking-wider mb-2 ${categoryConfig[expandedCategory].text}`}
                         >
                           {item.period}
                         </p>
                       )}
-                      <h4 className="text-2xl font-heading italic font-black text-white leading-tight mb-3">
+                      <h4 className="text-2xl font-heading font-semibold text-white leading-tight mb-3">
                         {item.title}
                       </h4>
                       {item.description && (
-                        <p className="text-base leading-relaxed font-body font-medium text-white/70">
+                        <p className="text-base leading-relaxed font-body text-white/70">
                           {item.description}
                         </p>
                       )}
@@ -407,10 +406,10 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                 stroke="transparent"
               />
               <text
-                fill="rgba(255,255,255,0.35)"
-                fontSize="16"
-                fontWeight="bold"
-                fontFamily="sans-serif"
+                fill="rgba(255,255,255,0.4)"
+                fontSize="15"
+                fontWeight="500"
+                fontFamily="Google Sans Text, system-ui, sans-serif"
                 className="uppercase tracking-widest"
               >
                 <textPath
@@ -418,7 +417,6 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                   startOffset="0"
                   className="animate-wavy-marquee"
                 >
-                  {/* We use an SVG animate tag as fallback/primary for better cross-browser compatibility */}
                   <animate
                     attributeName="startOffset"
                     from="0%"
