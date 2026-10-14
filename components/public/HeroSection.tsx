@@ -54,6 +54,8 @@ function TiltCard({ children }: { children: React.ReactNode }) {
     <div
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onTouchEnd={handleMouseLeave}
+      onTouchCancel={handleMouseLeave}
       className="relative flex items-center justify-center w-full h-full [perspective:1200px]"
     >
       <motion.div
@@ -159,7 +161,7 @@ export function HeroSection({
           >
             {about?.banner_url && (
               <TiltCard>
-                <div className="relative w-full h-full rounded-[2.1rem] bg-gradient-to-tr from-cyan-400/40 via-violet-500/40 to-cyan-300/40 p-[2px] shadow-[0_20px_60px_-10px_rgba(0,0,0,0.5),0_0_60px_10px_rgba(88,28,135,0.2),0_0_120px_30px_rgba(30,64,175,0.1)] group transition-all duration-700 hover:p-[3px] hover:from-cyan-400 hover:via-violet-500 hover:to-cyan-300">
+                <div className="relative w-full h-full rounded-[2.1rem] bg-gradient-to-tr from-cyan-400/40 via-violet-500/40 to-cyan-300/40 p-[2px] shadow-[0_20px_60px_-10px_rgba(0,0,0,0.5),0_0_60px_10px_rgba(88,28,135,0.2),0_0_120px_30px_rgba(30,64,175,0.1)] group transition-all duration-700 hover:from-cyan-400 hover:via-violet-500 hover:to-cyan-300">
                   <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-violet-500 to-cyan-300 blur-xl opacity-20 transition-opacity duration-700 group-hover:opacity-60 rounded-[2.1rem]" />
                   
                   <div className="liquid-glass relative z-10 w-full h-full rounded-[2rem] border border-white/10 overflow-hidden bg-black/80 backdrop-blur-xl">
@@ -198,17 +200,20 @@ export function HeroSection({
                   }
                 `}</style>
                 <div className="flex w-max items-center gap-24 pr-24 animate-marquee hover:[animation-play-state:paused] group/marquee pointer-events-auto">
-                  {Array.from({ length: 12 }).flatMap(() => socials).map((link, idx) => (
-                    <a
-                      key={`${link.id}-${idx}`}
-                      href={link.url || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-heading italic text-3xl md:text-5xl text-white/70 tracking-tight transition-all duration-300 group-hover/marquee:opacity-30 hover:!opacity-100 hover:!text-cyan-300 hover:drop-shadow-[0_0_16px_rgba(34,211,238,1)]"
-                    >
-                      {link.title}
-                    </a>
-                  ))}
+                  {Array.from({ length: 12 }).flatMap(() => socials).map((link, idx) => {
+                    const isExternal = Boolean(link.url && (link.url.startsWith("http://") || link.url.startsWith("https://")));
+                    return (
+                      <a
+                        key={`${link.id}-${idx}`}
+                        href={link.url || "#"}
+                        target={isExternal ? "_blank" : undefined}
+                        rel={isExternal ? "noopener noreferrer" : undefined}
+                        className="font-heading italic text-3xl md:text-5xl text-white/70 tracking-tight transition-all duration-300 group-hover/marquee:opacity-30 hover:!opacity-100 hover:!text-cyan-300 hover:drop-shadow-[0_0_16px_rgba(34,211,238,1)]"
+                      >
+                        {link.title}
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             </motion.div>

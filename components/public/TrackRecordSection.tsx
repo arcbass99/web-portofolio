@@ -152,7 +152,6 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
         </div>
 
         <div className="mb-10 max-w-3xl">
-
           <h2 className="text-3xl md:text-5xl font-heading italic font-black tracking-wide leading-tight text-white">
             Track Record
           </h2>
@@ -171,10 +170,15 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
           className="relative flex h-[400px] w-full items-center justify-center overflow-hidden perspective-[1000px] mt-8"
           style={{ perspective: "1000px" }}
           onTouchStart={(e) => {
-            touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            if (e.touches[0]) {
+              touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            }
+          }}
+          onTouchCancel={() => {
+            touchStartRef.current = null;
           }}
           onTouchEnd={(e) => {
-            if (!touchStartRef.current) return;
+            if (!touchStartRef.current || !e.changedTouches[0]) return;
             const dx = e.changedTouches[0].clientX - touchStartRef.current.x;
             const dy = e.changedTouches[0].clientY - touchStartRef.current.y;
             // Only count horizontal swipes (more horizontal than vertical)
@@ -195,14 +199,12 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
             const topItem = grouped[cat][0];
             if (!topItem) return null;
 
-            let x = "0%";
             let scale = 1;
             let filter = "brightness(1) grayscale(0)";
             let zIndex = 10;
             let rotateY = 0;
 
             if (distance !== 0) {
-              x = `${distance * 50}%`;
               scale = 0.85;
               filter = "brightness(0.3) grayscale(0.5)";
               zIndex = 5 - Math.abs(distance);
@@ -273,6 +275,7 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                         e.stopPropagation();
                         setExpandedCategory(cat);
                       }}
+                      aria-label={`Buka detail kategori ${categoryConfig[cat].title}`}
                       className="absolute bottom-6 right-6 p-2.5 bg-white/10 rounded-full hover:bg-white/20 transition-colors text-white backdrop-blur-md z-20"
                     >
                       <Maximize2 size={18} />
@@ -319,6 +322,7 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
             >
               <button
                 onClick={() => setExpandedCategory(null)}
+                aria-label="Tutup detail kategori"
                 className="absolute top-6 right-6 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors text-white z-20"
               >
                 <X size={20} />

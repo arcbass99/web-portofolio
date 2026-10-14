@@ -15,59 +15,75 @@ export function DotPatternBackground() {
 
     let animationFrameId: number;
     let time = 0;
+    let lastDrawTime = 0;
+
+    const spacing = 28;
+    let cols = 0;
+    let rows = 0;
+    let dotVignettes: Float32Array = new Float32Array(0);
 
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-    };
 
-    window.addEventListener("resize", resize);
-    resize();
-
-    const draw = () => {
-      time += 0.02;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#000000";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      const spacing = 20;
-      const cols = Math.ceil(canvas.width / spacing);
-      const rows = Math.ceil(canvas.height / spacing);
+      cols = Math.ceil(canvas.width / spacing);
+      rows = Math.ceil(canvas.height / spacing);
+      const totalDots = cols * rows;
+      dotVignettes = new Float32Array(totalDots);
 
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
+      const maxDist = Math.max(centerX, centerY) * 1.4;
 
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
           const x = i * spacing;
           const y = j * spacing;
+          const dist = Math.hypot(x - centerX, y - centerY);
+          dotVignettes[i * rows + j] = Math.max(0, 1 - dist / maxDist);
+        }
+      }
+    };
 
-          // Calculate distance from center for a subtle vignette effect
-          const distFromCenter = Math.sqrt(
-            Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)
-          );
-          const maxDist = Math.max(centerX, centerY);
-          const vignette = Math.max(0, 1 - distFromCenter / (maxDist * 1.5));
+    window.addEventListener("resize", resize);
+    resize();
 
-          // Calculate dynamic opacity using sine waves
-          const noiseX = Math.sin(x * 0.05 + time) * 0.5 + 0.5;
-          const noiseY = Math.cos(y * 0.05 + time) * 0.5 + 0.5;
-          const pulsing = (Math.sin(time * 0.5 + i * 0.1 + j * 0.1) * 0.5 + 0.5);
-          
-          // Base dot brightness
+    const draw = (currentTime: number) => {
+      // Throttle rendering to ~30 FPS to conserve CPU and battery
+      if (currentTime - lastDrawTime < 32) {
+        animationFrameId = requestAnimationFrame(draw);
+        return;
+      }
+      lastDrawTime = currentTime;
+      time += 0.03;
+
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < cols; i++) {
+        const x = i * spacing;
+        const noiseX = Math.sin(x * 0.04 + time) * 0.5 + 0.5;
+
+        for (let j = 0; j < rows; j++) {
+          const vignette = dotVignettes[i * rows + j];
+          if (vignette <= 0.01) continue;
+
+          const y = j * spacing;
+          const noiseY = Math.cos(y * 0.04 + time) * 0.5 + 0.5;
+          const pulsing = Math.sin(time * 0.5 + (i + j) * 0.1) * 0.5 + 0.5;
           const opacity = (noiseX * noiseY * 0.5 + pulsing * 0.5) * 0.6 * vignette;
 
-          ctx.beginPath();
-          ctx.arc(x, y, 1, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
-          ctx.fill();
+          if (opacity > 0.02) {
+            ctx.fillStyle = `rgba(255, 255, 255, ${opacity.toFixed(2)})`;
+            ctx.fillRect(x, y, 1.5, 1.5);
+          }
         }
       }
 
       animationFrameId = requestAnimationFrame(draw);
     };
 
-    draw();
+    animationFrameId = requestAnimationFrame(draw);
 
     return () => {
       window.removeEventListener("resize", resize);

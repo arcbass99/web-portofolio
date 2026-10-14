@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Menu } from "lucide-react";
 import { smoothScrollToId, smoothScrollTo, smoothScrollToElement } from "../../lib/smoothScroll";
@@ -9,29 +9,45 @@ import { formatMediaUrl } from "../../lib/media";
 type PublicNavbarProps = {
   focusRing: string;
   bannerUrl?: string;
+  highlightsCount?: number;
+  servicesCount?: number;
   onOpenMenu: () => void;
 };
-
-const navLinks = [
-  { label: "Profil", id: "home" },
-  { label: "Track Record", id: "track-record" },
-  { label: "Karya", id: "portfolio" },
-  { label: "Layanan", id: "services" },
-];
 
 export function PublicNavbar({
   focusRing,
   bannerUrl,
+  highlightsCount = 0,
+  servicesCount = 0,
   onOpenMenu,
 }: PublicNavbarProps) {
   const [showPhoto, setShowPhoto] = useState(false);
+
+  const navLinks = [
+    { label: "Profil", id: "home" },
+    ...(highlightsCount > 0
+      ? [{ label: "Track Record", id: "track-record" }]
+      : []),
+    { label: "Karya", id: "portfolio" },
+    ...(servicesCount > 0
+      ? [{ label: "Layanan", id: "services" }]
+      : []),
+  ];
+
   // Track scroll position to show/hide profile photo
   useEffect(() => {
     if (!bannerUrl) return;
 
     const handleScroll = () => {
       const trackRecordEl = document.getElementById("track-record");
-      if (!trackRecordEl) return;
+      if (!trackRecordEl) {
+        // If track record doesn't exist, check portfolio
+        const portfolioEl = document.getElementById("portfolio");
+        if (portfolioEl) {
+          setShowPhoto(portfolioEl.getBoundingClientRect().top <= 80);
+        }
+        return;
+      }
       const rect = trackRecordEl.getBoundingClientRect();
       setShowPhoto(rect.top <= 80);
     };

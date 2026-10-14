@@ -40,18 +40,17 @@
 }
 
 @layer base {
-  /* Base — admin pages use these defaults */
   html, body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: var(--color-mist);
-    color: var(--color-steel);
+    background-color: #000000;
+    color: rgba(255, 255, 255, 0.9);
     font-feature-settings: "ss01" on, "tnum" on;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    color: var(--color-midnight-ink);
+    color: #ffffff;
     letter-spacing: -0.02em;
   }
 }

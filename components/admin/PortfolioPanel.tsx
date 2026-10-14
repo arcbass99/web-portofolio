@@ -4,7 +4,7 @@
 
 import type { Dispatch, SetStateAction } from "react";
 import { Film, Pencil, Trash2 } from "lucide-react";
-import { formatMediaUrl } from "../../lib/media";
+import { formatMediaUrl, formatVideoEmbedUrl } from "../../lib/media";
 import type { PortfolioItem, PortfolioMediaType } from "../../types/content";
 
 type PortfolioPanelProps = {
@@ -56,10 +56,7 @@ export function PortfolioPanel({
   const portfolioImagePreviewUrl = mediaInput
     ? formatMediaUrl(mediaInput, 600)
     : "";
-  const portfolioVideoPreviewUrl =
-    mediaInput.startsWith("http://") || mediaInput.startsWith("https://")
-      ? mediaInput
-      : `https://drive.google.com/file/d/${mediaInput}/preview`;
+  const portfolioVideoPreviewUrl = formatVideoEmbedUrl(mediaInput);
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">

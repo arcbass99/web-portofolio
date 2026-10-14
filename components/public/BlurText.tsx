@@ -30,7 +30,7 @@ export function BlurText({ text, className = "" }: BlurTextProps) {
     return () => observer.disconnect();
   }, []);
 
-  const words = text.split(" ");
+  const words = (text || "").trim().split(/\s+/).filter(Boolean);
 
   return (
     <span

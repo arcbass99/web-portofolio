@@ -4,7 +4,7 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Play, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
-import { formatMediaUrl } from "../../lib/media";
+import { formatMediaUrl, formatVideoEmbedUrl } from "../../lib/media";
 import type { PortfolioItem } from "../../types/content";
 
 type PortfolioSectionProps = {
@@ -13,16 +13,6 @@ type PortfolioSectionProps = {
 
 const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
-
-const getPortfolioVideoPreviewUrl = (mediaUrl?: string | null) => {
-  if (!mediaUrl) return "";
-
-  if (mediaUrl.startsWith("http://") || mediaUrl.startsWith("https://")) {
-    return mediaUrl;
-  }
-
-  return `https://drive.google.com/file/d/${mediaUrl}/preview`;
-};
 
 const formatPortfolioNumber = (value: number) => {
   return String(value).padStart(2, "0");
@@ -248,41 +238,41 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
               layoutId={`portfolio-card-${selectedPortfolio.id}`}
               className="relative z-10 my-auto w-full max-w-5xl rounded-[2rem] border p-4 shadow-2xl md:p-6 border-white/10 bg-[#050505] text-white flex flex-col max-h-[90vh] overflow-hidden"
             >
-              <div className="overflow-y-auto pr-2 h-full w-full">
               <button
                 type="button"
                 onClick={closePortfolioDetail}
                 autoFocus
                 aria-label="Tutup detail portfolio"
-                className={`absolute right-4 top-4 z-20 rounded-full border p-3 transition ${focusRing} border-white/5 bg-black/50 text-white hover:bg-white/10`}
+                className={`absolute right-4 top-4 z-30 rounded-full border p-3 transition ${focusRing} border-white/10 bg-black/70 backdrop-blur-md text-white hover:bg-white/20`}
               >
                 <X size={20} />
               </button>
 
-              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
-                <div className="relative aspect-video overflow-hidden rounded-2xl bg-slate-900 md:rounded-[1.5rem]">
-                  {selectedPortfolio.media_type === "video" &&
-                  selectedPortfolio.media_url ? (
-                    <>
-                      <iframe
-                        src={getPortfolioVideoPreviewUrl(
-                          selectedPortfolio.media_url,
-                        )}
-                        title={selectedPortfolio.title || "Portfolio video detail"}
-                        className="h-full w-full border-0"
-                        allow="autoplay; fullscreen"
-                        loading="lazy"
-                        allowFullScreen
-                      />
+              <div className="overflow-y-auto pr-2 h-full w-full">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+                  <div className="relative aspect-video overflow-hidden rounded-2xl bg-slate-900 md:rounded-[1.5rem]">
+                    {selectedPortfolio.media_type === "video" &&
+                    selectedPortfolio.media_url ? (
+                      <>
+                        <iframe
+                          src={formatVideoEmbedUrl(
+                            selectedPortfolio.media_url,
+                          )}
+                          title={selectedPortfolio.title || "Portfolio video detail"}
+                          className="h-full w-full border-0"
+                          allow="autoplay; fullscreen"
+                          loading="lazy"
+                          allowFullScreen
+                        />
 
-                      <a
-                        href={getPortfolioVideoPreviewUrl(
-                          selectedPortfolio.media_url,
-                        )}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={`absolute bottom-4 left-4 z-10 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-950 shadow-xl backdrop-blur-md transition hover:bg-cyan-300 ${focusRing}`}
-                      >
+                        <a
+                          href={formatVideoEmbedUrl(
+                            selectedPortfolio.media_url,
+                          )}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={`absolute bottom-4 left-4 z-10 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-950 shadow-xl backdrop-blur-md transition hover:bg-cyan-300 ${focusRing}`}
+                        >
                         Buka di Drive <ArrowUpRight size={14} />
                       </a>
                     </>

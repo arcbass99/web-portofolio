@@ -127,6 +127,7 @@ export function LiquidShaderBackground() {
     const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
     const timeUniformLocation = gl.getUniformLocation(program, "u_time");
 
+    let isVisible = true;
     let animationFrameId: number;
     const startTime = Date.now();
 
@@ -140,6 +141,8 @@ export function LiquidShaderBackground() {
     resize();
 
     const render = () => {
+      if (!isVisible) return;
+
       gl.useProgram(program);
       gl.enableVertexAttribArray(positionAttributeLocation);
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -153,9 +156,26 @@ export function LiquidShaderBackground() {
       animationFrameId = requestAnimationFrame(render);
     };
 
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const nowVisible = entry.isIntersecting;
+        if (nowVisible && !isVisible) {
+          isVisible = true;
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = requestAnimationFrame(render);
+        } else if (!nowVisible) {
+          isVisible = false;
+          cancelAnimationFrame(animationFrameId);
+        }
+      },
+      { threshold: 0.01 },
+    );
+
+    observer.observe(canvas);
     render();
 
     return () => {
+      observer.disconnect();
       window.removeEventListener("resize", resize);
       cancelAnimationFrame(animationFrameId);
       gl.deleteProgram(program);

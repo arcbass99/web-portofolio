@@ -61,6 +61,19 @@ export function LandingPageClient({
     };
   }, []);
 
+  // Handle URL hash navigation on mount
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash) {
+      const hashId = window.location.hash.replace("#", "");
+      if (hashId) {
+        const timer = setTimeout(() => {
+          smoothScrollToId(hashId);
+        }, 300);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, []);
+
   const focusRing = PUBLIC_FOCUS_RING;
 
   const scrollToSection = (id: string) => {
@@ -140,6 +153,8 @@ export function LandingPageClient({
       <PublicNavbar
         focusRing={focusRing}
         bannerUrl={about?.banner_url || ""}
+        highlightsCount={highlights.length}
+        servicesCount={services.length}
         onOpenMenu={() => setIsMenuOpen(true)}
       />
 

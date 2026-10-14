@@ -2,7 +2,6 @@
 
 import { ChevronRight, LogOut, X } from "lucide-react";
 import type { ActiveTab, MenuItem } from "../../types/content";
-import { LiquidShaderBackground } from "../ui/LiquidShaderBackground";
 
 type AdminSidebarProps = {
   activeTab: ActiveTab;
@@ -37,13 +36,12 @@ export function AdminSidebar({
       <aside
         id="admin-sidebar"
         aria-label="Sidebar admin"
-        className={`fixed inset-y-0 left-0 z-[60] w-72 transform border-r border-white/5 bg-black/80 backdrop-blur-3xl transition-transform duration-300 lg:translate-x-0 overflow-hidden ${
+        className={`fixed inset-y-0 left-0 z-[60] w-72 transform border-r border-white/5 bg-black/90 backdrop-blur-3xl transition-transform duration-300 lg:translate-x-0 overflow-hidden ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="absolute inset-0 z-0 opacity-40">
-          <LiquidShaderBackground />
-        </div>
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-cyan-950/20 via-black to-violet-950/20 pointer-events-none" />
+
         <div className="relative z-10 flex h-full flex-col p-6">
           <div className="mb-8 flex items-center justify-between">
             <div>
