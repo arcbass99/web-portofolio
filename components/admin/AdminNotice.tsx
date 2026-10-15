@@ -19,22 +19,22 @@ export function AdminNotice({ focusRing, notice, onClose }: AdminNoticeProps) {
       role={isError ? "alert" : "status"}
       aria-live={isError ? "assertive" : "polite"}
       aria-atomic="true"
-      className={`mb-6 flex items-start justify-between gap-4 rounded-2xl border p-4 liquid-glass ${
+      className={`mb-4 flex items-center justify-between gap-3 rounded-xl border p-3 ${
         isError
-          ? "border-red-500/20 bg-red-500/10 text-red-100"
-          : "border-cyan-500/20 bg-cyan-500/10 text-cyan-50"
+          ? "border-red-500/20 bg-red-500/10 text-red-200"
+          : "border-blue-500/20 bg-blue-500/10 text-blue-100"
       }`}
     >
-      <p className="text-sm font-semibold leading-relaxed">{notice.message}</p>
+      <p className="text-xs sm:text-sm font-medium leading-relaxed">{notice.message}</p>
 
       <button
         type="button"
         onClick={onClose}
-        className={`shrink-0 rounded-xl p-1 opacity-80 transition hover:opacity-100 text-white/80 hover:text-white ${focusRing}`}
+        className={`shrink-0 rounded-lg p-1 opacity-70 transition hover:opacity-100 text-white/80 hover:text-white ${focusRing}`}
         aria-label="Tutup notifikasi"
         title="Tutup notifikasi"
       >
-        <X size={18} />
+        <X size={15} />
       </button>
     </div>
   );

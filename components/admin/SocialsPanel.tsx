@@ -34,29 +34,29 @@ export function SocialsPanel({
   onSaveSocial,
 }: SocialsPanelProps) {
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h1 className="text-3xl md:text-5xl font-heading italic font-black mb-6 text-white">
+    <div className="animate-in fade-in slide-in-from-bottom-3 duration-400">
+      <h1 className="text-2xl md:text-3xl font-heading font-semibold mb-4 text-white tracking-tight">
         Media Sosial
       </h1>
 
-      <div className="grid grid-cols-1 gap-5">
-        <div className="liquid-glass-strong border border-white/10 bg-[#0a0a0a]/80 shadow-2xl shadow-black/50 rounded-3xl p-5">
+      <div className="grid grid-cols-1 gap-4">
+        <div className="solid-frost border border-white/12 bg-[#141619] shadow-xl rounded-2xl p-4 sm:p-5">
           {editingSocialId !== null && (
-            <div className="mb-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4">
-              <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">
+            <div className="mb-3.5 rounded-xl border border-blue-500/20 bg-blue-500/10 p-3">
+              <p className="text-xs font-semibold uppercase tracking-wider text-blue-300">
                 Mode Edit Link Sosial
               </p>
-              <p className="mt-1 text-xs text-white/60">
+              <p className="mt-0.5 text-xs text-white/60">
                 Kamu sedang mengubah link media sosial yang sudah tersimpan.
               </p>
             </div>
           )}
 
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col md:flex-row gap-3">
             <div className="flex-1">
               <label
                 htmlFor="socialTitle"
-                className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
+                className="text-[11px] font-medium uppercase tracking-wider text-blue-400 mb-1.5 block font-body"
               >
                 Nama Media
               </label>
@@ -66,14 +66,14 @@ export function SocialsPanel({
                 onChange={(event) => setNewSocialTitle(event.target.value)}
                 disabled={saving}
                 placeholder="Ex: Instagram"
-                className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl outline-none focus-visible:border-white/40 focus:border-white/40 text-sm disabled:cursor-not-allowed disabled:opacity-60 transition-colors"
+                className="w-full bg-[#0b0d0e] border border-white/15 text-white px-3 py-2 rounded-xl outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 text-xs sm:text-sm disabled:cursor-not-allowed disabled:opacity-60 transition-all"
               />
             </div>
 
             <div className="flex-[2]">
               <label
                 htmlFor="socialUrl"
-                className="text-[10px] font-black uppercase tracking-widest text-cyan-500 mb-2 block"
+                className="text-[11px] font-medium uppercase tracking-wider text-blue-400 mb-1.5 block font-body"
               >
                 Link URL
               </label>
@@ -83,7 +83,7 @@ export function SocialsPanel({
                 onChange={(event) => setNewSocialUrl(event.target.value)}
                 disabled={saving}
                 placeholder="https://..."
-                className="w-full bg-black border border-[#333] text-white p-3.5 rounded-xl outline-none focus-visible:border-white/40 focus:border-white/40 text-sm disabled:cursor-not-allowed disabled:opacity-60 transition-colors"
+                className="w-full bg-[#0b0d0e] border border-white/15 text-white px-3 py-2 rounded-xl outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 text-xs sm:text-sm disabled:cursor-not-allowed disabled:opacity-60 transition-all"
               />
             </div>
 
@@ -91,7 +91,7 @@ export function SocialsPanel({
               type="button"
               onClick={onSaveSocial}
               disabled={saving}
-              className={`w-full md:w-auto md:self-end bg-white hover:bg-gray-200 text-black px-5 py-3.5 rounded-xl font-bold text-sm disabled:opacity-50 flex items-center justify-center gap-2 transition-colors ${focusRing}`}
+              className={`w-full md:w-auto md:self-end bg-white hover:bg-white/90 text-black px-5 py-2 rounded-full font-semibold text-xs sm:text-sm shadow-md disabled:opacity-50 flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] ${focusRing}`}
             >
               {saving ? (
                 "Menyimpan..."
@@ -99,7 +99,7 @@ export function SocialsPanel({
                 "Simpan Perubahan"
               ) : (
                 <>
-                  <Plus size={16} /> Tambah Link
+                  <Plus size={15} /> Tambah Link
                 </>
               )}
             </button>
@@ -110,20 +110,20 @@ export function SocialsPanel({
               type="button"
               onClick={onCancelEdit}
               disabled={saving}
-              className={`mt-4 w-full liquid-glass-strong bg-white/10 text-white hover:bg-white/20 p-3.5 rounded-xl font-bold text-sm uppercase border border-white/10 disabled:opacity-50 transition-colors ${focusRing}`}
+              className={`mt-3 w-full bg-white/10 text-white hover:bg-white/15 py-2 rounded-full font-medium text-xs border border-white/10 disabled:opacity-50 transition-colors ${focusRing}`}
             >
               Batal Edit
             </button>
           )}
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {socials.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-[#333] bg-[#0a0a0a]/50 p-6 text-center liquid-glass">
-              <p className="text-sm font-bold text-white/80">
+            <div className="rounded-2xl border border-dashed border-white/15 bg-[#141619]/50 p-6 text-center">
+              <p className="text-xs sm:text-sm font-semibold text-white/80">
                 Belum ada link sosial.
               </p>
-              <p className="mt-1 text-xs text-white/60">
+              <p className="mt-1 text-xs text-white/50">
                 Tambahkan link agar pengunjung bisa menemukan kanal utamamu.
               </p>
             </div>
@@ -132,34 +132,34 @@ export function SocialsPanel({
           {socials.map((social) => (
             <div
               key={social.id}
-              className="flex items-center justify-between gap-4 p-4 liquid-glass-strong border border-[#333] bg-black/60 rounded-2xl backdrop-blur-sm"
+              className="flex items-center justify-between gap-3 p-3 solid-frost border border-white/10 bg-[#141619] rounded-xl shadow-md"
             >
               <div className="min-w-0">
-                <p className="font-bold text-white text-sm">
+                <p className="font-semibold text-white text-xs sm:text-sm">
                   {social.title || "Untitled Link"}
                 </p>
-                <p className="text-xs text-white/60 truncate max-w-[200px] md:max-w-md">
+                <p className="text-xs text-white/50 truncate max-w-[200px] md:max-w-md">
                   {social.url || "-"}
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-1 shrink-0">
                 <button
                   type="button"
                   onClick={() => onEditSocial(social)}
-                  className={`rounded-xl text-white/60 hover:text-cyan-400 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-2 ${focusRing}`}
+                  className={`rounded-lg text-white/50 hover:text-blue-300 hover:bg-white/5 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-1.5 ${focusRing}`}
                   aria-label={`Edit ${social.title || "link sosial"}`}
                 >
-                  <Pencil size={16} />
+                  <Pencil size={14} />
                 </button>
 
                 <button
                   type="button"
                   onClick={() => onDeleteSocial(social)}
-                  className={`rounded-xl text-white/60 hover:text-red-400 p-2 transition-colors ${focusRing}`}
+                  className={`rounded-lg text-white/50 hover:text-red-400 hover:bg-red-500/10 p-1.5 transition-colors ${focusRing}`}
                   aria-label={`Hapus ${social.title || "link sosial"}`}
                 >
-                  <Trash2 size={18} />
+                  <Trash2 size={15} />
                 </button>
               </div>
             </div>

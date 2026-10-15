@@ -20,7 +20,8 @@ import { PortfolioPanel } from "../../components/admin/PortfolioPanel";
 import { ServicesPanel } from "../../components/admin/ServicesPanel";
 import { SocialsPanel } from "../../components/admin/SocialsPanel";
 import { TrackRecordPanel } from "../../components/admin/TrackRecordPanel";
-import { DotPatternBackground } from "../../components/ui/DotPatternBackground";
+import { StitchDotCanvas } from "../../components/ui/StitchDotCanvas";
+import { AmbientAuroraOrb } from "../../components/ui/AmbientAuroraOrb";
 import {
   createPortfolio,
   createProfileHighlight,
@@ -631,33 +632,45 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="relative min-h-screen bg-black text-white/80 font-sans">
+    <div className="relative min-h-screen bg-[#0b0d0e] text-white/80 font-body">
       <div className="fixed inset-0 z-0">
-        <DotPatternBackground />
+        <StitchDotCanvas spacing={28} dotSize={1.1} />
+        <AmbientAuroraOrb
+          variant="blue"
+          size="md"
+          className="top-10 right-20 opacity-20"
+          duration={24}
+        />
+        <AmbientAuroraOrb
+          variant="violet"
+          size="sm"
+          className="bottom-20 left-10 opacity-20"
+          duration={20}
+        />
       </div>
       <div className="relative z-10">
         <AdminMobileHeader
-        focusRing={focusRing}
-        isSidebarOpen={isSidebarOpen}
-        onOpenSidebar={() => setIsSidebarOpen(true)}
-        onSignOut={handleSignOut}
-      />
+          focusRing={focusRing}
+          isSidebarOpen={isSidebarOpen}
+          onOpenSidebar={() => setIsSidebarOpen(true)}
+          onSignOut={handleSignOut}
+        />
 
-      <AdminSidebar
-        activeTab={activeTab}
-        focusRing={focusRing}
-        isSidebarOpen={isSidebarOpen}
-        menuItems={menuItems}
-        onChangeTab={changeTab}
-        onCloseSidebar={() => setIsSidebarOpen(false)}
-        onSignOut={handleSignOut}
-      />
+        <AdminSidebar
+          activeTab={activeTab}
+          focusRing={focusRing}
+          isSidebarOpen={isSidebarOpen}
+          menuItems={menuItems}
+          onChangeTab={changeTab}
+          onCloseSidebar={() => setIsSidebarOpen(false)}
+          onSignOut={handleSignOut}
+        />
 
-      <main
-        className="lg:ml-72 min-h-screen px-[1.618rem] pt-[6.854rem] pb-[6.854rem] md:px-[2.618rem] lg:px-[2.618rem] lg:py-[2.618rem]"
-        aria-busy={saving}
-      >
-        <div className="max-w-6xl mx-auto pb-[6.854rem] lg:pb-0">
+        <main
+          className="lg:ml-64 min-h-screen px-4 pt-16 pb-20 md:px-8 md:pt-6 md:pb-8 lg:px-8 lg:py-8"
+          aria-busy={saving}
+        >
+          <div className="max-w-5xl mx-auto pb-12 lg:pb-0">
           <AdminNotice
             focusRing={focusRing}
             notice={notice}

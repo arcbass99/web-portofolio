@@ -36,19 +36,17 @@ export function AdminSidebar({
       <aside
         id="admin-sidebar"
         aria-label="Sidebar admin"
-        className={`fixed inset-y-0 left-0 z-[60] w-72 transform border-r border-white/5 bg-black/90 backdrop-blur-3xl transition-transform duration-300 lg:translate-x-0 overflow-hidden ${
+        className={`fixed inset-y-0 left-0 z-[60] w-64 transform border-r border-white/10 bg-[#141619] backdrop-blur-2xl transition-transform duration-300 lg:translate-x-0 overflow-hidden ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="absolute inset-0 z-0 bg-gradient-to-b from-cyan-950/20 via-black to-violet-950/20 pointer-events-none" />
-
-        <div className="relative z-10 flex h-full flex-col p-6">
-          <div className="mb-8 flex items-center justify-between">
+        <div className="relative z-10 flex h-full flex-col p-5">
+          <div className="mb-6 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-black tracking-tight text-white">
-                I’m Nafis<span className="text-cyan-400">.</span>
+              <h2 className="text-base font-heading font-semibold tracking-tight text-white">
+                I’m Nafis<span className="text-blue-400">.</span>
               </h2>
-              <p className="mt-1 text-[10px] font-black uppercase tracking-widest text-white/60">
+              <p className="mt-0.5 text-[10px] font-medium uppercase tracking-wider text-white/50 font-body">
                 Admin Console
               </p>
             </div>
@@ -56,11 +54,11 @@ export function AdminSidebar({
             <button
               type="button"
               onClick={onCloseSidebar}
-              className={`rounded-xl p-2 text-white/80 transition hover:bg-white/5 hover:text-white lg:hidden ${focusRing}`}
+              className={`rounded-lg p-1.5 text-white/80 transition hover:bg-white/10 hover:text-white lg:hidden ${focusRing}`}
               aria-label="Tutup sidebar admin"
               title="Tutup sidebar admin"
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
 
@@ -74,19 +72,19 @@ export function AdminSidebar({
                   key={item.id}
                   onClick={() => onChangeTab(item.id)}
                   aria-current={isActive ? "page" : undefined}
-                  className={`group flex w-full items-center justify-between rounded-2xl px-3.5 py-3 text-left transition-all ${focusRing} ${
+                  className={`group flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left transition-all ${focusRing} ${
                     isActive
-                      ? "bg-cyan-500 text-black shadow-lg shadow-cyan-500/20"
-                      : "text-white/80 hover:bg-white/5 hover:text-white"
+                      ? "bg-white text-black font-semibold shadow-md"
+                      : "text-white/70 hover:bg-white/5 hover:text-white font-medium"
                   }`}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2.5">
                     {item.icon}
-                    <span className="text-sm font-bold">{item.label}</span>
+                    <span className="text-xs sm:text-sm">{item.label}</span>
                   </div>
 
                   <ChevronRight
-                    size={16}
+                    size={14}
                     aria-hidden="true"
                     className={`transition-opacity ${
                       isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
@@ -100,9 +98,9 @@ export function AdminSidebar({
           <button
             type="button"
             onClick={onSignOut}
-            className={`mt-auto flex items-center gap-3 rounded-2xl px-3.5 py-3 text-sm font-bold text-white/80 transition hover:bg-red-500/10 hover:text-red-300 ${focusRing}`}
+            className={`mt-auto flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-white/60 transition hover:bg-red-500/10 hover:text-red-300 ${focusRing}`}
           >
-            <LogOut size={20} aria-hidden="true" /> Logout Semua Perangkat
+            <LogOut size={16} aria-hidden="true" /> Logout Semua Perangkat
           </button>
         </div>
       </aside>
