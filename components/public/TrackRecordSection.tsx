@@ -87,31 +87,33 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
 
   useEffect(() => {
     if (expandedCategory) {
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = "hidden";
       document.body.style.paddingRight = `${scrollbarWidth}px`;
-      
-      const navbar = document.querySelector('nav');
+
+      const navbar = document.querySelector("nav");
       if (navbar) {
         const computedStyle = window.getComputedStyle(navbar);
         const originalPaddingRight = computedStyle.paddingRight;
-        navbar.setAttribute('data-original-pr', originalPaddingRight);
+        navbar.setAttribute("data-original-pr", originalPaddingRight);
         navbar.style.paddingRight = `calc(${originalPaddingRight} + ${scrollbarWidth}px)`;
       }
     } else {
       document.body.style.overflow = "";
       document.body.style.paddingRight = "";
-      
-      const navbar = document.querySelector('nav');
-      if (navbar && navbar.hasAttribute('data-original-pr')) {
-        navbar.style.paddingRight = navbar.getAttribute('data-original-pr') || "";
-        navbar.removeAttribute('data-original-pr');
+
+      const navbar = document.querySelector("nav");
+      if (navbar && navbar.hasAttribute("data-original-pr")) {
+        navbar.style.paddingRight =
+          navbar.getAttribute("data-original-pr") || "";
+        navbar.removeAttribute("data-original-pr");
       }
     }
     return () => {
       document.body.style.overflow = "";
       document.body.style.paddingRight = "";
-      const navbar = document.querySelector('nav');
+      const navbar = document.querySelector("nav");
       if (navbar) {
         navbar.style.paddingRight = "";
       }
@@ -122,12 +124,18 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
     return null;
   }
 
-  // Wavy marquee string preparation
-  const skillsString = grouped.skill.map((s) => s.title).join("             ✦             ");
-  const repeatedSkills = Array(20).fill(skillsString).join("             ✦             ");
+  const skillsString = grouped.skill
+    .map((s) => s.title)
+    .join("             ✦             ");
+  const repeatedSkills = Array(20)
+    .fill(skillsString)
+    .join("             ✦             ");
 
   return (
-    <section id="track-record" className="relative py-8 md:py-14 overflow-hidden scroll-mt-20">
+    <section
+      id="track-record"
+      className="relative py-10 md:py-16 overflow-hidden scroll-mt-20"
+    >
       {/* Moving gradient light in empty header space */}
       <AmbientAuroraOrb
         variant="cyan"
@@ -151,20 +159,20 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
         }
       `}</style>
 
-      {/* Header section (Refined Scale) */}
+      {/* Standardized Section Header */}
       <div className="max-w-6xl mx-auto px-6 lg:px-12 relative z-10">
-        <div className="mb-6">
-          <span className="liquid-glass rounded-full inline-flex border border-white/10 px-3.5 py-1 text-[11px] font-body font-medium uppercase tracking-wider text-white/80">
+        <div className="mb-4">
+          <span className="apple-liquid-glass rounded-full inline-flex px-3.5 py-1 text-[11px] font-body font-medium uppercase tracking-wider text-blue-300">
             Track Record
           </span>
         </div>
 
         <div className="mb-8 max-w-2xl">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-heading font-semibold tracking-tight leading-tight text-white">
+          <h2 className="text-2xl md:text-3xl font-heading font-semibold tracking-tight leading-tight text-white">
             Perjalanan &amp; Pengalaman
           </h2>
 
-          <p className="mt-3 max-w-[60ch] text-xs sm:text-sm font-body leading-relaxed text-white/70 text-justify md:text-left">
+          <p className="mt-2.5 max-w-[60ch] text-xs sm:text-sm font-body leading-relaxed text-white/70 text-justify md:text-left">
             Ringkasan perjalanan yang membentuk cara saya berpikir, memimpin,
             dan membuat karya digital.
           </p>
@@ -174,141 +182,151 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
       {/* 3D Cover Flow Carousel (Solid Frost Cards) */}
       {activeCategories.length > 0 && (
         <>
-        <div
-          className="relative flex h-[340px] w-full items-center justify-center overflow-hidden perspective-[1000px] mt-4"
-          style={{ perspective: "1000px" }}
-          onTouchStart={(e) => {
-            if (e.touches[0]) {
-              touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-            }
-          }}
-          onTouchCancel={() => {
-            touchStartRef.current = null;
-          }}
-          onTouchEnd={(e) => {
-            if (!touchStartRef.current || !e.changedTouches[0]) return;
-            const dx = e.changedTouches[0].clientX - touchStartRef.current.x;
-            const dy = e.changedTouches[0].clientY - touchStartRef.current.y;
-            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
-              if (dx < 0 && activeIndex < activeCategories.length - 1) {
-                setActiveIndex(activeIndex + 1);
-              } else if (dx > 0 && activeIndex > 0) {
-                setActiveIndex(activeIndex - 1);
+          <div
+            className="relative flex h-[340px] w-full items-center justify-center overflow-hidden perspective-[1000px] mt-4"
+            style={{ perspective: "1000px" }}
+            onTouchStart={(e) => {
+              if (e.touches[0]) {
+                touchStartRef.current = {
+                  x: e.touches[0].clientX,
+                  y: e.touches[0].clientY,
+                };
               }
-            }
-            touchStartRef.current = null;
-          }}
-        >
-          {activeCategories.map((cat, idx) => {
-            const isActive = idx === activeIndex;
-            const distance = idx - activeIndex;
+            }}
+            onTouchCancel={() => {
+              touchStartRef.current = null;
+            }}
+            onTouchEnd={(e) => {
+              if (!touchStartRef.current || !e.changedTouches[0]) return;
+              const dx = e.changedTouches[0].clientX - touchStartRef.current.x;
+              const dy = e.changedTouches[0].clientY - touchStartRef.current.y;
+              if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+                if (dx < 0 && activeIndex < activeCategories.length - 1) {
+                  setActiveIndex(activeIndex + 1);
+                } else if (dx > 0 && activeIndex > 0) {
+                  setActiveIndex(activeIndex - 1);
+                }
+              }
+              touchStartRef.current = null;
+            }}
+          >
+            {activeCategories.map((cat, idx) => {
+              const isActive = idx === activeIndex;
+              const distance = idx - activeIndex;
 
-            const topItem = grouped[cat][0];
-            if (!topItem) return null;
+              const topItem = grouped[cat][0];
+              if (!topItem) return null;
 
-            let scale = 1;
-            let filter = "brightness(1)";
-            let zIndex = 10;
-            let rotateY = 0;
+              let scale = 1;
+              let filter = "brightness(1)";
+              let zIndex = 10;
+              let rotateY = 0;
 
-            if (distance !== 0) {
-              scale = 0.88;
-              filter = "brightness(0.35) saturate(0.7)";
-              zIndex = 5 - Math.abs(distance);
-              rotateY = distance < 0 ? 12 : -12;
-            }
+              if (distance !== 0) {
+                scale = 0.88;
+                filter = "brightness(0.35) saturate(0.7)";
+                zIndex = 5 - Math.abs(distance);
+                rotateY = distance < 0 ? 12 : -12;
+              }
 
-            return (
-              <div
-                key={cat}
-                className="absolute left-1/2 top-1/2 w-[250px] sm:w-[280px] h-[280px] transition-all duration-500 ease-in-out"
-                style={{ 
-                  transformOrigin: "center center",
-                  backfaceVisibility: "hidden",
-                  transform: `translate3d(calc(-50% + ${distance * 125}px), -50%, ${isActive ? "0px" : "-90px"}) rotateY(${rotateY}deg) scale(${scale})`,
-                  zIndex,
-                  filter,
-                }}
-              >
-                {/* Solid Frost Card (Opaque #141619, does NOT leak background through) */}
-                <motion.div
-                  layoutId={`category-card-${cat}`}
-                  onClick={() => {
-                    if (isActive) {
-                      setExpandedCategory(cat);
-                    } else {
-                      setActiveIndex(idx);
-                    }
+              return (
+                <div
+                  key={cat}
+                  className="absolute left-1/2 top-1/2 w-[250px] sm:w-[280px] h-[280px] transition-all duration-500 ease-in-out"
+                  style={{
+                    transformOrigin: "center center",
+                    backfaceVisibility: "hidden",
+                    transform: `translate3d(calc(-50% + ${distance * 125}px), -50%, ${isActive ? "0px" : "-90px"}) rotateY(${rotateY}deg) scale(${scale})`,
+                    zIndex,
+                    filter,
                   }}
-                  className="solid-frost relative w-full h-full rounded-[1.75rem] p-5 flex flex-col justify-between overflow-hidden cursor-pointer shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-white/12 bg-[#141619] group"
                 >
-                  {/* Subtle Aurora Glow on hover */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-                    <div className={`absolute -top-20 -right-20 w-40 h-40 blur-[45px] rounded-full ${cat === 'education' ? 'bg-blue-500/15' : cat === 'achievement' ? 'bg-amber-400/15' : 'bg-violet-400/15'}`} />
-                    <div className={`absolute -bottom-20 -left-20 w-40 h-40 blur-[45px] rounded-full ${cat === 'education' ? 'bg-violet-500/15' : cat === 'achievement' ? 'bg-rose-500/15' : 'bg-emerald-500/15'}`} />
-                  </div>
-
-                  <div className="flex items-center gap-2.5 relative z-10">
-                    <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center text-black shadow-md flex-shrink-0 ${categoryConfig[cat].bg}`}
-                    >
-                      {categoryConfig[cat].icon}
-                    </div>
-                    <h3 className="text-base font-heading font-semibold text-white tracking-tight truncate">
-                      {categoryConfig[cat].title}
-                    </h3>
-                  </div>
-
-                  <div className="mt-3 flex-1 flex flex-col gap-2.5 relative z-10 overflow-y-auto pr-1.5 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
-                    {grouped[cat].map((item) => (
-                      <div key={item.id} className="flex flex-col">
-                        {item.period && (
-                          <span
-                            className={`text-[9px] font-body font-semibold uppercase tracking-wider mb-0.5 ${categoryConfig[cat].text}`}
-                          >
-                            {item.period}
-                          </span>
-                        )}
-                        <h4 className="text-xs sm:text-sm font-heading font-medium text-white leading-snug line-clamp-1">
-                          {item.title}
-                        </h4>
-                      </div>
-                    ))}
-                  </div>
-
-                  {isActive && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
+                  {/* Solid Frost Card */}
+                  <motion.div
+                    layoutId={`category-card-${cat}`}
+                    onClick={() => {
+                      if (isActive) {
                         setExpandedCategory(cat);
-                      }}
-                      aria-label={`Buka detail kategori ${categoryConfig[cat].title}`}
-                      className="absolute bottom-5 right-5 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors text-white backdrop-blur-md z-20"
-                    >
-                      <Maximize2 size={15} />
-                    </button>
-                  )}
-                </motion.div>
-              </div>
-            );
-          })}
-        </div>
+                      } else {
+                        setActiveIndex(idx);
+                      }
+                    }}
+                    className="solid-frost relative w-full h-full rounded-[1.6rem] p-5 flex flex-col justify-between overflow-hidden cursor-pointer shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-white/12 bg-[#141619] group"
+                  >
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                      <div
+                        className={`absolute -top-20 -right-20 w-40 h-40 blur-[45px] rounded-full ${cat === "education" ? "bg-blue-500/15" : cat === "achievement" ? "bg-amber-400/15" : "bg-violet-400/15"}`}
+                      />
+                      <div
+                        className={`absolute -bottom-20 -left-20 w-40 h-40 blur-[45px] rounded-full ${cat === "education" ? "bg-violet-500/15" : cat === "achievement" ? "bg-rose-500/15" : "bg-emerald-500/15"}`}
+                      />
+                    </div>
 
-        {/* Dot Indicator */}
-        <div className="flex items-center justify-center gap-1.5 mt-4">
-          {activeCategories.map((cat, idx) => (
-            <button
-              key={`dot-${cat}`}
-              onClick={() => setActiveIndex(idx)}
-              className={`rounded-full transition-all duration-300 ${
-                idx === activeIndex
-                  ? `w-6 h-1.5 ${categoryConfig[cat].bg}`
-                  : "w-1.5 h-1.5 bg-white/20 hover:bg-white/40"
-              }`}
-              aria-label={`Lihat ${categoryConfig[cat].title}`}
-            />
-          ))}
-        </div>
+                    <div className="flex items-center gap-2.5 relative z-10">
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center text-black shadow-md flex-shrink-0 ${categoryConfig[cat].bg}`}
+                      >
+                        {categoryConfig[cat].icon}
+                      </div>
+                      {/* Standardized Card Heading (H3) */}
+                      <h3 className="text-base sm:text-lg font-heading font-semibold text-white tracking-tight leading-snug truncate">
+                        {categoryConfig[cat].title}
+                      </h3>
+                    </div>
+
+                    <div className="mt-3 flex-1 flex flex-col gap-2.5 relative z-10 overflow-y-auto pr-1.5 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+                      {grouped[cat].map((item) => (
+                        <div key={item.id} className="flex flex-col">
+                          {item.period && (
+                            <span
+                              className={`text-[11px] font-body font-medium uppercase tracking-wider mb-0.5 ${categoryConfig[cat].text}`}
+                            >
+                              {item.period}
+                            </span>
+                          )}
+                          {/* Standardized Item Title (H4) */}
+                          <h4 className="text-xs sm:text-sm font-heading font-semibold text-white leading-snug line-clamp-1">
+                            {item.title}
+                          </h4>
+                        </div>
+                      ))}
+                    </div>
+
+                    {isActive && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setExpandedCategory(cat);
+                        }}
+                        aria-label={`Buka detail kategori ${categoryConfig[cat].title}`}
+                        className="absolute bottom-5 right-5 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors text-white backdrop-blur-md z-20"
+                      >
+                        <Maximize2 size={15} />
+                      </button>
+                    )}
+                  </motion.div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Dot Indicator */}
+          <div className="flex items-center justify-center gap-1.5 mt-4">
+            {activeCategories.map((cat, idx) => (
+              <button
+                type="button"
+                key={`dot-${cat}`}
+                onClick={() => setActiveIndex(idx)}
+                className={`rounded-full transition-all duration-300 ${
+                  idx === activeIndex
+                    ? `w-6 h-1.5 ${categoryConfig[cat].bg}`
+                    : "w-1.5 h-1.5 bg-white/20 hover:bg-white/40"
+                }`}
+                aria-label={`Lihat ${categoryConfig[cat].title}`}
+              />
+            ))}
+          </div>
         </>
       )}
 
@@ -325,9 +343,10 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
             />
             <motion.div
               layoutId={`category-card-${expandedCategory}`}
-              className="bg-[#141619] border border-white/12 w-full max-w-3xl max-h-[82vh] rounded-[1.75rem] p-5 md:p-8 relative z-10 shadow-2xl flex flex-col"
+              className="solid-frost bg-[#141619] border border-white/12 w-full max-w-3xl max-h-[82vh] rounded-[1.6rem] p-5 md:p-7 relative z-10 shadow-2xl flex flex-col"
             >
               <button
+                type="button"
                 onClick={() => setExpandedCategory(null)}
                 aria-label="Tutup detail kategori"
                 className="absolute top-5 right-5 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors text-white z-20"
@@ -335,30 +354,30 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                 <X size={18} />
               </button>
 
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-5">
                 <div
-                  className={`w-11 h-11 rounded-full flex items-center justify-center text-black ${categoryConfig[expandedCategory].bg}`}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-black ${categoryConfig[expandedCategory].bg}`}
                 >
                   {categoryConfig[expandedCategory].icon}
                 </div>
-                <h2 className="text-2xl font-heading font-semibold text-white tracking-tight">
+                <h2 className="text-2xl md:text-3xl font-heading font-semibold text-white tracking-tight leading-tight">
                   {categoryConfig[expandedCategory].title}
                 </h2>
               </div>
 
-              <div className="space-y-6 overflow-y-auto flex-1 pr-2">
+              <div className="space-y-5 overflow-y-auto flex-1 pr-2">
                 {grouped[expandedCategory].map((item) => (
                   <div
                     key={item.id}
-                    className="flex flex-col md:flex-row gap-5 border-b border-white/10 pb-6 last:border-0 last:pb-0"
+                    className="flex flex-col md:flex-row gap-4 border-b border-white/10 pb-5 last:border-0 last:pb-0"
                   >
                     {item.image_url && (
-                      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white/5">
+                      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white/5">
                         <Image
                           src={formatMediaUrl(item.image_url, 200)}
                           alt={item.title || "Timeline image"}
                           fill
-                          sizes="80px"
+                          sizes="64px"
                           className="object-cover"
                         />
                       </div>
@@ -366,14 +385,14 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                     <div className="flex-1">
                       {item.period && (
                         <p
-                          className={`text-xs font-body font-semibold uppercase tracking-wider mb-1.5 ${categoryConfig[expandedCategory].text}`}
+                          className={`text-[11px] font-body font-medium uppercase tracking-wider mb-1 ${categoryConfig[expandedCategory].text}`}
                         >
                           {item.period}
                         </p>
                       )}
-                      <h4 className="text-lg md:text-xl font-heading font-semibold text-white leading-tight mb-2">
+                      <h3 className="text-base sm:text-lg font-heading font-semibold text-white leading-snug mb-1.5">
                         {item.title}
-                      </h4>
+                      </h3>
                       {item.description && (
                         <p className="text-xs sm:text-sm leading-relaxed font-body text-white/70">
                           {item.description}

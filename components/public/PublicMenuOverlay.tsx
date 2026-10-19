@@ -41,13 +41,13 @@ export function PublicMenuOverlay({
   }, [isOpen, onClose]);
 
   const menuItems = [
-    { id: "home", label: "I'm Nafis" },
+    { id: "home", label: "Profil" },
     ...(highlightsCount > 0
       ? [{ id: "track-record", label: "Track Record" }]
       : []),
     { id: "portfolio", label: "Karya" },
     ...(servicesCount > 0
-      ? [{ id: "services", label: "Produk dan Layanan" }]
+      ? [{ id: "services", label: "Layanan" }]
       : []),
   ];
 
@@ -58,32 +58,35 @@ export function PublicMenuOverlay({
           role="dialog"
           aria-modal="true"
           aria-label="Menu navigasi"
-          initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-          animate={{ opacity: 1, backdropFilter: "blur(24px)" }}
-          exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-          className="fixed inset-0 z-50 flex flex-col justify-center items-center bg-[#0b0d0e]/90"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex flex-col justify-center items-center bg-[#0b0d0e]/85 backdrop-blur-2xl px-6"
         >
           <button
             type="button"
             onClick={onClose}
             aria-label="Tutup menu navigasi"
             autoFocus
-            className={`absolute top-6 right-6 lg:right-12 xl:right-24 p-4 rounded-full border transition-all ${focusRing} border-white/10 hover:bg-white/10 text-white/50 hover:text-white`}
+            className={`apple-liquid-glass absolute top-5 right-6 p-2.5 rounded-full transition-all ${focusRing} text-white/80 hover:text-white hover:scale-105 active:scale-95`}
           >
-            <X size={24} />
+            <X size={20} />
           </button>
 
-          <div className="flex flex-col gap-5 md:gap-8 text-center font-heading font-medium tracking-tight w-full px-6">
+          <div className="apple-liquid-glass w-full max-w-xs rounded-[1.75rem] p-5 flex flex-col gap-2 text-center font-heading font-semibold tracking-tight">
+            <span className="text-[11px] font-body font-medium uppercase tracking-wider text-white/50 mb-1">
+              Navigasi Halaman
+            </span>
             {menuItems.map((item, index) => (
               <motion.button
                 type="button"
                 key={item.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.08 }}
+                transition={{ delay: index * 0.06 }}
                 onClick={() => onNavigate(item.id)}
                 aria-label={`Buka bagian ${item.label}`}
-                className={`text-4xl md:text-5xl lg:text-6xl text-white rounded-2xl hover:-translate-y-1 transition-all hover:text-blue-300 ${focusRing}`}
+                className={`w-full py-2.5 px-4 text-base sm:text-lg text-white rounded-xl hover:bg-white/10 transition-all hover:text-blue-300 ${focusRing}`}
               >
                 {item.label}
               </motion.button>

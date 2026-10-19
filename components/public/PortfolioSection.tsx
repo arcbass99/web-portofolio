@@ -33,9 +33,9 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
         const itemWidth = firstCard.offsetWidth;
         const gap = window.innerWidth > 768 ? 20 : 14;
         const scrollAmount = itemWidth + gap;
-        
-        scrollContainerRef.current.style.scrollSnapType = 'none';
-        
+
+        scrollContainerRef.current.style.scrollSnapType = "none";
+
         scrollContainerRef.current.scrollBy({
           left: direction === "left" ? -scrollAmount : scrollAmount,
           behavior: "smooth",
@@ -43,7 +43,7 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
 
         setTimeout(() => {
           if (scrollContainerRef.current) {
-            scrollContainerRef.current.style.scrollSnapType = '';
+            scrollContainerRef.current.style.scrollSnapType = "";
           }
         }, 500);
       }
@@ -58,15 +58,16 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
     };
 
     if (selectedPortfolio) {
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = "hidden";
       document.body.style.paddingRight = `${scrollbarWidth}px`;
-      
-      const navbar = document.querySelector('nav');
+
+      const navbar = document.querySelector("nav");
       if (navbar) {
         const computedStyle = window.getComputedStyle(navbar);
         const originalPaddingRight = computedStyle.paddingRight;
-        navbar.setAttribute('data-original-pr', originalPaddingRight);
+        navbar.setAttribute("data-original-pr", originalPaddingRight);
         navbar.style.paddingRight = `calc(${originalPaddingRight} + ${scrollbarWidth}px)`;
       }
 
@@ -74,18 +75,19 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
     } else {
       document.body.style.overflow = "";
       document.body.style.paddingRight = "";
-      
-      const navbar = document.querySelector('nav');
-      if (navbar && navbar.hasAttribute('data-original-pr')) {
-        navbar.style.paddingRight = navbar.getAttribute('data-original-pr') || "";
-        navbar.removeAttribute('data-original-pr');
+
+      const navbar = document.querySelector("nav");
+      if (navbar && navbar.hasAttribute("data-original-pr")) {
+        navbar.style.paddingRight =
+          navbar.getAttribute("data-original-pr") || "";
+        navbar.removeAttribute("data-original-pr");
       }
     }
 
     return () => {
       document.body.style.overflow = "";
       document.body.style.paddingRight = "";
-      const navbar = document.querySelector('nav');
+      const navbar = document.querySelector("nav");
       if (navbar) {
         navbar.style.paddingRight = "";
       }
@@ -104,7 +106,7 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
   return (
     <section
       id="portfolio"
-      className="relative py-8 md:py-14 px-6 lg:px-12 max-w-6xl mx-auto overflow-hidden scroll-mt-24"
+      className="relative py-10 md:py-16 px-6 lg:px-12 max-w-6xl mx-auto overflow-hidden scroll-mt-24"
     >
       {/* Moving gradient light in empty space */}
       <AmbientAuroraOrb
@@ -115,28 +117,63 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
       />
 
       <div className="relative z-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-4">
+        <div className="mb-4">
+          <span className="apple-liquid-glass rounded-full inline-flex px-3.5 py-1 text-[11px] font-body font-medium uppercase tracking-wider text-blue-300">
+            Selected Works
+          </span>
+        </div>
+
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-10 gap-4">
           <div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-heading font-semibold tracking-tight mb-2 text-white">
+            <h2 className="text-2xl md:text-3xl font-heading font-semibold tracking-tight leading-tight text-white">
               Karya
             </h2>
-            <p className="mt-2 max-w-[55ch] text-xs sm:text-sm font-body leading-relaxed text-white/70 text-justify md:text-left">
-              Kumpulan karya visual, desain, dan eksperimen digital yang sedang saya kembangkan.
+            <p className="mt-2.5 max-w-[55ch] text-xs sm:text-sm font-body leading-relaxed text-white/70 text-justify md:text-left">
+              Kumpulan karya visual, desain, dan eksperimen digital yang sedang
+              saya kembangkan.
             </p>
           </div>
 
           <div className="flex items-center justify-between gap-4 md:flex-col md:items-end">
             <div className="flex items-center gap-1.5 md:hidden">
-              <button onClick={() => scrollCarousel("left")} className="p-1.5 rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors" aria-label="Geser kiri"><ChevronLeft size={20} /></button>
-              <button onClick={() => scrollCarousel("right")} className="p-1.5 rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors" aria-label="Geser kanan"><ChevronRight size={20} /></button>
+              <button
+                type="button"
+                onClick={() => scrollCarousel("left")}
+                className="p-2 rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+                aria-label="Geser kiri"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollCarousel("right")}
+                className="p-2 rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+                aria-label="Geser kanan"
+              >
+                <ChevronRight size={18} />
+              </button>
             </div>
-            
+
             <div className="flex items-center gap-4">
               <div className="hidden md:flex items-center gap-1.5">
-                <button onClick={() => scrollCarousel("left")} className="p-1.5 rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors" aria-label="Geser kiri"><ChevronLeft size={20} /></button>
-                <button onClick={() => scrollCarousel("right")} className="p-1.5 rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors" aria-label="Geser kanan"><ChevronRight size={20} /></button>
+                <button
+                  type="button"
+                  onClick={() => scrollCarousel("left")}
+                  className="p-2 rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+                  aria-label="Geser kiri"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollCarousel("right")}
+                  className="p-2 rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+                  aria-label="Geser kanan"
+                >
+                  <ChevronRight size={18} />
+                </button>
               </div>
-              <span className="text-3xl md:text-5xl font-bold font-heading text-white/30">
+              <span className="text-2xl md:text-3xl font-semibold font-heading text-white/30">
                 {totalPortfolios > 0
                   ? formatPortfolioNumber(totalPortfolios)
                   : "00"}
@@ -146,22 +183,24 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
         </div>
 
         {totalPortfolios > 0 ? (
-          <div ref={scrollContainerRef} className="flex overflow-x-auto gap-4 md:gap-5 snap-x snap-mandatory scroll-smooth py-6 -my-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] -mx-6 px-6 lg:-mx-12 lg:px-12">
+          <div
+            ref={scrollContainerRef}
+            className="flex overflow-x-auto gap-4 md:gap-5 snap-x snap-mandatory scroll-smooth py-6 -my-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] -mx-6 px-6 lg:-mx-12 lg:px-12"
+          >
             {portfolios.map((portfolio) => (
               <motion.button
                 layoutId={`portfolio-card-${portfolio.id}`}
                 key={portfolio.id}
                 onClick={() => openPortfolioDetail(portfolio)}
-                whileHover={{ y: -6 }}
+                whileHover={{ y: -5 }}
                 className={`w-[75vw] sm:w-[300px] md:w-[325px] flex-shrink-0 snap-center relative solid-frost rounded-[1.6rem] flex flex-col p-4 sm:p-5 text-left group overflow-hidden border border-white/12 bg-[#141619] transition-all duration-300 ${focusRing}`}
                 aria-label={`Lihat detail ${portfolio.title || "portfolio"}`}
               >
-                {/* Subtle Aurora Glow Effect */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
                   <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/15 blur-[45px] rounded-full" />
                   <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-violet-500/15 blur-[45px] rounded-full" />
                 </div>
-                
+
                 <div className="relative z-10 w-full aspect-[16/10] rounded-[1.2rem] bg-slate-900 overflow-hidden mb-4">
                   {portfolio.media_url ? (
                     <Image
@@ -193,7 +232,7 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
                 </div>
 
                 <div className="relative z-10 flex flex-col gap-2 px-1 pb-1">
-                  <span className="inline-flex max-w-full rounded-full border px-2.5 py-0.5 text-[10px] font-body font-medium uppercase tracking-wider border-white/10 bg-white/5 text-blue-300 w-fit">
+                  <span className="inline-flex max-w-full rounded-full border px-2.5 py-0.5 text-[11px] font-body font-medium uppercase tracking-wider border-white/10 bg-white/5 text-blue-300 w-fit">
                     <span className="truncate">
                       {portfolio.tags || "Project"}
                     </span>
@@ -203,7 +242,7 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
                     {portfolio.title || "Untitled Project"}
                   </h3>
 
-                  <p className="text-xs font-body leading-relaxed text-white/70 line-clamp-2 text-justify">
+                  <p className="text-xs sm:text-sm font-body leading-relaxed text-white/70 line-clamp-2 text-justify">
                     {portfolio.description || "Belum ada deskripsi."}
                   </p>
                 </div>
@@ -211,10 +250,10 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
             ))}
           </div>
         ) : (
-          <div className="solid-frost rounded-2xl md:rounded-3xl border p-8 md:p-14 text-center backdrop-blur-md bg-[#141619] border-white/10 text-white/80">
-            <p className="text-xl font-heading font-semibold text-white">
+          <div className="solid-frost rounded-[1.6rem] border p-8 md:p-12 text-center bg-[#141619] border-white/10 text-white/80">
+            <h3 className="text-base sm:text-lg font-heading font-semibold text-white">
               Karya sedang disiapkan.
-            </p>
+            </h3>
             <p className="mt-2 text-xs sm:text-sm font-body leading-relaxed text-white/70">
               Portfolio akan tampil di sini setelah data karya ditambahkan dari
               console admin.
@@ -243,14 +282,14 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
 
             <motion.div
               layoutId={`portfolio-card-${selectedPortfolio.id}`}
-              className="relative z-10 my-auto w-full max-w-4xl rounded-[1.75rem] border p-4 shadow-2xl md:p-6 border-white/12 bg-[#141619] text-white flex flex-col max-h-[88vh] overflow-hidden"
+              className="solid-frost relative z-10 my-auto w-full max-w-4xl rounded-[1.6rem] border p-4 shadow-2xl md:p-6 border-white/12 bg-[#141619] text-white flex flex-col max-h-[88vh] overflow-hidden"
             >
               <button
                 type="button"
                 onClick={closePortfolioDetail}
                 autoFocus
                 aria-label="Tutup detail portfolio"
-                className={`absolute right-4 top-4 z-30 rounded-full border p-2.5 transition ${focusRing} border-white/10 bg-black/70 backdrop-blur-md text-white hover:bg-white/20`}
+                className={`absolute right-4 top-4 z-30 rounded-full border p-2 transition ${focusRing} border-white/10 bg-black/70 backdrop-blur-md text-white hover:bg-white/20`}
               >
                 <X size={18} />
               </button>
@@ -265,7 +304,9 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
                           src={formatVideoEmbedUrl(
                             selectedPortfolio.media_url,
                           )}
-                          title={selectedPortfolio.title || "Portfolio video detail"}
+                          title={
+                            selectedPortfolio.title || "Portfolio video detail"
+                          }
                           className="h-full w-full border-0"
                           allow="autoplay; fullscreen"
                           loading="lazy"
@@ -278,49 +319,52 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
                           )}
                           target="_blank"
                           rel="noreferrer"
-                          className={`absolute bottom-3 left-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-950 shadow-xl backdrop-blur-md transition hover:bg-blue-300 ${focusRing}`}
+                          className={`btn-google-cta absolute bottom-3 left-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-black shadow-xl ${focusRing}`}
                         >
-                        Buka di Drive <ArrowUpRight size={13} />
-                      </a>
-                    </>
-                  ) : selectedPortfolio.media_url ? (
-                    <Image
-                      src={formatMediaUrl(selectedPortfolio.media_url, 1000)}
-                      alt={selectedPortfolio.title || "Portfolio detail image"}
-                      fill
-                      sizes="(max-width: 1024px) 92vw, 50vw"
-                      quality={82}
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full flex-col items-center justify-center px-4 text-center text-slate-400">
-                      <ArrowUpRight size={28} className="mb-2 opacity-60" />
-                      <p className="text-xs font-body font-medium">
-                        Media karya belum tersedia
+                          <span>Buka di Drive</span>
+                          <ArrowUpRight size={13} />
+                        </a>
+                      </>
+                    ) : selectedPortfolio.media_url ? (
+                      <Image
+                        src={formatMediaUrl(selectedPortfolio.media_url, 1000)}
+                        alt={
+                          selectedPortfolio.title || "Portfolio detail image"
+                        }
+                        fill
+                        sizes="(max-width: 1024px) 92vw, 50vw"
+                        quality={82}
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full flex-col items-center justify-center px-4 text-center text-slate-400">
+                        <ArrowUpRight size={28} className="mb-2 opacity-60" />
+                        <p className="text-xs font-body font-medium">
+                          Media karya belum tersedia
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col justify-between gap-5 p-1">
+                    <div>
+                      <span className="inline-flex max-w-full rounded-full border px-3 py-1 text-[11px] font-body font-medium uppercase tracking-wider border-white/10 bg-white/5 text-blue-300">
+                        <span className="truncate">
+                          {selectedPortfolio.tags || "Project"}
+                        </span>
+                      </span>
+
+                      <h3 className="mt-3.5 text-xl md:text-2xl font-heading font-semibold tracking-tight text-white">
+                        {selectedPortfolio.title || "Untitled Project"}
+                      </h3>
+
+                      <p className="mt-3 whitespace-pre-line text-xs sm:text-sm font-body leading-relaxed text-white/70 text-justify">
+                        {selectedPortfolio.description ||
+                          "Belum ada deskripsi detail untuk karya ini."}
                       </p>
                     </div>
-                  )}
-                </div>
-
-                <div className="flex flex-col justify-between gap-6 p-1">
-                  <div>
-                    <span className="inline-flex max-w-full rounded-full border px-3 py-1 text-xs font-body font-medium uppercase tracking-wider border-white/10 bg-white/5 text-blue-300">
-                      <span className="truncate">
-                        {selectedPortfolio.tags || "Project"}
-                      </span>
-                    </span>
-
-                    <h3 className="mt-4 text-xl md:text-2xl font-heading font-semibold tracking-tight text-white">
-                      {selectedPortfolio.title || "Untitled Project"}
-                    </h3>
-
-                    <p className="mt-3 whitespace-pre-line text-xs sm:text-sm font-body leading-relaxed text-white/70 text-justify">
-                      {selectedPortfolio.description ||
-                        "Belum ada deskripsi detail untuk karya ini."}
-                    </p>
                   </div>
                 </div>
-              </div>
               </div>
             </motion.div>
           </motion.div>

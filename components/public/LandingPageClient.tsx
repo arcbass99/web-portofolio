@@ -18,6 +18,7 @@ import { HeroSection } from "./HeroSection";
 import { PortfolioSection } from "./PortfolioSection";
 import { ServicesSection } from "./ServicesSection";
 import { TrackRecordSection } from "./TrackRecordSection";
+import { CloudCompanion } from "./CloudCompanion";
 import { AmbientAuroraOrb } from "../ui/AmbientAuroraOrb";
 
 type LandingPageClientProps = {
@@ -167,6 +168,9 @@ export function LandingPageClient({
         onClose={() => setIsMenuOpen(false)}
         onNavigate={scrollToSection}
       />
+
+      {/* Interactive Expressive Cloud Companion */}
+      <CloudCompanion />
 
       <main id="main-content" className="relative z-10">
         {publicError && (

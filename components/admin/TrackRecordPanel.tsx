@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import type { Dispatch, SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { formatMediaUrl } from "../../lib/media";
 import type {
@@ -34,9 +34,9 @@ type TrackRecordPanelProps = {
 };
 
 const categoryLabels: Record<ProfileHighlightCategory, string> = {
-  education: "Riwayat Pendidikan",
-  achievement: "Pencapaian Utama",
-  leadership: "Kepemimpinan & Organisasi",
+  education: "Pendidikan",
+  achievement: "Pencapaian",
+  leadership: "Kepemimpinan",
   skill: "Keahlian Inti",
 };
 
@@ -82,52 +82,93 @@ export function TrackRecordPanel({
   onEditHighlight,
   onSaveHighlight,
 }: TrackRecordPanelProps) {
+  const [filterCategory, setFilterCategory] = useState<
+    ProfileHighlightCategory | "all"
+  >("all");
+
   const isSkill = hCategory === "skill";
   const imagePreviewUrl = hImageUrl.trim()
     ? formatMediaUrl(hImageUrl.trim(), 256)
     : "";
 
-  const groupedHighlights = categoryOrder.map((category) => ({
-    category,
-    label: categoryLabels[category],
-    items: sortHighlights(
-      highlights.filter((highlight) => highlight.category === category),
-    ),
-  }));
+  const groupedHighlights = categoryOrder
+    .filter((cat) => filterCategory === "all" || filterCategory === cat)
+    .map((category) => ({
+      category,
+      label: categoryLabels[category],
+      items: sortHighlights(
+        highlights.filter((highlight) => highlight.category === category),
+      ),
+    }));
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-3 duration-400">
-      <h1 className="text-2xl md:text-3xl font-heading font-semibold mb-1 text-white tracking-tight">
-        Track Record
-      </h1>
-      <p className="text-white/60 text-xs sm:text-sm mb-4 font-body">
-        Kelola riwayat pendidikan, pencapaian, kepemimpinan, dan keahlian inti.
-      </p>
-
-      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)] gap-5">
+    <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <div className="mb-3 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
         <div>
-          <div className="solid-frost border border-white/12 bg-[#141619] shadow-xl p-4 sm:p-5 rounded-2xl space-y-3.5 xl:sticky xl:top-20">
-            <h3 className="font-semibold text-xs uppercase tracking-wider text-blue-400 font-body">
+          <h1 className="text-2xl md:text-3xl font-heading font-semibold text-white tracking-tight leading-tight">
+            Track Record
+          </h1>
+          <p className="text-white/70 text-xs sm:text-sm font-body leading-relaxed">
+            Kelola riwayat pendidikan, pencapaian, kepemimpinan, dan keahlian
+            inti.
+          </p>
+        </div>
+
+        {/* Quick Category Filter Pills */}
+        <div className="flex flex-wrap items-center gap-1">
+          <button
+            type="button"
+            onClick={() => setFilterCategory("all")}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors cursor-pointer ${
+              filterCategory === "all"
+                ? "bg-white text-black font-semibold"
+                : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            Semua ({highlights.length})
+          </button>
+          {categoryOrder.map((cat) => {
+            const count = highlights.filter((h) => h.category === cat).length;
+            return (
+              <button
+                type="button"
+                key={cat}
+                onClick={() => setFilterCategory(cat)}
+                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors cursor-pointer ${
+                  filterCategory === cat
+                    ? "bg-white text-black font-semibold"
+                    : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {categoryLabels[cat]} ({count})
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-[360px_1fr] gap-4 items-start">
+        {/* Left: Compact Sticky Form */}
+        <div className="solid-frost border border-white/12 bg-[#141619] shadow-xl p-4 rounded-2xl space-y-3 xl:sticky xl:top-16">
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-[11px] uppercase tracking-wider text-blue-400 font-body">
               {editingHighlightId !== null
                 ? "Edit Track Record"
                 : "Tambah Track Record"}
             </h3>
-
             {editingHighlightId !== null && (
-              <div className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-3">
-                <p className="text-xs font-semibold uppercase tracking-wider text-blue-300">
-                  Mode Edit
-                </p>
-                <p className="mt-0.5 text-xs text-white/60">
-                  Kamu sedang mengubah data track record yang sudah tersimpan.
-                </p>
-              </div>
+              <span className="rounded-full bg-blue-500/15 px-2.5 py-0.5 text-[10px] font-medium text-blue-300">
+                Mode Edit
+              </span>
             )}
+          </div>
 
+          {/* Row 1: Kategori + Urutan Tampil */}
+          <div className="grid grid-cols-[1fr_95px] gap-2.5">
             <div>
               <label
                 htmlFor="highlightCategory"
-                className="text-[11px] font-medium uppercase tracking-wider text-blue-400 mb-1.5 block font-body"
+                className="text-[11px] font-medium uppercase tracking-wider text-blue-400 mb-1 block font-body"
               >
                 Kategori
               </label>
@@ -150,11 +191,51 @@ export function TrackRecordPanel({
               </select>
             </div>
 
-            {!isSkill && (
+            <div>
+              <label
+                htmlFor="highlightSortOrder"
+                className="text-[11px] font-medium uppercase tracking-wider text-blue-400 mb-1 block font-body"
+              >
+                Urutan
+              </label>
+              <input
+                id="highlightSortOrder"
+                type="number"
+                inputMode="numeric"
+                value={hSortOrder}
+                disabled={saving}
+                onChange={(event) => setHSortOrder(event.target.value)}
+                placeholder="10"
+                className="w-full bg-[#0b0d0e] border border-white/15 text-white px-3 py-2 rounded-xl text-xs sm:text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60 transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Row 2: Judul / Nama Keahlian */}
+          <div>
+            <label
+              htmlFor="highlightTitle"
+              className="text-[11px] font-medium uppercase tracking-wider text-blue-400 mb-1 block font-body"
+            >
+              {isSkill ? "Nama Keahlian" : "Judul"}
+            </label>
+            <input
+              id="highlightTitle"
+              value={hTitle}
+              disabled={saving}
+              onChange={(event) => setHTitle(event.target.value)}
+              placeholder={isSkill ? "Analytical Thinking" : "Judul item"}
+              className="w-full bg-[#0b0d0e] border border-white/15 text-white px-3 py-2 rounded-xl text-xs sm:text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60 transition-all"
+            />
+          </div>
+
+          {/* Row 3 (Non-skill): Periode + Foto Opsional side-by-side */}
+          {!isSkill && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <div>
                 <label
                   htmlFor="highlightPeriod"
-                  className="text-[11px] font-medium uppercase tracking-wider text-blue-400 mb-1.5 block font-body"
+                  className="text-[11px] font-medium uppercase tracking-wider text-blue-400 mb-1 block font-body"
                 >
                   Periode / Tahun
                 </label>
@@ -167,168 +248,164 @@ export function TrackRecordPanel({
                   className="w-full bg-[#0b0d0e] border border-white/15 text-white px-3 py-2 rounded-xl text-xs sm:text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60 transition-all"
                 />
               </div>
-            )}
 
-            {!isSkill && (
               <div>
                 <label
                   htmlFor="highlightImage"
-                  className="text-[11px] font-medium uppercase tracking-wider text-blue-400 mb-1.5 block font-body"
+                  className="text-[11px] font-medium uppercase tracking-wider text-blue-400 mb-1 block font-body"
                 >
-                  ID Drive Foto Opsional
+                  ID Drive Foto
                 </label>
-                <input
-                  id="highlightImage"
-                  value={hImageUrl}
-                  disabled={saving}
-                  onChange={(event) => setHImageUrl(event.target.value)}
-                  placeholder="ID Drive / Link Gambar"
-                  className="w-full bg-[#0b0d0e] border border-white/15 text-white px-3 py-2 rounded-xl text-xs sm:text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60 transition-all"
-                />
-
-                {imagePreviewUrl && (
-                  <div className="mt-3 rounded-xl border border-white/10 bg-[#0b0d0e] p-2.5">
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-white/60 mb-2">
-                      Preview Foto
-                    </p>
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/5">
-                        <img
-                          src={imagePreviewUrl}
-                          alt="Preview track record"
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                      <p className="text-xs text-white/50">
-                        Foto ini opsional. Kalau kosong, item tetap tampil rapi.
-                      </p>
+                <div className="flex items-center gap-2">
+                  <input
+                    id="highlightImage"
+                    value={hImageUrl}
+                    disabled={saving}
+                    onChange={(event) => setHImageUrl(event.target.value)}
+                    placeholder="Opsional"
+                    className="w-full bg-[#0b0d0e] border border-white/15 text-white px-3 py-2 rounded-xl text-xs sm:text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60 transition-all"
+                  />
+                  {imagePreviewUrl && (
+                    <div
+                      className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/15 bg-[#0b0d0e]"
+                      title="Preview Foto"
+                    >
+                      <img
+                        src={imagePreviewUrl}
+                        alt="Preview track record"
+                        className="h-full w-full object-cover"
+                      />
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            )}
+            </div>
+          )}
 
+          {/* Row 4 (Non-skill): Deskripsi */}
+          {!isSkill && (
             <div>
               <label
-                htmlFor="highlightTitle"
-                className="text-[11px] font-medium uppercase tracking-wider text-blue-400 mb-1.5 block font-body"
+                htmlFor="highlightDescription"
+                className="text-[11px] font-medium uppercase tracking-wider text-blue-400 mb-1 block font-body"
               >
-                {isSkill ? "Nama Keahlian" : "Judul"}
+                Deskripsi
               </label>
-              <input
-                id="highlightTitle"
-                value={hTitle}
+              <textarea
+                id="highlightDescription"
+                value={hDescription}
                 disabled={saving}
-                onChange={(event) => setHTitle(event.target.value)}
-                placeholder={isSkill ? "Analytical Thinking" : "Judul item"}
-                className="w-full bg-[#0b0d0e] border border-white/15 text-white px-3 py-2 rounded-xl text-xs sm:text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60 transition-all"
+                rows={2}
+                onChange={(event) => setHDescription(event.target.value)}
+                placeholder="Deskripsi singkat..."
+                className="w-full bg-[#0b0d0e] border border-white/15 text-white px-3 py-2 rounded-xl text-xs sm:text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 resize-none transition-all leading-relaxed"
               />
             </div>
+          )}
 
-            {!isSkill && (
-              <div>
-                <label
-                  htmlFor="highlightDescription"
-                  className="text-[11px] font-medium uppercase tracking-wider text-blue-400 mb-1.5 block font-body"
-                >
-                  Deskripsi
-                </label>
-                <textarea
-                  id="highlightDescription"
-                  value={hDescription}
-                  disabled={saving}
-                  rows={3}
-                  onChange={(event) => setHDescription(event.target.value)}
-                  placeholder="Deskripsi singkat"
-                  className="w-full bg-[#0b0d0e] border border-white/15 text-white px-3 py-2 rounded-xl text-xs sm:text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 resize-none transition-all"
-                />
-              </div>
-            )}
-
-            <div>
-              <label
-                htmlFor="highlightSortOrder"
-                className="text-[11px] font-medium uppercase tracking-wider text-blue-400 mb-1.5 block font-body"
-              >
-                Urutan Tampil
-              </label>
-              <input
-                id="highlightSortOrder"
-                type="number"
-                inputMode="numeric"
-                value={hSortOrder}
-                disabled={saving}
-                onChange={(event) => setHSortOrder(event.target.value)}
-                placeholder="10"
-                className="w-full bg-[#0b0d0e] border border-white/15 text-white px-3 py-2 rounded-xl text-xs sm:text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60 transition-all"
-              />
-              <p className="mt-1 text-xs text-white/50">
-                Angka lebih kecil tampil lebih dulu (misal: 10, 20, 30).
-              </p>
-            </div>
-
-            <div className="pt-1 flex flex-col gap-2">
-              <button
-                type="button"
-                onClick={onSaveHighlight}
-                disabled={saving}
-                className={`w-full bg-white hover:bg-white/90 text-black py-2.5 rounded-full font-semibold text-xs sm:text-sm shadow-md transition-all active:scale-[0.98] disabled:opacity-50 ${focusRing}`}
-              >
+          {/* Submit & Cancel Buttons */}
+          <div className="pt-1 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onSaveHighlight}
+              disabled={saving}
+              className={`btn-google-cta flex-1 bg-white hover:bg-white/95 text-black py-2.5 px-5 rounded-full font-semibold text-xs sm:text-sm shadow-md disabled:opacity-50 cursor-pointer ${focusRing}`}
+            >
+              <span>
                 {saving
                   ? "Menyimpan..."
                   : editingHighlightId !== null
                     ? "Simpan Perubahan"
                     : "Tambah Data"}
-              </button>
+              </span>
+            </button>
 
-              {editingHighlightId !== null && (
-                <button
-                  type="button"
-                  onClick={onCancelEdit}
-                  disabled={saving}
-                  className={`w-full bg-white/10 text-white hover:bg-white/15 py-2 rounded-full font-medium text-xs border border-white/10 disabled:opacity-50 transition-colors ${focusRing}`}
-                >
-                  Batal Edit
-                </button>
-              )}
-            </div>
+            {editingHighlightId !== null && (
+              <button
+                type="button"
+                onClick={onCancelEdit}
+                disabled={saving}
+                className={`bg-white/10 text-white hover:bg-white/15 px-4 py-2.5 rounded-full font-medium text-xs border border-white/10 disabled:opacity-50 transition-colors ${focusRing}`}
+              >
+                Batal
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="space-y-5">
+        {/* Right: Categorized Items (Compact Cards & Skill Chips) */}
+        <div className="space-y-4">
           {highlights.length === 0 && (
             <div className="rounded-2xl border border-dashed border-white/15 bg-[#141619]/50 p-6 text-center">
-              <p className="text-xs sm:text-sm font-semibold text-white/80">
+              <p className="text-xs sm:text-sm font-heading font-semibold text-white/80">
                 Belum ada track record.
               </p>
-              <p className="mt-1 text-xs text-white/50">
+              <p className="mt-1 text-xs font-body text-white/50">
                 Tambahkan data pendidikan, prestasi, kepemimpinan, atau skill.
               </p>
             </div>
           )}
 
           {groupedHighlights.map(({ category, label, items }) => (
-            <section key={category} className="space-y-2.5">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-white/50 font-body">
-                {label}
-              </h2>
+            <section key={category} className="space-y-2">
+              <div className="flex items-center justify-between">
+                <h2 className="text-[11px] font-semibold uppercase tracking-wider text-white/60 font-body">
+                  {label} ({items.length})
+                </h2>
+              </div>
 
               {items.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-white/15 bg-[#141619]/40 p-4">
-                  <p className="text-xs text-white/40">
+                <div className="rounded-xl border border-dashed border-white/12 bg-[#141619]/40 px-3.5 py-2.5">
+                  <p className="text-xs font-body text-white/40">
                     Belum ada data untuk kategori ini.
                   </p>
                 </div>
+              ) : category === "skill" ? (
+                /* Compact Chip Grid for Skills */
+                <div className="flex flex-wrap gap-2">
+                  {items.map((highlight) => (
+                    <div
+                      key={highlight.id}
+                      className="solid-frost inline-flex items-center gap-2 rounded-full border border-white/12 bg-[#141619] pl-3.5 pr-2 py-1.5 shadow-sm hover:border-white/25 transition-colors"
+                    >
+                      <span className="text-[10px] font-medium text-blue-300">
+                        #{highlight.sort_order ?? 100}
+                      </span>
+                      <span className="text-xs sm:text-sm font-heading font-semibold text-white">
+                        {highlight.title || "Untitled"}
+                      </span>
+                      <div className="flex items-center gap-0.5 ml-1 border-l border-white/10 pl-1.5">
+                        <button
+                          type="button"
+                          onClick={() => onEditHighlight(highlight)}
+                          className={`rounded-full text-white/50 hover:text-blue-300 p-1 transition-colors ${focusRing}`}
+                          aria-label={`Edit ${highlight.title || "keahlian"}`}
+                        >
+                          <Pencil size={12} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onDeleteHighlight(highlight)}
+                          className={`rounded-full text-white/50 hover:text-red-400 p-1 transition-colors ${focusRing}`}
+                          aria-label={`Hapus ${highlight.title || "keahlian"}`}
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               ) : (
-                <div className="space-y-2.5">
+                /* Compact Cards Grid for Education / Achievement / Leadership */
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                   {items.map((highlight) => (
                     <article
                       key={highlight.id}
-                      className="solid-frost border border-white/10 bg-[#141619] p-3.5 rounded-2xl flex items-center justify-between gap-3 shadow-md"
+                      className="solid-frost border border-white/10 bg-[#141619] p-3 rounded-xl flex items-center justify-between gap-2.5 shadow-md hover:border-white/20 transition-colors"
                     >
-                      <div className="flex items-center gap-3 min-w-0">
+                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
                         {highlight.image_url ? (
-                          <div className="h-10 w-10 shrink-0 overflow-hidden rounded-xl bg-black/40 border border-white/10">
+                          <div className="h-9 w-9 shrink-0 overflow-hidden rounded-lg bg-black/40 border border-white/10">
                             <img
                               src={formatMediaUrl(highlight.image_url, 128)}
                               alt={highlight.title || "Track record image"}
@@ -336,36 +413,38 @@ export function TrackRecordPanel({
                             />
                           </div>
                         ) : (
-                          <div className="h-10 w-10 shrink-0 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-semibold uppercase text-white/60">
-                            {category === "skill" ? "SK" : "TR"}
+                          <div className="h-9 w-9 shrink-0 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-semibold uppercase text-white/50">
+                            #{highlight.sort_order ?? 100}
                           </div>
                         )}
 
-                        <div className="min-w-0">
-                          <div className="flex flex-wrap items-center gap-2">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5">
                             {highlight.period && (
-                              <span className="rounded-full bg-blue-500/15 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-blue-300">
+                              <span className="rounded-full bg-blue-500/15 px-2 py-0.2 text-[10px] font-semibold uppercase tracking-wider text-blue-300 truncate">
                                 {highlight.period}
                               </span>
                             )}
-                            <span className="text-[10px] font-medium text-white/50">
-                              Urutan {highlight.sort_order ?? 100}
-                            </span>
+                            {highlight.image_url && (
+                              <span className="text-[10px] font-medium text-white/40 shrink-0">
+                                #{highlight.sort_order ?? 100}
+                              </span>
+                            )}
                           </div>
 
-                          <h3 className="mt-0.5 font-semibold text-xs sm:text-sm text-white truncate">
+                          <h4 className="mt-0.5 font-heading font-semibold text-xs sm:text-sm text-white leading-snug truncate">
                             {highlight.title || "Untitled"}
-                          </h3>
+                          </h4>
 
                           {highlight.description && (
-                            <p className="text-xs text-white/60 line-clamp-1 max-w-xl">
+                            <p className="text-xs font-body text-white/55 line-clamp-1">
                               {highlight.description}
                             </p>
                           )}
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-1 shrink-0">
+                      <div className="flex items-center gap-0.5 shrink-0">
                         <button
                           type="button"
                           onClick={() => onEditHighlight(highlight)}
@@ -381,7 +460,7 @@ export function TrackRecordPanel({
                           className={`rounded-lg text-white/50 hover:text-red-400 hover:bg-red-500/10 transition-colors disabled:cursor-not-allowed disabled:opacity-40 p-1.5 ${focusRing}`}
                           aria-label={`Hapus ${highlight.title || "track record"}`}
                         >
-                          <Trash2 size={15} />
+                          <Trash2 size={14} />
                         </button>
                       </div>
                     </article>

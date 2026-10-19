@@ -11,9 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import { Award, Briefcase, Link as LinkIcon, User, Wrench } from "lucide-react";
 import { AboutPanel } from "../../components/admin/AboutPanel";
-import { AdminBottomNav } from "../../components/admin/AdminBottomNav";
 import { AdminLoadingScreen } from "../../components/admin/AdminLoadingScreen";
-import { AdminMobileHeader } from "../../components/admin/AdminMobileHeader";
 import { AdminNotice } from "../../components/admin/AdminNotice";
 import { AdminSidebar } from "../../components/admin/AdminSidebar";
 import { PortfolioPanel } from "../../components/admin/PortfolioPanel";
@@ -60,7 +58,6 @@ export default function AdminDashboard() {
 
   const [activeTab, setActiveTab] = useState<ActiveTab>("about");
   const [loading, setLoading] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [notice, setNotice] = useState<Notice>(null);
 
   const [headline, setHeadline] = useState("");
@@ -119,7 +116,10 @@ export default function AdminDashboard() {
         return;
       }
     } catch (error) {
-      showNotice("error", `Gagal memeriksa sesi admin: ${getErrorMessage(error)}`);
+      showNotice(
+        "error",
+        `Gagal memeriksa sesi admin: ${getErrorMessage(error)}`,
+      );
       router.replace("/admin/login");
       return;
     }
@@ -155,45 +155,39 @@ export default function AdminDashboard() {
     return () => window.clearTimeout(initializeTimer);
   }, [initializeAdmin]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsSidebarOpen(false);
-      }
-    };
-
-    if (!isSidebarOpen) return undefined;
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isSidebarOpen]);
-
-  useEffect(() => {
-    if (!isSidebarOpen) return undefined;
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [isSidebarOpen]);
-
   const menuItems = useMemo<MenuItem[]>(
     () => [
-      { id: "about", label: "Profil", icon: <User size={20} /> },
-      { id: "socials", label: "Media", icon: <LinkIcon size={20} /> },
-      { id: "track_record", label: "Track Record", icon: <Award size={20} /> },
-      { id: "portfolio", label: "Karya", icon: <Briefcase size={20} /> },
-      { id: "services", label: "Produk", icon: <Wrench size={20} /> },
+      { id: "about", label: "Profil", icon: <User size={15} /> },
+      {
+        id: "socials",
+        label: "Media",
+        icon: <LinkIcon size={15} />,
+        count: socials.length,
+      },
+      {
+        id: "track_record",
+        label: "Track Record",
+        icon: <Award size={15} />,
+        count: highlights.length,
+      },
+      {
+        id: "portfolio",
+        label: "Karya",
+        icon: <Briefcase size={15} />,
+        count: portfolios.length,
+      },
+      {
+        id: "services",
+        label: "Produk",
+        icon: <Wrench size={15} />,
+        count: services.length,
+      },
     ],
-    [],
+    [socials.length, highlights.length, portfolios.length, services.length],
   );
 
   const changeTab = (tab: ActiveTab) => {
     setActiveTab(tab);
-    setIsSidebarOpen(false);
   };
 
   const sortPortfoliosByOrder = (items: PortfolioItem[]) => {
@@ -368,7 +362,10 @@ export default function AdminDashboard() {
       resetSocialForm();
       showNotice("success", "Link sosial berhasil ditambahkan.");
     } catch (error) {
-      showNotice("error", `Gagal menyimpan link sosial: ${getErrorMessage(error)}`);
+      showNotice(
+        "error",
+        `Gagal menyimpan link sosial: ${getErrorMessage(error)}`,
+      );
     } finally {
       setSaving(false);
     }
@@ -417,7 +414,9 @@ export default function AdminDashboard() {
         setPortfolios((current) =>
           sortPortfoliosByOrder(
             current.map((portfolio) =>
-              portfolio.id === updatedPortfolio.id ? updatedPortfolio : portfolio,
+              portfolio.id === updatedPortfolio.id
+                ? updatedPortfolio
+                : portfolio,
             ),
           ),
         );
@@ -648,29 +647,21 @@ export default function AdminDashboard() {
           duration={20}
         />
       </div>
-      <div className="relative z-10">
-        <AdminMobileHeader
-          focusRing={focusRing}
-          isSidebarOpen={isSidebarOpen}
-          onOpenSidebar={() => setIsSidebarOpen(true)}
-          onSignOut={handleSignOut}
-        />
 
+      <div className="relative z-10 flex flex-col min-h-screen">
+        {/* Compact Apple-Liquid-Glass Top Console Navigation */}
         <AdminSidebar
           activeTab={activeTab}
           focusRing={focusRing}
-          isSidebarOpen={isSidebarOpen}
           menuItems={menuItems}
           onChangeTab={changeTab}
-          onCloseSidebar={() => setIsSidebarOpen(false)}
           onSignOut={handleSignOut}
         />
 
         <main
-          className="lg:ml-64 min-h-screen px-4 pt-16 pb-20 md:px-8 md:pt-6 md:pb-8 lg:px-8 lg:py-8"
+          className="flex-1 w-full max-w-6xl mx-auto px-4 pt-3 pb-10 sm:px-6 lg:px-8"
           aria-busy={saving}
         >
-          <div className="max-w-5xl mx-auto pb-12 lg:pb-0">
           <AdminNotice
             focusRing={focusRing}
             notice={notice}
@@ -816,15 +807,7 @@ export default function AdminDashboard() {
               onSaveService={handleSaveService}
             />
           )}
-        </div>
-      </main>
-
-      <AdminBottomNav
-        activeTab={activeTab}
-        focusRing={focusRing}
-        menuItems={menuItems}
-        onChangeTab={changeTab}
-      />
+        </main>
       </div>
     </div>
   );

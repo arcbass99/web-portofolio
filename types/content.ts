@@ -78,4 +78,5 @@ export type MenuItem = {
   id: ActiveTab;
   label: string;
   icon: ReactNode;
+  count?: number;
 };

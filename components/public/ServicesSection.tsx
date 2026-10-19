@@ -19,7 +19,7 @@ export function ServicesSection({
   return (
     <section
       id="services"
-      className="relative py-8 md:py-14 px-6 lg:px-12 max-w-6xl mx-auto scroll-mt-24 overflow-hidden"
+      className="relative py-10 md:py-16 px-6 lg:px-12 max-w-6xl mx-auto scroll-mt-24 overflow-hidden"
     >
       {/* Moving gradient light in empty space */}
       <AmbientAuroraOrb
@@ -30,14 +30,21 @@ export function ServicesSection({
       />
 
       <div className="relative z-10">
-        <div className="mb-8 md:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="mb-4">
+          <span className="apple-liquid-glass rounded-full inline-flex px-3.5 py-1 text-[11px] font-body font-medium uppercase tracking-wider text-blue-300">
+            Digital Offerings
+          </span>
+        </div>
+
+        <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h2 className="font-heading font-semibold text-white text-2xl md:text-3xl lg:text-4xl leading-tight tracking-tight">
+            <h2 className="font-heading font-semibold text-white text-2xl md:text-3xl leading-tight tracking-tight">
               Produk dan Layanan
             </h2>
           </div>
-          <p className="max-w-xs text-xs sm:text-sm font-body text-white/70 text-justify md:text-right">
-            Akses langsung ke berbagai produk dan layanan digital yang saya sediakan.
+          <p className="max-w-[42ch] text-xs sm:text-sm font-body leading-relaxed text-white/70 text-justify md:text-right">
+            Akses langsung ke berbagai produk dan layanan digital yang saya
+            sediakan.
           </p>
         </div>
 
@@ -56,7 +63,7 @@ export function ServicesSection({
                 target="_blank"
                 rel="noreferrer"
                 aria-label={`Kunjungi ${service.title || "produk"}`}
-                className={`group relative solid-frost rounded-[1.6rem] p-5 md:p-6 flex flex-col gap-6 items-start overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_45px_rgba(0,0,0,0.85)] border border-white/12 bg-[#141619] active:scale-[0.98] ${focusRing}`}
+                className={`group relative h-full solid-frost rounded-[1.6rem] p-5 flex flex-col justify-between gap-5 items-start overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_45px_rgba(0,0,0,0.85)] border border-white/12 bg-[#141619] active:scale-[0.98] ${focusRing}`}
               >
                 {/* Subtle Aurora Glow Effect */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
@@ -78,24 +85,21 @@ export function ServicesSection({
                       />
                     </div>
                   ) : (
-                    <ArrowRight
-                      className="text-white/80"
-                      size={18}
-                    />
+                    <ArrowRight className="text-white/80" size={18} />
                   )}
                 </div>
 
                 {/* Bottom */}
                 <div className="relative z-10 w-full">
-                  <h3 className="font-heading font-semibold text-white text-lg tracking-tight leading-snug transition-colors duration-300 group-hover:text-blue-200">
+                  <h3 className="font-heading font-semibold text-white text-base sm:text-lg tracking-tight leading-snug transition-colors duration-300 group-hover:text-blue-200">
                     {service.title || "Produk"}
                   </h3>
-                  <p className="mt-2 text-xs text-white/70 font-body leading-relaxed max-w-[30ch]">
+                  <p className="mt-2 text-xs sm:text-sm text-white/70 font-body leading-relaxed">
                     {service.description ||
                       "Klik untuk melihat detail penawaran ini."}
                   </p>
-                  
-                  <div className="mt-3.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-blue-400 opacity-100 md:opacity-0 md:-translate-y-1 transition-all duration-300 md:group-hover:opacity-100 md:group-hover:translate-y-0">
+
+                  <div className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-blue-400 transition-all duration-300 group-hover:translate-x-0.5">
                     Kunjungi <ArrowRight size={13} />
                   </div>
                 </div>
