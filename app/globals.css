@@ -151,7 +151,8 @@
   transform: scale(0.96);
 }
 
-/* Inner rainbow ring + inward diffused shadow */
+/* Hidden at rest. On hover, a short rainbow "comet" arc appears on one
+   side of the inner edge and travels around the button perimeter. */
 .btn-google-cta::before,
 .btn-google-cta::after {
   content: "";
@@ -162,12 +163,14 @@
   z-index: 1;
   background: conic-gradient(
     from var(--rainbow-angle),
-    #4285f4 0deg,
-    #9b72cf 72deg,
-    #ea4335 144deg,
-    #fbbc05 216deg,
-    #34a853 288deg,
-    #4285f4 360deg
+    transparent 0deg,
+    transparent 220deg,
+    #4285f4 260deg,
+    #9b72cf 290deg,
+    #ea4335 315deg,
+    #fbbc05 335deg,
+    #34a853 352deg,
+    transparent 360deg
   );
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
@@ -177,37 +180,33 @@
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  animation: google-rainbow-spin 3.2s linear infinite;
-  transition: opacity 0.35s ease, padding 0.35s ease;
+  opacity: 0;
+  animation: google-rainbow-spin 2.4s linear infinite;
+  animation-play-state: paused;
+  transition: opacity 0.35s ease;
 }
 
-/* Crisp inner rim */
+/* Crisp thin inner rim */
 .btn-google-cta::before {
-  padding: 2px;
-  opacity: 0.75;
+  padding: 1.5px;
 }
 
-/* Soft inward rainbow shadow glow */
+/* Soft inward glow of the arc */
 .btn-google-cta::after {
   padding: 5px;
-  filter: blur(5px);
-  opacity: 0.45;
+  filter: blur(6px);
 }
 
 .btn-google-cta:hover::before,
-.btn-google-cta:focus-visible::before,
-.btn-google-cta:active::before {
-  padding: 2.5px;
+.btn-google-cta:focus-visible::before {
   opacity: 1;
-  animation-duration: 2s;
+  animation-play-state: running;
 }
 
 .btn-google-cta:hover::after,
-.btn-google-cta:focus-visible::after,
-.btn-google-cta:active::after {
-  padding: 7px;
-  opacity: 0.85;
-  animation-duration: 2s;
+.btn-google-cta:focus-visible::after {
+  opacity: 0.7;
+  animation-play-state: running;
 }
 
 /* ===================================================================
