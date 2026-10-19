@@ -5,6 +5,7 @@
 import type { Dispatch, SetStateAction } from "react";
 import { ImageIcon } from "lucide-react";
 import { formatMediaUrl } from "../../lib/media";
+import { GoogleCtaButton } from "../ui/GoogleCtaButton";
 
 type AboutPanelProps = {
   bannerUrl: string;
@@ -127,14 +128,14 @@ export function AboutPanel({
             </div>
 
             <div className="flex items-center justify-end pt-1">
-              <button
-                type="button"
+              <GoogleCtaButton
                 onClick={onSave}
                 disabled={saving}
-                className={`btn-google-cta bg-white hover:bg-white/95 text-black px-5 py-2.5 rounded-full font-semibold text-xs sm:text-sm shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${focusRing}`}
+                variant="light"
+                focusRing={focusRing}
               >
                 <span>{saving ? "Menyimpan..." : "Update Profil"}</span>
-              </button>
+              </GoogleCtaButton>
             </div>
           </div>
         </div>

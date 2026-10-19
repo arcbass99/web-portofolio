@@ -6,6 +6,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { Film, Pencil, Trash2 } from "lucide-react";
 import { formatMediaUrl, formatVideoEmbedUrl } from "../../lib/media";
 import type { PortfolioItem, PortfolioMediaType } from "../../types/content";
+import { GoogleCtaButton } from "../ui/GoogleCtaButton";
 
 type PortfolioPanelProps = {
   editingPortfolioId: number | null;
@@ -229,11 +230,12 @@ export function PortfolioPanel({
 
           {/* Actions */}
           <div className="pt-1 flex items-center gap-2">
-            <button
-              type="button"
+            <GoogleCtaButton
               onClick={onSavePortfolio}
               disabled={saving}
-              className={`btn-google-cta flex-1 bg-white text-black py-2.5 px-5 rounded-full font-semibold text-xs sm:text-sm disabled:opacity-50 shadow-md cursor-pointer ${focusRing}`}
+              variant="light"
+              className="flex-1"
+              focusRing={focusRing}
             >
               <span>
                 {saving
@@ -242,7 +244,7 @@ export function PortfolioPanel({
                     ? "Simpan Perubahan"
                     : "Simpan Karya"}
               </span>
-            </button>
+            </GoogleCtaButton>
 
             {editingPortfolioId !== null && (
               <button

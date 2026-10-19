@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Menu, ArrowUpRight } from "lucide-react";
 import { smoothScrollToId, smoothScrollTo, smoothScrollToElement } from "../../lib/smoothScroll";
 import { formatMediaUrl } from "../../lib/media";
+import { GoogleCtaButton } from "../ui/GoogleCtaButton";
 
 type PublicNavbarProps = {
   focusRing: string;
@@ -182,16 +183,17 @@ export function PublicNavbar({
                 );
               })}
 
-              <button
-                type="button"
+              <GoogleCtaButton
                 onClick={() => {
                   smoothScrollToElement(document.querySelector("footer"));
                 }}
-                className={`btn-google-cta ml-1 flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-black shadow-md hover:bg-white/95 ${focusRing}`}
+                variant="light"
+                className="ml-1"
+                focusRing={focusRing}
               >
-                <span className="relative z-10">Hubungi</span>
-                <ArrowUpRight className="relative z-10 h-3.5 w-3.5" />
-              </button>
+                <span>Hubungi</span>
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </GoogleCtaButton>
             </div>
           </div>
 

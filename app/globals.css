@@ -113,100 +113,22 @@
 }
 
 /* ===================================================================
-   Google Rotating Rainbow Inner Shadow & Zoom CTA System
+   Google Rotating Rainbow Wave & Dynamic CTA System
    =================================================================== */
 
-@property --rainbow-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-@keyframes google-rainbow-spin {
+@keyframes google-spin {
   0% {
-    --rainbow-angle: 0deg;
+    transform: translate(-50%, -50%) rotate(0deg);
   }
   100% {
-    --rainbow-angle: 360deg;
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 
 .btn-google-cta {
   position: relative;
   isolation: isolate;
-  overflow: hidden;
-  transition:
-    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.28s ease,
-    background-color 0.28s ease,
-    border-color 0.28s ease;
   will-change: transform;
-}
-
-.btn-google-cta:hover {
-  transform: scale(1.04);
-}
-
-.btn-google-cta:active {
-  transform: scale(0.96);
-}
-
-/* Hidden at rest. On hover, a short rainbow "comet" arc appears on one
-   side of the inner edge and travels around the button perimeter. */
-.btn-google-cta::before,
-.btn-google-cta::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 1;
-  background: conic-gradient(
-    from var(--rainbow-angle),
-    transparent 0deg,
-    transparent 220deg,
-    #4285f4 260deg,
-    #9b72cf 290deg,
-    #ea4335 315deg,
-    #fbbc05 335deg,
-    #34a853 352deg,
-    transparent 360deg
-  );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  opacity: 0;
-  animation: google-rainbow-spin 2.4s linear infinite;
-  animation-play-state: paused;
-  transition: opacity 0.35s ease;
-}
-
-/* Crisp thin inner rim */
-.btn-google-cta::before {
-  padding: 1.5px;
-}
-
-/* Soft inward glow of the arc */
-.btn-google-cta::after {
-  padding: 5px;
-  filter: blur(6px);
-}
-
-.btn-google-cta:hover::before,
-.btn-google-cta:focus-visible::before {
-  opacity: 1;
-  animation-play-state: running;
-}
-
-.btn-google-cta:hover::after,
-.btn-google-cta:focus-visible::after {
-  opacity: 0.7;
-  animation-play-state: running;
 }
 
 /* ===================================================================

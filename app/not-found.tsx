@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { StitchDotCanvas } from "../components/ui/StitchDotCanvas";
 import { AmbientAuroraOrb } from "../components/ui/AmbientAuroraOrb";
+import { GoogleCtaButton } from "../components/ui/GoogleCtaButton";
 import { PUBLIC_FOCUS_RING } from "../lib/constants";
 
 const quickLinks = [
@@ -181,13 +182,14 @@ export default function NotFound() {
           transition={{ duration: 0.5, delay: 0.35 }}
           className="mt-8"
         >
-          <Link
+          <GoogleCtaButton
             href="/"
-            className={`btn-google-cta inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs sm:text-sm font-semibold font-body text-black bg-white hover:bg-white/95 shadow-xl ${focusRing}`}
+            variant="light"
+            focusRing={focusRing}
           >
             <span>Kembali ke Beranda Utama</span>
             <ArrowRight size={15} />
-          </Link>
+          </GoogleCtaButton>
         </motion.div>
       </main>
 

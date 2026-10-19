@@ -7,6 +7,7 @@ import { useEffect, useState, useRef } from "react";
 import { formatMediaUrl, formatVideoEmbedUrl } from "../../lib/media";
 import type { PortfolioItem } from "../../types/content";
 import { AmbientAuroraOrb } from "../ui/AmbientAuroraOrb";
+import { GoogleCtaButton } from "../ui/GoogleCtaButton";
 
 type PortfolioSectionProps = {
   portfolios: PortfolioItem[];
@@ -313,17 +314,18 @@ export function PortfolioSection({ portfolios }: PortfolioSectionProps) {
                           allowFullScreen
                         />
 
-                        <a
+                        <GoogleCtaButton
                           href={formatVideoEmbedUrl(
                             selectedPortfolio.media_url,
                           )}
                           target="_blank"
-                          rel="noreferrer"
-                          className={`btn-google-cta absolute bottom-3 left-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-black shadow-xl ${focusRing}`}
+                          variant="light"
+                          className="absolute bottom-3 left-3 z-10 shadow-xl"
+                          focusRing={focusRing}
                         >
                           <span>Buka di Drive</span>
                           <ArrowUpRight size={13} />
-                        </a>
+                        </GoogleCtaButton>
                       </>
                     ) : selectedPortfolio.media_url ? (
                       <Image

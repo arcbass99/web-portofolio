@@ -6,6 +6,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { Globe, Pencil, Trash2 } from "lucide-react";
 import { formatMediaUrl } from "../../lib/media";
 import type { ServiceItem } from "../../types/content";
+import { GoogleCtaButton } from "../ui/GoogleCtaButton";
 
 type ServicesPanelProps = {
   editingServiceId: number | null;
@@ -187,11 +188,12 @@ export function ServicesPanel({
           </div>
 
           <div className="pt-1 flex items-center gap-2">
-            <button
-              type="button"
+            <GoogleCtaButton
               onClick={onSaveService}
               disabled={saving}
-              className={`btn-google-cta flex-1 bg-white hover:bg-white/95 text-black py-2.5 px-5 rounded-full font-semibold text-xs sm:text-sm shadow-md disabled:opacity-50 cursor-pointer ${focusRing}`}
+              variant="light"
+              focusRing={focusRing}
+              className="flex-1"
             >
               <span>
                 {saving
@@ -200,7 +202,7 @@ export function ServicesPanel({
                     ? "Simpan Perubahan"
                     : "Tambah Data"}
               </span>
-            </button>
+            </GoogleCtaButton>
 
             {editingServiceId !== null && (
               <button

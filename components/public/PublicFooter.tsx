@@ -3,6 +3,7 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { StitchDotCanvas } from "../ui/StitchDotCanvas";
+import { GoogleCtaButton } from "../ui/GoogleCtaButton";
 
 type PublicFooterProps = {
   contactHref: string;
@@ -14,7 +15,7 @@ type PublicFooterProps = {
 export function PublicFooter({
   contactHref,
   contactLabel,
-  isExternalContact,
+  isExternalContact: _isExternalContact,
   focusRing,
 }: PublicFooterProps) {
   return (
@@ -42,20 +43,19 @@ export function PublicFooter({
           diskusikan bersama.
         </p>
 
-        {/* Primary CTA with Rotating Rainbow Inner Shadow + Zoom */}
-        <a
+        {/* Primary CTA with Dynamic Rotating Gradient Wave (Google Mode AI style) */}
+        <GoogleCtaButton
           href={contactHref}
-          target={isExternalContact ? "_blank" : undefined}
-          rel={isExternalContact ? "noreferrer" : undefined}
-          aria-label={contactLabel}
-          className={`btn-google-cta group inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-xs sm:text-sm shadow-[0_12px_28px_rgba(0,0,0,0.5),0_0_24px_rgba(66,133,244,0.25)] border border-white/20 bg-white text-black hover:bg-white/95 ${focusRing}`}
+          ariaLabel={contactLabel}
+          variant="light"
+          focusRing={focusRing}
         >
           <span>{contactLabel}</span>
           <ArrowRight
             size={15}
             className="transition-transform duration-300 group-hover:translate-x-0.5"
           />
-        </a>
+        </GoogleCtaButton>
 
         <div className="mt-12 md:mt-16 flex flex-col items-center justify-center gap-1.5">
           <p className="text-xs font-body text-white/50 leading-relaxed">

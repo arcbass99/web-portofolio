@@ -3,6 +3,7 @@
 import type { Dispatch, SetStateAction } from "react";
 import { Pencil, Plus, Trash2, ExternalLink } from "lucide-react";
 import type { SocialLink } from "../../types/content";
+import { GoogleCtaButton } from "../ui/GoogleCtaButton";
 
 type SocialsPanelProps = {
   editingSocialId: number | null;
@@ -99,24 +100,24 @@ export function SocialsPanel({
             </div>
 
             <div className="flex items-center gap-2">
-              <button
-                type="button"
+              <GoogleCtaButton
                 onClick={onSaveSocial}
                 disabled={saving}
-                className={`btn-google-cta w-full md:w-auto bg-white hover:bg-white/95 text-black px-5 py-2.5 rounded-full font-semibold text-xs sm:text-sm shadow-md disabled:opacity-50 flex items-center justify-center gap-1.5 cursor-pointer ${focusRing}`}
+                variant="light"
+                focusRing={focusRing}
               >
-                <span className="flex items-center gap-1.5">
+                <span>
                   {saving ? (
                     "Menyimpan..."
                   ) : editingSocialId !== null ? (
                     "Simpan Perubahan"
                   ) : (
-                    <>
+                    <span className="flex items-center gap-1.5">
                       <Plus size={15} /> Tambah Link
-                    </>
+                    </span>
                   )}
                 </span>
-              </button>
+              </GoogleCtaButton>
 
               {editingSocialId !== null && (
                 <button

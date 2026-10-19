@@ -9,6 +9,7 @@ import type {
   ProfileHighlight,
   ProfileHighlightCategory,
 } from "../../types/content";
+import { GoogleCtaButton } from "../ui/GoogleCtaButton";
 
 type TrackRecordPanelProps = {
   editingHighlightId: number | null;
@@ -305,11 +306,12 @@ export function TrackRecordPanel({
 
           {/* Submit & Cancel Buttons */}
           <div className="pt-1 flex items-center gap-2">
-            <button
-              type="button"
+            <GoogleCtaButton
               onClick={onSaveHighlight}
               disabled={saving}
-              className={`btn-google-cta flex-1 bg-white hover:bg-white/95 text-black py-2.5 px-5 rounded-full font-semibold text-xs sm:text-sm shadow-md disabled:opacity-50 cursor-pointer ${focusRing}`}
+              variant="light"
+              focusRing={focusRing}
+              className="flex-1"
             >
               <span>
                 {saving
@@ -318,7 +320,7 @@ export function TrackRecordPanel({
                     ? "Simpan Perubahan"
                     : "Tambah Data"}
               </span>
-            </button>
+            </GoogleCtaButton>
 
             {editingHighlightId !== null && (
               <button

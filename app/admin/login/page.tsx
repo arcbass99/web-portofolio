@@ -10,6 +10,7 @@ import { AmbientAuroraOrb } from "../../../components/ui/AmbientAuroraOrb";
 import { getAdminSession } from "../../../lib/admin-data";
 import { supabase } from "../../../lib/supabase";
 import { ADMIN_FOCUS_RING } from "../../../lib/constants";
+import { GoogleCtaButton } from "../../../components/ui/GoogleCtaButton";
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -204,13 +205,15 @@ export default function AdminLogin() {
             </div>
 
             <div className="pt-1">
-              <button
+              <GoogleCtaButton
                 type="submit"
                 disabled={loading}
-                className={`btn-google-cta w-full rounded-full bg-white py-2.5 px-5 text-xs sm:text-sm font-semibold text-black shadow-md disabled:cursor-not-allowed disabled:opacity-50 ${focusRing}`}
+                variant="light"
+                className="w-full"
+                focusRing={focusRing}
               >
                 <span>{loading ? "Signing in..." : "Continue with Email"}</span>
-              </button>
+              </GoogleCtaButton>
             </div>
           </form>
 

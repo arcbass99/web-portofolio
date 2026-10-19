@@ -9,6 +9,7 @@ import { smoothScrollToId } from "../../lib/smoothScroll";
 import { BlurText } from "./BlurText";
 import { LiquidShaderBackground } from "../ui/LiquidShaderBackground";
 import { AmbientAuroraOrb } from "../ui/AmbientAuroraOrb";
+import { GoogleCtaButton } from "../ui/GoogleCtaButton";
 
 type HeroSectionProps = {
   about: AboutMe | null;
@@ -141,23 +142,22 @@ export function HeroSection({
             {...blurFadeIn(0.95)}
             className="mt-7 flex flex-wrap items-center gap-3.5"
           >
-            <a
+            <GoogleCtaButton
               href={contactHref}
-              target={isExternalContact ? "_blank" : undefined}
-              rel={isExternalContact ? "noopener noreferrer" : undefined}
-              className={`btn-google-cta inline-flex items-center gap-2 rounded-full bg-[#141619]/90 px-5 py-2.5 text-xs sm:text-sm font-semibold text-white font-body border border-white/15 shadow-lg ${focusRing}`}
+              focusRing={focusRing}
+              variant="dark"
             >
               <span>{contactLabel}</span>
               <ArrowUpRight className="h-4 w-4" />
-            </a>
-            <button
-              type="button"
+            </GoogleCtaButton>
+            <GoogleCtaButton
               onClick={scrollToPortfolio}
-              className={`btn-google-cta inline-flex cursor-pointer items-center gap-2 rounded-full bg-white/5 px-5 py-2.5 text-xs sm:text-sm font-semibold text-white/90 font-body border border-white/10 hover:text-white ${focusRing}`}
+              focusRing={focusRing}
+              variant="glass"
             >
               <span>Lihat Karya</span>
               <Play className="h-3.5 w-3.5" fill="currentColor" />
-            </button>
+            </GoogleCtaButton>
           </motion.div>
         </div>
 
