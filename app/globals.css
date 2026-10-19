@@ -128,6 +128,8 @@
 .btn-google-cta {
   position: relative;
   isolation: isolate;
+  overflow: hidden;
+  clip-path: inset(0 round 9999px);
   will-change: transform;
 }
 

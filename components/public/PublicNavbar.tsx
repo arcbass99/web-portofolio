@@ -147,7 +147,7 @@ export function PublicNavbar({
           <div className="hidden lg:flex items-center">
             <div
               onMouseLeave={() => setHoveredNav(null)}
-              className="apple-liquid-glass flex items-center rounded-full p-1.5 gap-0.5"
+              className="apple-liquid-glass flex items-center rounded-full p-1 gap-0.5"
             >
               {/* Subtle specular liquid sheen across top */}
               <div
@@ -188,7 +188,8 @@ export function PublicNavbar({
                   smoothScrollToElement(document.querySelector("footer"));
                 }}
                 variant="light"
-                className="ml-1"
+                size="sm"
+                className="ml-0.5"
                 focusRing={focusRing}
               >
                 <span>Hubungi</span>
