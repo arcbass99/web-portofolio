@@ -116,13 +116,13 @@ export function PublicNavbar({
             className={`apple-liquid-glass relative flex h-10 w-10 items-center justify-center rounded-full cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95 ${focusRing}`}
             aria-label="I'm Nafis — kembali ke profil utama"
           >
-            {/* "n" text — fades out when photo appears */}
+            {/* "N" text — fades out when photo appears */}
             <span
               className={`font-heading font-semibold text-base text-white absolute inset-0 flex items-center justify-center transition-all duration-500 ${
                 showPhoto ? "opacity-0 scale-75" : "opacity-100 scale-100"
               }`}
             >
-              n
+              N
             </span>
 
             {/* Profile photo — fades in when entering track-record zone */}

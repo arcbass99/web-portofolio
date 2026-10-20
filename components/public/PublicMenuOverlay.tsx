@@ -61,16 +61,27 @@ export function PublicMenuOverlay({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex flex-col justify-center items-center bg-[#0b0d0e]/85 backdrop-blur-2xl px-6"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              onClose();
+            }
+          }}
+          className="fixed inset-0 z-50 flex flex-col justify-center items-center bg-[#0b0d0e]/85 backdrop-blur-2xl px-6 py-16"
         >
+          {/* Close button — fixed at top-right with safe-area spacing to prevent overlap with the menu card */}
           <button
             type="button"
             onClick={onClose}
             aria-label="Tutup menu navigasi"
             autoFocus
-            className={`apple-liquid-glass absolute top-5 right-6 p-2.5 rounded-full transition-all ${focusRing} text-white/80 hover:text-white hover:scale-105 active:scale-95`}
+            style={{
+              position: "fixed",
+              top: "max(1.25rem, env(safe-area-inset-top, 1.25rem))",
+              right: "max(1.25rem, env(safe-area-inset-right, 1.25rem))",
+            }}
+            className={`apple-liquid-glass flex h-10 w-10 items-center justify-center rounded-full transition-all ${focusRing} text-white/80 hover:text-white hover:scale-105 active:scale-95 cursor-pointer z-10`}
           >
-            <X size={20} />
+            <X size={18} />
           </button>
 
           <div className="apple-liquid-glass w-full max-w-xs rounded-[1.75rem] p-5 flex flex-col gap-2 text-center font-heading font-semibold tracking-tight">
