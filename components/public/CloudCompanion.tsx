@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Minimize2 } from "lucide-react";
 
 type CloudMood =
   | "normal"
@@ -21,10 +20,10 @@ type CloudMood =
 type Reaction = { text: string | null; mood: CloudMood; duration?: number };
 
 const SIFAN_CLICK_DIALOGUES: Reaction[] = [
-  { text: "Halo! Namaku Sifan, asisten awan setia di web Nafis ☁️", mood: "happy" },
+  { text: "Halo! Namaku Sifan, maskot awan setia di web Nafis ☁️", mood: "happy" },
   { text: "Tahu gak kenapa namaku Sifan? Coba baca nama Nafis terbalik 🤭", mood: "wink" },
   { text: "Hehe geli tau diklik! Gerakin kursormu, mataku ngikutin lho 👀", mood: "curious" },
-  { text: "Kamu bisa geser dan lempar aku ke mana aja di layar 🎈", mood: "excited" },
+  { text: "Kamu bisa geser dan pindahin aku ke mana aja di layar 🎈", mood: "excited" },
   { text: "Coba klik 2x cepat, aku bisa salto 360° lho! 🤸", mood: "wheee" },
   { text: "Elus-elus aku pelan-pelan pakai kursor, aku suka banget 🥰", mood: "love" },
   { text: "Jangan lupa kepoin karya & track record Nafis ya! 🚀", mood: "excited" },
@@ -134,7 +133,6 @@ export function CloudCompanion() {
   const cloudRef = useRef<HTMLDivElement>(null);
 
   const [mounted, setMounted] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
   const [mood, setMood] = useState<CloudMood>("normal");
   const [isBlinking, setIsBlinking] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -148,7 +146,6 @@ export function CloudCompanion() {
   const moodRef = useRef<CloudMood>("normal");
   const lockedRef = useRef(false);
   const hoveredRef = useRef(false);
-  const minimizedRef = useRef(false);
   const reactionTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const clickDebounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -197,10 +194,6 @@ export function CloudCompanion() {
     hoveredRef.current = isHovered;
   }, [isHovered]);
 
-  useEffect(() => {
-    minimizedRef.current = isMinimized;
-  }, [isMinimized]);
-
   // Mount + time-based greeting
   useEffect(() => {
     setMounted(true);
@@ -231,7 +224,6 @@ export function CloudCompanion() {
     if (!mounted) return;
     const id = setInterval(() => {
       if (
-        minimizedRef.current ||
         lockedRef.current ||
         hoveredRef.current ||
         moodRef.current === "sleepy" ||
@@ -260,7 +252,6 @@ export function CloudCompanion() {
     };
 
     const handlePointerLocation = (clientX: number, clientY: number, targetEl?: HTMLElement | null) => {
-      if (minimizedRef.current) return;
       const now = performance.now();
       const dt = now - lastMouse.current.time;
       const dx = clientX - lastMouse.current.x;
@@ -368,7 +359,7 @@ export function CloudCompanion() {
 
     // Cursor leaves / returns to the window
     const onOut = (e: MouseEvent) => {
-      if (!e.relatedTarget && !minimizedRef.current) {
+      if (!e.relatedTarget) {
         cursorLeftWindow.current = true;
         if (canFire("leave", 8000)) {
           react({
@@ -381,7 +372,7 @@ export function CloudCompanion() {
     };
 
     const onOver = () => {
-      if (cursorLeftWindow.current && !minimizedRef.current) {
+      if (cursorLeftWindow.current) {
         cursorLeftWindow.current = false;
         if (canFire("return", 8000)) {
           react({
@@ -395,7 +386,7 @@ export function CloudCompanion() {
 
     // Coming back to the tab
     const onVisibility = () => {
-      if (!document.hidden && !minimizedRef.current && canFire("tab", 20000)) {
+      if (!document.hidden && canFire("tab", 20000)) {
         react({ text: "Selamat datang kembali! Sifan nungguin lho 👋", mood: "love", duration: 3200 });
       }
     };
@@ -403,7 +394,7 @@ export function CloudCompanion() {
     // Text selection
     const onSelection = () => {
       const text = window.getSelection()?.toString().trim() ?? "";
-      if (text.length > 3 && !minimizedRef.current && canFire("select", 12000)) {
+      if (text.length > 3 && canFire("select", 12000)) {
         react({
           text: pick([
             "Lagi nyimak bagian itu ya? Keren kan! 👀",
@@ -417,7 +408,7 @@ export function CloudCompanion() {
 
     // Copy to clipboard listener
     const onCopy = () => {
-      if (!minimizedRef.current && canFire("copy", 8000)) {
+      if (canFire("copy", 8000)) {
         react({
           text: pick([
             "Teks disalin! Mau disimpan ke mana tuh? 📋",
@@ -425,26 +416,6 @@ export function CloudCompanion() {
           ]),
           mood: "curious",
           duration: 2800,
-        });
-      }
-    };
-
-    // Keyboard easter egg: Press 'S' for Sifan or 'N' for Nafis
-    const onKeyDown = (e: KeyboardEvent) => {
-      const activeTag = (document.activeElement?.tagName || "").toLowerCase();
-      if (activeTag === "input" || activeTag === "textarea") return;
-
-      if ((e.key === "s" || e.key === "S") && canFire("keyS", 7000)) {
-        react({
-          text: "Hadir! Kamu pencet 'S' buat manggil Sifan kan? 🙋‍♂️✨",
-          mood: "excited",
-          duration: 3000,
-        });
-      } else if ((e.key === "n" || e.key === "N") && canFire("keyN", 7000)) {
-        react({
-          text: "'N' buat Nafis, 'S' buat Sifan! Dua serangkai yang pas 😎",
-          mood: "happy",
-          duration: 3000,
         });
       }
     };
@@ -457,7 +428,6 @@ export function CloudCompanion() {
     document.addEventListener("visibilitychange", onVisibility);
     document.addEventListener("selectionchange", onSelection);
     document.addEventListener("copy", onCopy);
-    window.addEventListener("keydown", onKeyDown);
 
     return () => {
       window.removeEventListener("mousemove", onMove);
@@ -467,7 +437,6 @@ export function CloudCompanion() {
       document.removeEventListener("visibilitychange", onVisibility);
       document.removeEventListener("selectionchange", onSelection);
       document.removeEventListener("copy", onCopy);
-      window.removeEventListener("keydown", onKeyDown);
       if (idleTimer.current) clearTimeout(idleTimer.current);
     };
   }, [mounted, react, applyMood]);
@@ -476,7 +445,6 @@ export function CloudCompanion() {
   useEffect(() => {
     if (!mounted) return;
     const onScroll = () => {
-      if (minimizedRef.current) return;
       const now = performance.now();
       const currentScrollY = window.scrollY;
       const dy = Math.abs(currentScrollY - lastScroll.current.y);
@@ -557,7 +525,6 @@ export function CloudCompanion() {
   const handleClick = () => {
     if (justDragged.current) return;
 
-    // Use a small debounce timer so double-click (salto) doesn't conflict with single click speech
     if (clickDebounceTimer.current) clearTimeout(clickDebounceTimer.current);
 
     clickDebounceTimer.current = setTimeout(() => {
@@ -608,26 +575,6 @@ export function CloudCompanion() {
   };
 
   if (!mounted) return null;
-
-  if (isMinimized) {
-    return (
-      <motion.button
-        type="button"
-        initial={{ opacity: 0, scale: 0.8, y: 10 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        onClick={() => {
-          setIsMinimized(false);
-          react({ text: "Sifan kembali! Kangen ya? ☁️✨", mood: "happy", duration: 3000 });
-        }}
-        className="fixed bottom-5 right-5 z-40 apple-liquid-glass flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-medium text-white shadow-xl hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-        aria-label="Panggil Sifan"
-        title="Panggil Sifan"
-      >
-        <span className="text-sm">☁️</span>
-        <span className="font-body text-[11px] text-white/90">Sifan</span>
-      </motion.button>
-    );
-  }
 
   // Hover makes it happy unless a stronger locked reaction is playing
   const m: CloudMood =
@@ -810,6 +757,7 @@ export function CloudCompanion() {
       initial={{ opacity: 0, scale: 0.6, y: 30 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
+      style={{ position: "fixed" }}
       className="fixed bottom-5 right-5 sm:bottom-7 sm:right-7 z-40 select-none touch-none"
     >
       <div className="relative flex flex-col items-end">
@@ -855,20 +803,6 @@ export function CloudCompanion() {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {/* Minimize button: accessible on mobile (subtle opacity) and desktop hover */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsMinimized(true);
-            }}
-            aria-label="Sembunyikan Sifan ke pojok"
-            title="Sembunyikan Sifan sementara"
-            className="absolute -top-1.5 -right-1.5 z-20 flex h-5 w-5 items-center justify-center rounded-full border border-white/15 bg-[#141619] text-white/60 opacity-60 sm:opacity-0 shadow-md transition-all hover:bg-white/20 hover:text-white group-hover:opacity-100 cursor-pointer"
-          >
-            <Minimize2 size={10} />
-          </button>
-
           {/* Spin wrapper for double-click salto */}
           <motion.div
             animate={{ rotate: spinCount * 360 }}
