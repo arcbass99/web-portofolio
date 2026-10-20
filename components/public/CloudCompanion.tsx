@@ -20,43 +20,99 @@ type CloudMood =
 
 type Reaction = { text: string | null; mood: CloudMood; duration?: number };
 
-const CLICK_DIALOGUES: Reaction[] = [
-  { text: "Halo! Aku Awan Kecil, penghuni setia web Nafis ☁️", mood: "happy" },
-  { text: "Hehe geli tau diklik! Gerakin kursormu, mataku ngikutin lho 👀", mood: "wink" },
-  { text: "Kamu bisa geser aku ke mana aja di layar 🎈", mood: "curious" },
-  { text: "Jangan lupa intip Karya & Track Record Nafis ya! 🚀", mood: "love" },
-  { text: "Coba klik dua kali deh, aku bisa salto! 🤸", mood: "excited" },
-  { text: "Elus-elus aku pelan-pelan, aku suka 🥰", mood: "happy" },
-  { text: "Fun fact: awan asli beratnya bisa ratusan ton. Aku sih ringan 😌", mood: "wink" },
-  { text: "Nafis itu suka Biologi, web, AI, dan desain. Keren kan? 🧬", mood: "excited" },
-  { text: "Kalau kursormu diam lama, aku ketiduran nih... 💤", mood: "sleepy" },
-  { text: "Jangan diacak-acak ya, nanti aku pusing 😵‍💫", mood: "surprised" },
-  { text: "Butuh website atau desain? Kontak Nafis di bawah! 📩", mood: "happy" },
-  { text: "Aku lagi latihan jadi awan hujan. Belum bisa sih 🌧️", mood: "sad" },
+const SIFAN_CLICK_DIALOGUES: Reaction[] = [
+  { text: "Halo! Namaku Sifan, asisten awan setia di web Nafis ☁️", mood: "happy" },
+  { text: "Tahu gak kenapa namaku Sifan? Coba baca nama Nafis terbalik 🤭", mood: "wink" },
+  { text: "Hehe geli tau diklik! Gerakin kursormu, mataku ngikutin lho 👀", mood: "curious" },
+  { text: "Kamu bisa geser dan lempar aku ke mana aja di layar 🎈", mood: "excited" },
+  { text: "Coba klik 2x cepat, aku bisa salto 360° lho! 🤸", mood: "wheee" },
+  { text: "Elus-elus aku pelan-pelan pakai kursor, aku suka banget 🥰", mood: "love" },
+  { text: "Jangan lupa kepoin karya & track record Nafis ya! 🚀", mood: "excited" },
+  { text: "Nafis itu suka Biologi, Web, AI, dan Desain. Lengkap kan? 🧬", mood: "happy" },
+  { text: "Fun fact: awan asli beratnya ratusan ton. Aku cuma beberapa kilobyte 😌", mood: "wink" },
+  { text: "Kalau kursormu diam lama, aku bakal ketiduran... 💤", mood: "sleepy" },
+  { text: "Jangan goyang kursormu terlalu kencang di atasku, nanti pusing! 😵‍💫", mood: "surprised" },
+  { text: "Butuh web atau desain canggih? Hubungi Nafis di bawah ya 📩", mood: "happy" },
+  { text: "Boing! Awan ini 100% empuk, ramah lingkungan, bebas hujan ☁️", mood: "wink" },
+  { text: "Lagi asik eksplor web ini ya? Betah-betah di sini! ✨", mood: "happy" },
+  { text: "Psst... kalau aku nutupin tombol atau teks, tinggal seret aku aja! 🖐️", mood: "curious" },
+  { text: "Kursor kamu lincah banget hari ini! Minum kopi berapa gelas? ☕", mood: "surprised" },
+  { text: "Tombol CTA di web ini punya aura pelangi berputar lho, udah coba klik? 🌈", mood: "excited" },
+  { text: "Sifan siap nemenin kamu keliling portofolio ini sampai tuntas! 🧭", mood: "happy" },
 ];
 
-const IDLE_ACTIONS: Reaction[] = [
-  { text: "🎵 La la la~", mood: "happy", duration: 2600 },
-  { text: "Hoaam~ 🥱", mood: "sleepy", duration: 2200 },
-  { text: "Hmm, ada yang seru nggak ya? 🤔", mood: "curious", duration: 2800 },
+const SIFAN_IDLE_ACTIONS: Reaction[] = [
+  { text: "🎵 La la la~ melayang santai di langit web", mood: "happy", duration: 2800 },
+  { text: "Hoaam~ ngantuk dikit tapi tetep siaga 🥱", mood: "sleepy", duration: 2400 },
+  { text: "Hmm, pengunjung lagi fokus baca bagian mana ya? 🤔", mood: "curious", duration: 2800 },
   { text: null, mood: "wink", duration: 900 },
-  { text: "Psst... scroll ke bawah, ada karya keren 👇", mood: "excited", duration: 3200 },
-  { text: "Cuacanya cerah, cocok buat ngoding ☀️", mood: "happy", duration: 3000 },
+  { text: "Psst... scroll ke bawah, ada tombol CTA dengan aura pelangi keren 👇", mood: "excited", duration: 3200 },
+  { text: "Cuacanya cerah, pas banget buat ngoding dan eksplor portofolio ☀️", mood: "happy", duration: 3000 },
+  { text: "✨ Cling! Mengirimkan energi positif buat harimu~", mood: "love", duration: 2800 },
 ];
 
-const SECTION_COMMENTS: Record<string, Reaction> = {
-  home: { text: "Selamat datang di ruang digital Nafis! 👋", mood: "happy" },
-  "track-record": { text: "Wah, lagi lihat perjalanan & prestasi Nafis ya! 🎓", mood: "curious" },
-  portfolio: { text: "Bagian favoritku! Klik kartunya buat detail 🎨", mood: "love" },
-  services: { text: "Butuh solusi digital? Cek di sini ⚡", mood: "wink" },
+const SIFAN_DIZZY_LINES = [
+  "Pusiiing... dunia berputar 360 derajat! 😵‍💫",
+  "Waaa jangan diacak-acak, awanku jadi gulali! 🌀",
+  "Kepalaku muter-muter kayak kipas angin 😵",
+  "Sumpah mual... kursormu ngebut banget 🤢",
+  "Ampun kak! Berhenti muter-muter dong 🏳️",
+];
+
+const SIFAN_ANGRY_LINES = [
+  "Aduh aduh! Jangan dipencet bertubi-tubi dong 😤",
+  "Hmph! Sakit tau, aku ngambek 3 detik! 😠",
+  "Mentang-mentang empuk diklik barbar gini 😣",
+  "Stop dulu! Jarimu lagi latihan drum ya? 🥁",
+];
+
+const SIFAN_PETTING_LINES = [
+  "Hehe, enak dielus-elus... makasih ya 🥰",
+  "Lagi dong elusnya~ bulu awanku jadi halus 💕",
+  "Aku jadi pengen bobo... nyaman banget 😊",
+  "Aww, kamu ramah banget sama Sifan! ✨",
+  "Puk-puk terus, nanti aku berubah jadi pelangi 🌈",
+];
+
+const SIFAN_LANDING_LINES = [
+  "Tempat baru, asik! Pemandangannya mantap 🏡",
+  "Mendarat dengan selamat, kapten! 🛬",
+  "Sip, aku stay di sudut ini dulu ya 😌",
+  "Wii, seru juga terbang dipindahin kamu 🎈",
+];
+
+const SIFAN_WAKEUP_LINES = [
+  "Eh! Aku gak tidur kok, cuma merem sedetik 😳",
+  "Hoaamm~ eh ada orang! Aku pura-pura rajin dulu 🥱",
+  "Kaget! Kirain tadi ditinggalin pergi 🥺",
+];
+
+const SECTION_COMMENTS: Record<string, Reaction[]> = {
+  home: [
+    { text: "Selamat datang di beranda utama Nafis! 👋", mood: "happy" },
+    { text: "Ini profil utamanya Nafis, baca bio singkatnya ya! 📖", mood: "curious" },
+  ],
+  "track-record": [
+    { text: "Wah, lagi lihat rekam jejak & prestasi Nafis ya! 🎓", mood: "curious" },
+    { text: "Banyak pengalaman organisasi & keahlian menarik di sini! 🏆", mood: "excited" },
+  ],
+  portfolio: [
+    { text: "Bagian favoritku! Klik kartunya buat lihat detail karya 🎨", mood: "love" },
+    { text: "Proyek desain & web karya Nafis rapi-rapi kan? 💻", mood: "happy" },
+  ],
+  services: [
+    { text: "Butuh solusi digital atau konsultasi? Cek di sini ⚡", mood: "wink" },
+    { text: "Produk dan layanannya siap bantu proyekmu! 🚀", mood: "excited" },
+  ],
 };
 
 const getGreeting = (): string => {
   const h = new Date().getHours();
-  if (h < 11) return "Selamat pagi! Aku Awan Kecil ☁️";
-  if (h < 15) return "Selamat siang! Aku Awan Kecil ☁️";
-  if (h < 19) return "Selamat sore! Aku Awan Kecil ☁️";
-  return "Malam-malam masih mampir? Halo! 🌙";
+  if (h >= 4 && h < 11) return "Selamat pagi! Aku Sifan, asisten awan Nafis ☁️";
+  if (h >= 11 && h < 15) return "Selamat siang! Aku Sifan, jangan lupa istirahat ya ☀️";
+  if (h >= 15 && h < 18) return "Selamat sore! Aku Sifan, selamat menikmati hari ⛅";
+  if (h >= 18 && h < 23) return "Selamat malam! Aku Sifan, santai dulu di sini 🌙";
+  return "Hai! Masih melek tengah malam? Sifan temenin ya 🦉";
 };
 
 const pick = <T,>(items: T[]): T =>
@@ -95,6 +151,7 @@ export function CloudCompanion() {
   const minimizedRef = useRef(false);
   const reactionTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clickDebounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastMouse = useRef({ x: 0, y: 0, time: 0 });
   const shake = useRef({ dxSign: 0, dySign: 0, reversals: [] as number[] });
   const clickTimes = useRef<number[]>([]);
@@ -181,12 +238,12 @@ export function CloudCompanion() {
         document.hidden
       )
         return;
-      if (Math.random() < 0.55) react(pick(IDLE_ACTIONS));
+      if (Math.random() < 0.55) react(pick(SIFAN_IDLE_ACTIONS));
     }, 15000);
     return () => clearInterval(id);
   }, [mounted, react]);
 
-  // Global cursor tracking: eyes, proximity, whip, shake → dizzy, sleep
+  // Global cursor & touch tracking: eyes, proximity, whip, shake → dizzy, sleep
   useEffect(() => {
     if (!mounted) return;
 
@@ -202,18 +259,18 @@ export function CloudCompanion() {
       }, 12000);
     };
 
-    const onMove = (e: MouseEvent) => {
+    const handlePointerLocation = (clientX: number, clientY: number, targetEl?: HTMLElement | null) => {
       if (minimizedRef.current) return;
       const now = performance.now();
       const dt = now - lastMouse.current.time;
-      const dx = e.clientX - lastMouse.current.x;
-      const dy = e.clientY - lastMouse.current.y;
+      const dx = clientX - lastMouse.current.x;
+      const dy = clientY - lastMouse.current.y;
       const speed = dt > 0 ? Math.hypot(dx, dy) / dt : 0;
-      lastMouse.current = { x: e.clientX, y: e.clientY, time: now };
+      lastMouse.current = { x: clientX, y: clientY, time: now };
 
       // Wake up
       if (moodRef.current === "sleepy" && !lockedRef.current) {
-        react({ text: "Eh! Aku nggak tidur kok 😳", mood: "surprised", duration: 2000 });
+        react({ text: pick(SIFAN_WAKEUP_LINES), mood: "surprised", duration: 2400 });
       }
       resetIdle();
 
@@ -221,8 +278,8 @@ export function CloudCompanion() {
       const rect = cloudRef.current.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.bottom - 40;
-      const ddx = e.clientX - cx;
-      const ddy = e.clientY - cy;
+      const ddx = clientX - cx;
+      const ddy = clientY - cy;
       const dist = Math.hypot(ddx, ddy);
       setIsClose(dist < 180);
 
@@ -234,7 +291,7 @@ export function CloudCompanion() {
         setFaceOffset({ x: Math.cos(angle) * f, y: Math.sin(angle) * f });
       }
 
-      // Shake detection: rapid direction reversals over the cloud → dizzy
+      // Shake detection: rapid direction reversals over Sifan → dizzy
       if (dist < 120) {
         const s = shake.current;
         if (Math.abs(dx) > 3) {
@@ -253,15 +310,11 @@ export function CloudCompanion() {
           s.reversals = [];
           react(
             {
-              text: pick([
-                "Pusiiing... dunia berputar~ 😵‍💫",
-                "Waaa jangan diacak-acak! 🌀",
-                "Kepalaku muter-muter kayak gasing 😵",
-              ]),
+              text: pick(SIFAN_DIZZY_LINES),
               mood: "dizzy",
               duration: 3200,
             },
-            { text: "Huft... jangan gitu lagi ya 😣", mood: "angry", duration: 2400 },
+            { text: "Huft... jangan gitu lagi ya, pusing tau 😣", mood: "angry", duration: 2400 },
           );
           return;
         }
@@ -270,20 +323,30 @@ export function CloudCompanion() {
       // Fast whip near the cloud
       if (speed > 4.2 && dist < 240 && !lockedRef.current && !hoveredRef.current) {
         if (canFire("whip", 5000)) {
-          react({ text: "Wuih, ngebut banget kursornya! 💨", mood: "surprised", duration: 2400 });
+          react({
+            text: pick(["Wuih, ngebut banget kursornya! 💨", "Awas rem blong! Kenceng banget 🚀"]),
+            mood: "surprised",
+            duration: 2400,
+          });
           return;
         }
       }
 
-      // Hovering a CTA somewhere on the page
-      const target = e.target as HTMLElement | null;
+      // Hovering a Google Mode AI CTA somewhere on the page
       if (
-        target?.closest?.(".btn-google-cta") &&
-        !cloudRef.current.contains(target) &&
+        targetEl?.closest?.(".btn-google-cta") &&
+        !cloudRef.current.contains(targetEl) &&
         !lockedRef.current &&
         canFire("cta", 14000)
       ) {
-        react({ text: "Ayo klik, tombolnya keren lho! 😆", mood: "excited", duration: 2600 });
+        react({
+          text: pick([
+            "Ayo klik, tombolnya keren ada aura pelangi lho! 😆",
+            "Coba tekan tombolnya, gelombangnya muter lebih cepat! ✨",
+          ]),
+          mood: "excited",
+          duration: 2800,
+        });
         return;
       }
 
@@ -292,20 +355,40 @@ export function CloudCompanion() {
       }
     };
 
+    const onMove = (e: MouseEvent) => {
+      handlePointerLocation(e.clientX, e.clientY, e.target as HTMLElement | null);
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        handlePointerLocation(touch.clientX, touch.clientY);
+      }
+    };
+
     // Cursor leaves / returns to the window
     const onOut = (e: MouseEvent) => {
       if (!e.relatedTarget && !minimizedRef.current) {
         cursorLeftWindow.current = true;
         if (canFire("leave", 8000)) {
-          react({ text: "Eh, mau ke mana? 🥺", mood: "sad", duration: 3000 });
+          react({
+            text: pick(["Eh, mau ke mana? Jangan pergi dulu 🥺", "Yah, kursornya keluar layar... ☁️"]),
+            mood: "sad",
+            duration: 3000,
+          });
         }
       }
     };
+
     const onOver = () => {
       if (cursorLeftWindow.current && !minimizedRef.current) {
         cursorLeftWindow.current = false;
         if (canFire("return", 8000)) {
-          react({ text: "Yay, kamu balik lagi! 🤗", mood: "happy", duration: 2600 });
+          react({
+            text: pick(["Yay, kamu balik lagi! Sifan seneng 🤗", "Welcome back! Siap lanjut jelajah? ✨"]),
+            mood: "happy",
+            duration: 2600,
+          });
         }
       }
     };
@@ -313,7 +396,7 @@ export function CloudCompanion() {
     // Coming back to the tab
     const onVisibility = () => {
       if (!document.hidden && !minimizedRef.current && canFire("tab", 20000)) {
-        react({ text: "Selamat datang kembali! Aku nungguin lho 👋", mood: "love", duration: 3200 });
+        react({ text: "Selamat datang kembali! Sifan nungguin lho 👋", mood: "love", duration: 3200 });
       }
     };
 
@@ -321,42 +404,112 @@ export function CloudCompanion() {
     const onSelection = () => {
       const text = window.getSelection()?.toString().trim() ?? "";
       if (text.length > 3 && !minimizedRef.current && canFire("select", 12000)) {
-        react({ text: "Lagi nyimak bagian itu ya? 👀", mood: "curious", duration: 2600 });
+        react({
+          text: pick([
+            "Lagi nyimak bagian itu ya? Keren kan! 👀",
+            "Teks penting nih, ditandai rapi banget ✨",
+          ]),
+          mood: "curious",
+          duration: 2600,
+        });
+      }
+    };
+
+    // Copy to clipboard listener
+    const onCopy = () => {
+      if (!minimizedRef.current && canFire("copy", 8000)) {
+        react({
+          text: pick([
+            "Teks disalin! Mau disimpan ke mana tuh? 📋",
+            "Copied! Jangan lupa dipelajari ya ilmunya ✨",
+          ]),
+          mood: "curious",
+          duration: 2800,
+        });
+      }
+    };
+
+    // Keyboard easter egg: Press 'S' for Sifan or 'N' for Nafis
+    const onKeyDown = (e: KeyboardEvent) => {
+      const activeTag = (document.activeElement?.tagName || "").toLowerCase();
+      if (activeTag === "input" || activeTag === "textarea") return;
+
+      if ((e.key === "s" || e.key === "S") && canFire("keyS", 7000)) {
+        react({
+          text: "Hadir! Kamu pencet 'S' buat manggil Sifan kan? 🙋‍♂️✨",
+          mood: "excited",
+          duration: 3000,
+        });
+      } else if ((e.key === "n" || e.key === "N") && canFire("keyN", 7000)) {
+        react({
+          text: "'N' buat Nafis, 'S' buat Sifan! Dua serangkai yang pas 😎",
+          mood: "happy",
+          duration: 3000,
+        });
       }
     };
 
     resetIdle();
     window.addEventListener("mousemove", onMove, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
     document.addEventListener("mouseout", onOut);
     document.addEventListener("mouseover", onOver);
     document.addEventListener("visibilitychange", onVisibility);
     document.addEventListener("selectionchange", onSelection);
+    document.addEventListener("copy", onCopy);
+    window.addEventListener("keydown", onKeyDown);
+
     return () => {
       window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("touchmove", onTouchMove);
       document.removeEventListener("mouseout", onOut);
       document.removeEventListener("mouseover", onOver);
       document.removeEventListener("visibilitychange", onVisibility);
       document.removeEventListener("selectionchange", onSelection);
+      document.removeEventListener("copy", onCopy);
+      window.removeEventListener("keydown", onKeyDown);
       if (idleTimer.current) clearTimeout(idleTimer.current);
     };
   }, [mounted, react, applyMood]);
 
-  // Scroll: section commentary + fast-scroll reaction
+  // Scroll: section commentary + fast-scroll reaction + reach bottom reaction
   useEffect(() => {
     if (!mounted) return;
     const onScroll = () => {
       if (minimizedRef.current) return;
       const now = performance.now();
-      const dy = Math.abs(window.scrollY - lastScroll.current.y);
+      const currentScrollY = window.scrollY;
+      const dy = Math.abs(currentScrollY - lastScroll.current.y);
       const dt = now - lastScroll.current.time;
-      lastScroll.current = { y: window.scrollY, time: now };
+      lastScroll.current = { y: currentScrollY, time: now };
 
+      // Fast scroll detection
       if (dt > 0 && dt < 100 && dy / dt > 3.5 && canFire("fastScroll", 7000)) {
-        react({ text: "Woaa, pelan-pelan scroll-nya! 🎢", mood: "wheee", duration: 2200 });
+        react({
+          text: pick([
+            "Woaa, pelan-pelan scroll-nya! 🎢",
+            "Wusshhh! Meluncur kenceng banget kayak roket 🚀",
+          ]),
+          mood: "wheee",
+          duration: 2200,
+        });
         return;
       }
 
-      const mid = window.innerHeight * 0.45;
+      // Check if reached bottom of the page
+      const docHeight = document.documentElement.scrollHeight;
+      const winHeight = window.innerHeight;
+      if (currentScrollY + winHeight >= docHeight - 80 && canFire("reachBottom", 25000)) {
+        react({
+          text: "Udah sampai paling bawah nih! Yuk hubungi Nafis lewat tombol di samping 👇",
+          mood: "love",
+          duration: 3400,
+        });
+        return;
+      }
+
+      // Section commentary
+      const mid = winHeight * 0.45;
       for (const id of ["services", "portfolio", "track-record", "home"]) {
         const el = document.getElementById(id);
         if (!el) continue;
@@ -364,15 +517,16 @@ export function CloudCompanion() {
         if (r.top <= mid && r.bottom >= mid) {
           if (lastSection.current !== id) {
             lastSection.current = id;
-            const c = SECTION_COMMENTS[id];
-            if (c && !hoveredRef.current && moodRef.current !== "dizzy") {
-              react({ ...c, duration: 3200 });
+            const comments = SECTION_COMMENTS[id];
+            if (comments && comments.length > 0 && !hoveredRef.current && moodRef.current !== "dizzy") {
+              react({ ...pick(comments), duration: 3200 });
             }
           }
           break;
         }
       }
     };
+
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [mounted, react]);
@@ -391,11 +545,7 @@ export function CloudCompanion() {
       ) {
         pettedThisHover.current = true;
         react({
-          text: pick([
-            "Hehe, enak dielus-elus 🥰",
-            "Lagi dong elusnya~ 💕",
-            "Aku jadi pengen bobo... nyaman 😊",
-          ]),
+          text: pick(SIFAN_PETTING_LINES),
           mood: "love",
           duration: 3000,
         });
@@ -406,25 +556,55 @@ export function CloudCompanion() {
 
   const handleClick = () => {
     if (justDragged.current) return;
-    const now = Date.now();
-    clickTimes.current = [...clickTimes.current.filter((t) => now - t < 1800), now];
 
-    if (clickTimes.current.length >= 5) {
-      clickTimes.current = [];
-      react({
-        text: pick(["Aduh! Jangan dipencet terus dong 😤", "Hmph! Aku ngambek nih 😠"]),
-        mood: "angry",
-        duration: 3000,
-      });
-      return;
-    }
-    react(pick(CLICK_DIALOGUES));
+    // Use a small debounce timer so double-click (salto) doesn't conflict with single click speech
+    if (clickDebounceTimer.current) clearTimeout(clickDebounceTimer.current);
+
+    clickDebounceTimer.current = setTimeout(() => {
+      const now = Date.now();
+      clickTimes.current = [...clickTimes.current.filter((t) => now - t < 1800), now];
+
+      if (clickTimes.current.length >= 5) {
+        clickTimes.current = [];
+        react({
+          text: pick(SIFAN_ANGRY_LINES),
+          mood: "angry",
+          duration: 3000,
+        });
+        return;
+      }
+      react(pick(SIFAN_CLICK_DIALOGUES));
+    }, 220);
   };
 
   const handleDoubleClick = () => {
     if (justDragged.current) return;
+    if (clickDebounceTimer.current) clearTimeout(clickDebounceTimer.current);
+
     setSpinCount((c) => c + 1);
-    react({ text: pick(["Wiii~ salto! 🤸", "Ta-da! Keren kan? 😎"]), mood: "wheee", duration: 2200 });
+    react({
+      text: pick([
+        "Wiii~ salto 360 derajat! 🤸",
+        "Ta-da! Keren kan saltonya Sifan? 😎",
+        "Hup! Akrobatik awan nomor satu di dunia 🎪",
+      ]),
+      mood: "wheee",
+      duration: 2200,
+    });
+  };
+
+  // Right-click secret reaction on Sifan
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    react({
+      text: pick([
+        "Ehh! Mau klik kanan apa hayo? Gak ada rahasia kok 🤫",
+        "Klik kiri aja dong, jangan di-inspect element 😆",
+        "Mau cari resep rahasia awan empuk ya? Rahasia negara! ☁️",
+      ]),
+      mood: "surprised",
+      duration: 2800,
+    });
   };
 
   if (!mounted) return null;
@@ -437,14 +617,14 @@ export function CloudCompanion() {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         onClick={() => {
           setIsMinimized(false);
-          react({ text: "Aku kembali! Kangen ya? ☁️", mood: "happy", duration: 3000 });
+          react({ text: "Sifan kembali! Kangen ya? ☁️✨", mood: "happy", duration: 3000 });
         }}
         className="fixed bottom-5 right-5 z-40 apple-liquid-glass flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-medium text-white shadow-xl hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-        aria-label="Panggil Awan Kecil"
-        title="Panggil Awan Kecil"
+        aria-label="Panggil Sifan"
+        title="Panggil Sifan"
       >
         <span className="text-sm">☁️</span>
-        <span className="font-body text-[11px] text-white/90">Awan Kecil</span>
+        <span className="font-body text-[11px] text-white/90">Sifan</span>
       </motion.button>
     );
   }
@@ -615,17 +795,17 @@ export function CloudCompanion() {
       whileDrag={{ scale: 1.08, cursor: "grabbing" }}
       onDragStart={() => {
         justDragged.current = true;
-        react({ text: "Wiii~ aku terbang! 🎈", mood: "wheee", duration: 60000 });
+        react({ text: "Wiii~ Sifan terbang! 🎈", mood: "wheee", duration: 60000 });
       }}
       onDragEnd={() => {
         react({
-          text: pick(["Tempat baru, asik! 🏡", "Mendarat dengan selamat ✅", "Pemandangannya bagus di sini 😌"]),
+          text: pick(SIFAN_LANDING_LINES),
           mood: "happy",
-          duration: 2600,
+          duration: 2800,
         });
         setTimeout(() => {
           justDragged.current = false;
-        }, 200);
+        }, 220);
       }}
       initial={{ opacity: 0, scale: 0.6, y: 30 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -642,7 +822,7 @@ export function CloudCompanion() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6, scale: 0.92 }}
               transition={{ duration: 0.22 }}
-              className="mb-2.5 max-w-[220px] rounded-2xl border border-white/15 bg-[#141619]/95 px-3.5 py-2 text-left shadow-[0_12px_30px_rgba(0,0,0,0.75)] backdrop-blur-xl relative"
+              className="mb-2.5 max-w-[240px] rounded-2xl border border-white/15 bg-[#141619]/95 px-3.5 py-2 text-left shadow-[0_12px_30px_rgba(0,0,0,0.75)] backdrop-blur-xl relative break-words"
             >
               <p className="text-[11px] font-body font-medium leading-snug text-white/90">{speech}</p>
               <div className="absolute -bottom-1.5 right-8 h-3 w-3 rotate-45 border-b border-r border-white/15 bg-[#141619]" />
@@ -675,15 +855,16 @@ export function CloudCompanion() {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
+          {/* Minimize button: accessible on mobile (subtle opacity) and desktop hover */}
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               setIsMinimized(true);
             }}
-            aria-label="Sembunyikan Awan Kecil ke pojok"
-            title="Sembunyikan sementara"
-            className="absolute -top-1.5 -right-1.5 z-20 flex h-5 w-5 items-center justify-center rounded-full border border-white/15 bg-[#141619] text-white/60 opacity-0 shadow-md transition-all hover:bg-white/20 hover:text-white group-hover:opacity-100 cursor-pointer"
+            aria-label="Sembunyikan Sifan ke pojok"
+            title="Sembunyikan Sifan sementara"
+            className="absolute -top-1.5 -right-1.5 z-20 flex h-5 w-5 items-center justify-center rounded-full border border-white/15 bg-[#141619] text-white/60 opacity-60 sm:opacity-0 shadow-md transition-all hover:bg-white/20 hover:text-white group-hover:opacity-100 cursor-pointer"
           >
             <Minimize2 size={10} />
           </button>
@@ -697,7 +878,8 @@ export function CloudCompanion() {
               type="button"
               onClick={handleClick}
               onDoubleClick={handleDoubleClick}
-              aria-label="Berinteraksi dengan Awan Kecil"
+              onContextMenu={handleContextMenu}
+              aria-label="Berinteraksi dengan Sifan"
               animate={bodyAnimate}
               transition={bodyTransition}
               whileTap={{ scale: 0.9 }}
