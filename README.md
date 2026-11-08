@@ -93,34 +93,12 @@ Website ini dibangun menggunakan fondasi teknologi web modern yang mengutamakan 
 - **Deployment:** Vercel Production Platform
 - **Keamanan:** Proteksi Clickjacking (X-Frame-Options), X-Content-Type-Options, Referrer-Policy, Rate Limiting, dan validasi input Zod
 
-### Menjalankan Secara Lokal
-
-```bash
-# 1. Clone repository
-git clone https://github.com/nafisalfa97/web-portofolio.git
-
-# 2. Masuk ke direktori
-cd web-portofolio
-
-# 3. Pasang dependensi
-npm install
-
-# 4. Buat file .env.local dan isi kredensial Supabase
-# NEXT_PUBLIC_SUPABASE_URL=...
-# NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-
-# 5. Jalankan server pengembangan
-npm run dev
-```
-
-Buka `http://localhost:3000` di peramban Anda.
-
 ---
 
 ## Kontak & Media Sosial
 
 - **Website:** [im-nafis.vercel.app](https://im-nafis.vercel.app)
-- **Instagram:** [@imnafis](https://instagram.com/imnafis)
+- **Instagram:** [@nfs_ky07](https://instagram.com/nfs_kt07)
 - **Email:** Hubungi langsung melalui tautan kontak pada website.
 
 ---
