@@ -98,7 +98,7 @@ Website ini dibangun menggunakan fondasi teknologi web modern yang mengutamakan 
 ## Kontak & Media Sosial
 
 - **Website:** [im-nafis.vercel.app](https://im-nafis.vercel.app)
-- **Instagram:** [@nfs_ky07](https://instagram.com/nfs_kt07)
+- **Instagram:** [@nfs_ky07](https://instagram.com/nfs_ky07)
 - **Email:** Hubungi langsung melalui tautan kontak pada website.
 
 ---
