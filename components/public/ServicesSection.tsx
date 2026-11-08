@@ -49,22 +49,36 @@ export function ServicesSection({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
-          {services.map((service, index) => (
-            <motion.div
-              key={service.id}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ delay: index * 0.1 }}
-              className="h-full"
-            >
-              <a
-                href={service.target_url || "#"}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`Kunjungi ${service.title || "produk"}`}
-                className={`group relative h-full solid-frost rounded-[1.6rem] p-5 flex flex-col justify-between gap-5 items-start overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_45px_rgba(0,0,0,0.85)] border border-white/12 bg-[#141619] active:scale-[0.98] ${focusRing}`}
+          {services.map((service, index) => {
+            const isExternal = Boolean(
+              service.target_url &&
+                (service.target_url.startsWith("http://") ||
+                  service.target_url.startsWith("https://") ||
+                  service.target_url.startsWith("mailto:") ||
+                  service.target_url.startsWith("tel:")),
+            );
+            const isProtocolLink = Boolean(
+              service.target_url &&
+                (service.target_url.startsWith("mailto:") ||
+                  service.target_url.startsWith("tel:")),
+            );
+
+            return (
+              <motion.div
+                key={service.id}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ delay: index * 0.1 }}
+                className="h-full"
               >
+                <a
+                  href={service.target_url || "#"}
+                  target={isExternal && !isProtocolLink ? "_blank" : undefined}
+                  rel={isExternal && !isProtocolLink ? "noopener noreferrer" : undefined}
+                  aria-label={`Kunjungi ${service.title || "produk"}`}
+                  className={`group relative h-full solid-frost rounded-[1.6rem] p-5 flex flex-col justify-between gap-5 items-start overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_45px_rgba(0,0,0,0.85)] border border-white/12 bg-[#141619] active:scale-[0.98] ${focusRing}`}
+                >
                 {/* Subtle Aurora Glow Effect */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
                   <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/15 blur-[45px] rounded-full" />
@@ -105,7 +119,8 @@ export function ServicesSection({
                 </div>
               </a>
             </motion.div>
-          ))}
+          );
+        })}
         </div>
       </div>
     </section>

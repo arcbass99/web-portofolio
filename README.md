@@ -1,154 +1,128 @@
-# I'm Nafis - Personal Portfolio
+# I'm Nafis — Ruang Digital & Portofolio Personal
 
-Repository ini berisi source code untuk website personal portfolio Nafis: sebuah landing page publik dan admin dashboard untuk mengelola konten dinamis.
+Selamat datang di ruang digital resmi **Muhammad Nafis Alfa Rizky** (Nafis). Website ini dirancang sebagai wadah representasi diri, etalase karya, rekam jejak perjalanan akademik dan organisasi, serta pintu gerbang untuk memulai kolaborasi kreatif dan profesional.
 
-Website production: https://im-nafis.vercel.app
+🌐 **Kunjungi Website Live:** [im-nafis.vercel.app](https://im-nafis.vercel.app)
 
-## Ringkasan
+---
 
-Website ini dirancang sebagai portfolio pribadi yang menampilkan profil, track record, karya pilihan, produk digital, dan CTA kontak. Konten utama dikelola dari halaman admin dan disimpan di Supabase.
+## Tentang Nafis
 
-Status stabil saat ini: `stable-v1-public-admin`
+> *"Memadukan pola pikir analitis dari Biologi dengan eksplorasi web, AI, dan desain untuk menerjemahkan masalah rumit menjadi solusi digital yang presisi."*
 
-## Fitur Publik
+Saya adalah mahasiswa S1 Biologi di **Universitas Negeri Surabaya (UNESA)** yang memiliki ketertarikan mendalam pada titik temu antara **sains, teknologi digital, kecerdasan buatan (AI), dan desain visual**. 
 
-- Hero section dengan profil utama dan CTA kontak.
-- Track Record: riwayat pendidikan, pencapaian utama, kepemimpinan/organisasi, dan keahlian inti.
-- Karya Pilihan berbasis carousel ringan.
-- Modal detail karya.
-- Video portfolio dapat diputar melalui modal dengan fallback ke Google Drive.
-- Produk Digital untuk layanan atau penawaran.
-- Tema terang/gelap.
-- Responsive layout untuk HP, desktop HP, tablet, dan laptop.
-- Robots dan sitemap untuk SEO dasar.
+Latar belakang sains melatih saya untuk tidak sekadar melihat permukaan, melainkan membedah persoalan secara sistematis sampai ke akarnya. Pola pikir inilah yang saya bawa saat merancang produk digital maupun visual: **setiap detail dibuat dengan tujuan, fungsionalitas, dan estetika yang selaras.**
 
-## Fitur Admin
+---
 
-- Login admin berbasis Supabase Auth.
-- Dashboard admin untuk mengelola:
-  - profil utama,
-  - social links,
-  - track record,
-  - portfolio/karya,
-  - produk digital.
-- Tambah, edit, dan hapus data.
-- Preview media untuk gambar/video.
-- Konfirmasi hapus dengan nama item.
-- Disabled/loading state saat proses simpan atau hapus.
-- Public page memakai revalidation pendek agar update admin cepat terlihat.
+## Konsep & Karakter Visual Web
 
-## Stack
+Website ini dibangun bukan sebagai portofolio template biasa, melainkan sebuah **pengalaman interaktif yang hidup, modern, dan berkarakter**:
 
-- Next.js App Router
-- React
-- TypeScript
-- Tailwind CSS
-- Supabase Database, Auth, dan Storage
-- Vercel Deployment
-- Framer Motion
-- Lucide React
+- **Google Dark & Sophisticated Aesthetic:** Nuansa gelap modern (#0b0d0e) yang elegan, tenang, dan futuristik, dipadukan dengan tipografi resmi *Google Sans* dan *Google Sans Text*.
+- **Google "Mode AI" Dynamic CTA Buttons:** Tombol aksi utama berbentuk kapsul dengan aura gelombang gradien pelangi berputar (*conic-gradient* warna Google Gemini: Kuning, Hijau, Tosca, Biru, Ungu, dan Merah) yang terakselerasi GPU secara mulus.
+- **Apple VisionOS Liquid Glass:** Sentuhan refraksi optik kaca cair halus (*optical liquid refraction*) pada bilah navigasi utama dan lencana status.
+- **Interactive Google Stitch Dot Canvas:** Latar belakang partikel titik interaktif ala *Google Stitch* pada bagian kolaborasi dan halaman status, yang bereaksi dinamis terhadap pergerakan kursor pengguna.
+- **3D Tilt Profile Card:** Kartu foto profil interaktif dengan perspektif tiga dimensi yang mengikuti arah kursor, dikelilingi pendaran cahaya aurora kosmik.
 
-## Struktur Route
+---
 
-```text
-/              Halaman portfolio publik
-/admin         Dashboard admin
-/admin/login   Login admin
-/robots.txt    Robots metadata
-/sitemap.xml   Sitemap metadata
-```
+## Kenalkan: Sifan ☁️ (Maskot Awan Interaktif)
 
-## Environment Variables
+Di pojok kanan bawah website, Anda akan ditemani oleh **Sifan** — maskot awan interaktif penunggu setia web ini (nama *Sifan* diambil dari nama *Nafis* yang dibaca terbalik). 
 
-Buat file `.env.local` di root project.
+Sifan bukan sekadar hiasan, ia memiliki kepribadian yang ekspresif dan responsif terhadap interaksi pengguna:
+- **Melirik Kursor / Jari:** Mata Sifan selalu melirik mengikuti ke mana pun kursor mouse atau sentuhan jari Anda bergerak.
+- **Dielus-elus:** Jika kursor didiamkan lembut di atasnya (>1.8 detik), matanya berubah menjadi bentuk hati (*love eyes*) dan pipinya merona senang.
+- **Klik 1x:** Mengajak mengobrol dengan lebih dari 18 dialog acak seputar profil Nafis, fakta awan, hingga tips menjelajah web.
+- **Klik 2x Cepat:** Sifan akan melakukan atraksi salto akrobatik 360° (*wheee!*).
+- **Diacak-acak (Kursor Cepat):** Jika kursor digerakkan bolak-balik secara cepat di atasnya, Sifan akan pusing dengan mata spiral berputar (*dizzy eyes*).
+- **Diseret & Dipindahkan:** Sifan bisa bebas diangkat dan dilempar (*drag & drop*) ke sudut layar mana saja yang Anda inginkan.
+- **Bisa Ketiduran:** Jika kursor didiamkan lama (>12 detik), Sifan akan tertidur pulas dengan dengkuran *Zzz* dan akan terkejut bangun saat kursor kembali digerakkan.
+- **Responsif Terhadap Halaman:** Sifan ikut heboh saat Anda mendekati tombol kontak atau melakukan scroll cepat melintasi bagian portofolio.
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-```
+---
 
-Jangan commit `.env.local`. File `.gitignore` sudah memblokir `.env*`.
+## Struktur & Konten Halaman
 
-## Development
+Website ini dirancang dengan alur satu halaman (*one-page flow*) yang mulus dan nyaman dijelajahi:
 
-Install dependency:
+1. **Profil Utama (Hero Section):**
+   - Salam pembuka dan biografi ringkas.
+   - Status ketersediaan (*Open for Collaboration*).
+   - Kartu profil 3D interaktif.
+   - *Running marquee* tautan media sosial.
+   - Tombol aksi langsung (*Hubungi* dan *Lihat Karya*).
+
+2. **Track Record (Rekam Jejak):**
+   Dokumentasi perjalanan terstruktur dalam empat pilar:
+   - 🎓 **Education:** Riwayat pendidikan formal dan bidang studi.
+   - 🏆 **Achievements:** Pencapaian, kejuaraan, dan penghargaan.
+   - 👥 **Leadership:** Pengalaman kepemimpinan dan keaktifan organisasi.
+   - ⚡ **Core Skills:** Keahlian analitis, desain grafis, dan kemampuan teknologi.
+   *(Dilengkapi modal pop-up pratinjau media dan deskripsi lengkap untuk setiap item).*
+
+3. **Karya Pilihan (Portfolio Showcase):**
+   - Galeri kurasi karya desain visual, proyek digital, dan konten multimedia.
+   - Pemutar video terintegrasi dengan opsi pratinjau Google Drive.
+   - Filter dan tag kategori proyek untuk kemudahan penelusuran.
+
+4. **Produk & Layanan (Services):**
+   - Showcase produk digital, jasa kreatif, dan penawaran konsultasi proyek.
+   - Tautan langsung ke platform pemesanan atau detail produk.
+
+5. **Mari Mulai Kolaborasi (Connect & Footer):**
+   - Ruang terbuka untuk mendiskusikan peluang kerja sama, proyek freelance, atau sekadar bertukar ide.
+   - Kanvas titik interaktif dengan tombol kontak cepat.
+
+6. **Admin Console (`/admin`):**
+   - Panel manajemen konten privat untuk memperbarui profil, karya, layanan, dan rekam jejak secara real-time tanpa perlu deployment ulang.
+
+---
+
+## Ringkasan Teknologi (Build & Stack)
+
+Website ini dibangun menggunakan fondasi teknologi web modern yang mengutamakan performa tinggi, aksesibilitas, dan keamanan:
+
+- **Framework:** Next.js (App Router) & React
+- **Bahasa:** TypeScript
+- **Styling & Desain:** Tailwind CSS, Font Google Sans, CSS Custom Shader & Backdrop Filter
+- **Animasi:** Framer Motion & GPU Transform
+- **Database & Autentikasi:** Supabase (PostgreSQL dengan Row Level Security aktif)
+- **Deployment:** Vercel Production Platform
+- **Keamanan:** Proteksi Clickjacking (X-Frame-Options), X-Content-Type-Options, Referrer-Policy, Rate Limiting, dan validasi input Zod
+
+### Menjalankan Secara Lokal
 
 ```bash
+# 1. Clone repository
+git clone https://github.com/nafisalfa97/web-portofolio.git
+
+# 2. Masuk ke direktori
+cd web-portofolio
+
+# 3. Pasang dependensi
 npm install
-```
 
-Jalankan development server:
+# 4. Buat file .env.local dan isi kredensial Supabase
+# NEXT_PUBLIC_SUPABASE_URL=...
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 
-```bash
+# 5. Jalankan server pengembangan
 npm run dev
 ```
 
-Validasi sebelum push:
+Buka `http://localhost:3000` di peramban Anda.
 
-```bash
-npm run lint
-npm run build
-```
+---
 
-## Deployment
+## Kontak & Media Sosial
 
-Project dideploy melalui Vercel.
+- **Website:** [im-nafis.vercel.app](https://im-nafis.vercel.app)
+- **Instagram:** [@imnafis](https://instagram.com/imnafis)
+- **Email:** Hubungi langsung melalui tautan kontak pada website.
 
-Production branch: `main`
+---
 
-Setiap perubahan production sebaiknya melewati validasi:
-
-```bash
-npm run lint
-npm run build
-```
-
-## Supabase Security Notes
-
-- RLS aktif pada tabel konten utama.
-- Public user hanya digunakan untuk membaca data yang memang tampil di halaman publik.
-- Operasi insert, update, dan delete dibatasi ke UID admin.
-- Storage write policy untuk bucket publik dibatasi ke UID admin.
-- Jangan menyimpan service role key di client atau repository.
-
-## PageSpeed Baseline
-
-Baseline production terakhir:
-
-```text
-Mobile
-Performance: 95
-Accessibility: 100
-Best Practices: 100
-SEO: 100
-CLS: 0
-
-Desktop
-Performance: 100
-Accessibility: 100
-Best Practices: 100
-SEO: 100
-CLS: 0
-```
-
-Catatan: mobile performance dapat sedikit berubah antar pengujian karena kondisi jaringan, device emulation, dan variasi Lighthouse.
-
-## Maintenance
-
-Checklist sebelum melakukan perubahan besar:
-
-- Pastikan working tree bersih.
-- Buat branch baru untuk eksperimen.
-- Jalankan `npm run lint` dan `npm run build`.
-- Cek homepage di HP biasa, mode desktop HP, dan laptop.
-- Cek `/admin/login` dan `/admin`.
-- Jalankan PageSpeed ulang jika perubahan menyentuh halaman publik.
-- Jangan menjalankan `npm audit fix --force` tanpa review manual.
-
-## Status Dependency
-
-Jika `npm audit --omit=dev` menampilkan moderate issue dari dependency internal Next/PostCSS, jangan langsung memakai `npm audit fix --force` karena dapat menyebabkan downgrade/breaking change. Evaluasi update Next patch/minor secara manual dan pastikan lint/build tetap aman.
-
-## License
-
-Personal project. All rights reserved unless stated otherwise.
+*© 2026 — Dibuat dengan presisi oleh Muhammad Nafis Alfa Rizky.*

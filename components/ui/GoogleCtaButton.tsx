@@ -32,13 +32,23 @@ export function GoogleCtaButton({
   disabled = false,
   ariaLabel,
 }: GoogleCtaButtonProps) {
-  const isExternal = Boolean(
-    target === "_blank" ||
-      (href && (href.startsWith("http://") || href.startsWith("https://"))),
+  const isProtocolLink = Boolean(
+    href && (href.startsWith("mailto:") || href.startsWith("tel:")),
   );
 
-  const finalRel = rel || (isExternal ? "noopener noreferrer" : undefined);
-  const finalTarget = target || (isExternal ? "_blank" : undefined);
+  const isExternal = Boolean(
+    target === "_blank" ||
+      (href &&
+        (href.startsWith("http://") ||
+          href.startsWith("https://") ||
+          isProtocolLink)),
+  );
+
+  const finalRel =
+    rel ||
+    (isExternal && !isProtocolLink ? "noopener noreferrer" : undefined);
+  const finalTarget =
+    target || (isExternal && !isProtocolLink ? "_blank" : undefined);
 
   // Strict pill clipping: overflow-hidden + clip-path guarantees the rotating gradient NEVER leaks outside the pill
   const outerClasses = `group btn-google-cta relative inline-flex items-center justify-center rounded-full overflow-hidden [clip-path:inset(0_round_9999px)] transition-transform duration-300 hover:scale-[1.03] active:scale-[0.96] disabled:opacity-50 disabled:pointer-events-none select-none cursor-pointer ${

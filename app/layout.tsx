@@ -1,21 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, Barlow } from "next/font/google";
 import "./globals.css";
-
-const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
-  display: "swap",
-  variable: "--font-instrument-serif",
-});
-
-const barlow = Barlow({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  display: "swap",
-  variable: "--font-barlow",
-});
 
 const siteUrl = "https://im-nafis.vercel.app";
 const siteName = "I'm Nafis";
@@ -89,10 +73,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="id"
-      className={`${instrumentSerif.variable} ${barlow.variable} scroll-smooth`}
-    >
+    <html lang="id" className="scroll-smooth">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
