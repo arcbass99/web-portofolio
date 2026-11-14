@@ -462,7 +462,24 @@ export const SECTION_COMMENTS: Record<string, Reaction[]> = {
       text: "Butuh solusi digital atau kolaborasi? Cek layanannya di sini ⚡",
       mood: "wink",
     },
-    { text: "Layanan & produk digital siap membantu proyekmu 🚀", mood: "excited" },
+    {
+      text: "Layanan & produk digital siap membantu proyekmu 🚀",
+      mood: "excited",
+    },
+    {
+      text: "Klik salah satu kartu layanan untuk langsung cek tautannya ✨",
+      mood: "happy",
+    },
+  ],
+  contact: [
+    {
+      text: "Sampai di bagian kontak! Yuk mulai kolaborasi bareng Nafis 🤝",
+      mood: "love",
+    },
+    {
+      text: "Punya ide proyek atau diskusi kreatif? Sampaikan lewat tombol di bawah ✨",
+      mood: "happy",
+    },
   ],
 };
 

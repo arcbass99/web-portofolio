@@ -19,7 +19,10 @@ export function PublicFooter({
   focusRing,
 }: PublicFooterProps) {
   return (
-    <footer className="relative py-16 md:py-24 px-6 text-center border-t border-white/10 overflow-hidden bg-[#0b0d0e]">
+    <footer
+      id="contact"
+      className="relative py-16 md:py-24 px-6 text-center border-t border-white/10 overflow-hidden bg-[#0b0d0e] scroll-mt-24"
+    >
       {/* ── Interactive Google Stitch Dot Canvas Background ── */}
       <StitchDotCanvas spacing={26} dotSize={1.2} />
 

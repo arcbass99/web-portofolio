@@ -89,6 +89,7 @@ const SECTION_LABELS: Record<string, string> = {
   "track-record": "Perjalanan",
   galeri: "Galeri",
   services: "Layanan",
+  contact: "Kontak",
 };
 
 type CloudCompanionProps = {
@@ -140,6 +141,7 @@ export function CloudCompanion({
   const lockedRef = useRef(false);
   const hoveredRef = useRef(false);
   const tourOpenRef = useRef(false);
+  const speechRef = useRef<string | null>(null);
   const reactionTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const clickDebounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -160,6 +162,11 @@ export function CloudCompanion({
   const applyMood = useCallback((m: CloudMood) => {
     moodRef.current = m;
     setMood(m);
+  }, []);
+
+  const updateSpeech = useCallback((next: string | null) => {
+    speechRef.current = next;
+    setSpeech(next);
   }, []);
 
   const spawnParticles = useCallback(
@@ -194,7 +201,7 @@ export function CloudCompanion({
         if (reactionTimer.current) clearTimeout(reactionTimer.current);
         lockedRef.current = true;
         applyMood(current.mood);
-        setSpeech(current.text);
+        updateSpeech(current.text);
 
         if (current.mood === "love") spawnParticles("heart", 3);
         else if (
@@ -208,7 +215,7 @@ export function CloudCompanion({
         reactionTimer.current = setTimeout(() => {
           lockedRef.current = false;
           if (!tourOpenRef.current) {
-            setSpeech(null);
+            updateSpeech(null);
           }
           applyMood(hoveredRef.current ? "happy" : "normal");
           if (queued) play(queued);
@@ -217,7 +224,7 @@ export function CloudCompanion({
 
       play(r, next);
     },
-    [applyMood, spawnParticles],
+    [applyMood, spawnParticles, updateSpeech],
   );
 
   useEffect(() => {
@@ -252,7 +259,7 @@ export function CloudCompanion({
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsTourOpen(false);
-        setSpeech(null);
+        updateSpeech(null);
       }
     };
 
@@ -263,7 +270,7 @@ export function CloudCompanion({
       ) {
         setIsTourOpen(false);
         if (!lockedRef.current) {
-          setSpeech(null);
+          updateSpeech(null);
         }
       }
     };
@@ -275,7 +282,7 @@ export function CloudCompanion({
       window.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("pointerdown", handlePointerDown);
     };
-  }, [isTourOpen]);
+  }, [isTourOpen, updateSpeech]);
 
   // Listen to cross-component events (Claps, Service clicks, Gallery detail open)
   useEffect(() => {
@@ -398,7 +405,7 @@ export function CloudCompanion({
       idleTimer.current = setTimeout(() => {
         if (!lockedRef.current && !hoveredRef.current && !tourOpenRef.current) {
           applyMood("sleepy");
-          setSpeech(null);
+          updateSpeech(null);
           setEyeOffset({ x: 0, y: 1.5 });
           setFaceOffset({ x: 0, y: 2 });
         }
@@ -613,7 +620,7 @@ export function CloudCompanion({
       if (idleTimer.current) clearTimeout(idleTimer.current);
       if (offsetRafId !== null) window.cancelAnimationFrame(offsetRafId);
     };
-  }, [mounted, react, applyMood]);
+  }, [mounted, react, applyMood, updateSpeech]);
 
   // Scroll commentary & fast-scroll reaction
   useEffect(() => {
@@ -626,9 +633,14 @@ export function CloudCompanion({
       const dt = now - lastScroll.current.time;
       lastScroll.current = { y: currentScrollY, time: now };
 
-      if (tourOpenRef.current) return;
-
-      if (dt > 0 && dt < 100 && dy / dt > 3.5 && canFire("fastScroll", 8000)) {
+      let fastScrolled = false;
+      if (
+        !tourOpenRef.current &&
+        dt > 0 &&
+        dt < 100 &&
+        dy / dt > 3.5 &&
+        canFire("fastScroll", 8000)
+      ) {
         react({
           text: pick([
             "Woaa, pelan-pelan scroll-nya! 🎢",
@@ -637,45 +649,65 @@ export function CloudCompanion({
           mood: "wheee",
           duration: 2200,
         });
-        return;
+        fastScrolled = true;
       }
 
       if (context.page !== "home") return;
 
       const docHeight = document.documentElement.scrollHeight;
       const winHeight = window.innerHeight;
-      if (
-        currentScrollY + winHeight >= docHeight - 80 &&
-        canFire("reachBottom", 28000)
-      ) {
-        react({
-          text: "Udah sampai paling bawah! Yuk kolaborasi bareng Nafis 👇",
-          mood: "love",
-          duration: 3200,
-        });
-        return;
-      }
-
       const mid = winHeight * 0.45;
-      for (const id of ["services", "galeri", "track-record", "home"]) {
+      let matchedId: string | null = null;
+      for (const id of [
+        "contact",
+        "services",
+        "galeri",
+        "track-record",
+        "home",
+      ]) {
         const el = document.getElementById(id);
         if (!el) continue;
         const r = el.getBoundingClientRect();
         if (r.top <= mid && r.bottom >= mid) {
-          if (lastSection.current !== id) {
-            lastSection.current = id;
-            setActiveSectionLabel(SECTION_LABELS[id] || "Beranda");
-            const comments = SECTION_COMMENTS[id];
-            if (
-              comments &&
-              comments.length > 0 &&
-              !hoveredRef.current &&
-              moodRef.current !== "dizzy"
-            ) {
-              react({ ...pick(comments), duration: 3000 });
-            }
-          }
+          matchedId = id;
           break;
+        }
+      }
+      if (!matchedId && currentScrollY + winHeight >= docHeight - 120) {
+        matchedId = "contact";
+      }
+
+      if (matchedId && lastSection.current !== matchedId) {
+        lastSection.current = matchedId;
+        setActiveSectionLabel(SECTION_LABELS[matchedId] || "Beranda");
+
+        if (tourOpenRef.current || fastScrolled) return;
+
+        if (
+          matchedId === "contact" &&
+          currentScrollY + winHeight >= docHeight - 80 &&
+          canFire("reachBottom", 28000)
+        ) {
+          react({
+            text: "Udah sampai paling bawah! Yuk kolaborasi bareng Nafis 👇",
+            mood: "love",
+            duration: 3200,
+          });
+          return;
+        }
+
+        const comments = SECTION_COMMENTS[matchedId];
+        if (
+          comments &&
+          comments.length > 0 &&
+          !hoveredRef.current &&
+          moodRef.current !== "dizzy"
+        ) {
+          const pool =
+            comments.length > 1
+              ? comments.filter((c) => c.text !== speechRef.current)
+              : comments;
+          react({ ...pick(pool.length > 0 ? pool : comments), duration: 3000 });
         }
       }
     };
@@ -905,6 +937,12 @@ export function CloudCompanion({
     m === "cool";
   const candyTier = getCandyTier(treatCount);
   const candyProgress = getCandyProgressPercent(treatCount, candyTier);
+  const bodyGradId = candyTier.hasCottonCandyTint
+    ? "cloudBodyGradCandy"
+    : "cloudBodyGrad";
+  const rimGradId = candyTier.hasCottonCandyTint
+    ? "cloudRimGradCandy"
+    : "cloudRimGrad";
 
   // Edge-docked right-edge peeking math: keeps both eyes & smile fully visible when idle,
   // while sliding cleanly left when active/speaking/hovered/tour open.
@@ -1302,14 +1340,14 @@ export function CloudCompanion({
     >
       <div className="relative flex flex-col items-end">
         {/* Speech & Quick Tour Bubble (opens cleanly leftward so never clips off-screen) */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           {(speech || isTourOpen) && (
             <motion.div
-              key={isTourOpen ? "tour-open" : speech}
+              key="sifan-bubble"
               initial={{ opacity: 0, y: 8, scale: 0.92 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6, scale: 0.92 }}
-              transition={{ duration: 0.22 }}
+              transition={{ duration: 0.18 }}
               className="mr-3 mb-2.5 w-max max-w-[min(272px,calc(100vw-24px))] rounded-2xl border border-white/15 bg-[#141619]/95 px-3.5 py-2.5 text-left shadow-[0_14px_34px_rgba(0,0,0,0.8)] backdrop-blur-xl relative break-words"
             >
               {isTourOpen && (
@@ -1355,7 +1393,7 @@ export function CloudCompanion({
                         type="button"
                         onClick={() => {
                           setIsTourOpen(false);
-                          setSpeech(null);
+                          updateSpeech(null);
                         }}
                         aria-label="Tutup panel panduan Sifan"
                         className="rounded-full p-0.5 text-white/50 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
@@ -1620,7 +1658,7 @@ export function CloudCompanion({
                 >
                   <defs>
                     <linearGradient
-                      id="cloudBodyGrad"
+                      id={bodyGradId}
                       x1="20"
                       y1="12"
                       x2="100"
@@ -1647,7 +1685,7 @@ export function CloudCompanion({
                       />
                     </linearGradient>
                     <linearGradient
-                      id="cloudRimGrad"
+                      id={rimGradId}
                       x1="0"
                       y1="0"
                       x2="120"
@@ -1674,8 +1712,8 @@ export function CloudCompanion({
 
                   <path
                     d="M34 76H88C101.255 76 112 65.2548 112 52C112 40.312 103.649 30.5775 92.5647 28.4368C88.7866 15.4904 76.8267 6 62.6 6C46.5015 6 33.2571 18.1835 31.5473 33.8299C19.5037 35.1078 10 45.3007 10 57.7C10 67.8068 18.1932 76 28.3 76H34Z"
-                    fill="url(#cloudBodyGrad)"
-                    stroke="url(#cloudRimGrad)"
+                    fill={`url(#${bodyGradId})`}
+                    stroke={`url(#${rimGradId})`}
                     strokeWidth="2.2"
                   />
                   <path
