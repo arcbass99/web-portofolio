@@ -16,6 +16,7 @@ import {
   getCandyTier,
   getGreeting,
 } from "../components/public/sifanData.ts";
+import { clampScrollTarget } from "../lib/smoothScroll.ts";
 
 const sampleItems = [
   {
@@ -246,4 +247,12 @@ test("buildTreatReaction triggers milestone spins, bursts, sugar rush, and tier 
 
   assert.match(getGreeting("home", 10), /Bestie Gulali \(10/);
   assert.match(getGreeting("galeri", 15), /Awan Sultan \(15/);
+});
+
+test("clampScrollTarget keeps programmatic scroll within document bounds", () => {
+  assert.equal(clampScrollTarget(-150, 1800), 0);
+  assert.equal(clampScrollTarget(2400, 1800), 1800);
+  assert.equal(clampScrollTarget(920, 1800), 920);
+  assert.equal(clampScrollTarget(Number.NaN, 1800), 0);
+  assert.equal(clampScrollTarget(500, -100), 0);
 });

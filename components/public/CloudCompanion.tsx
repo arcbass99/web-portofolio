@@ -6,7 +6,11 @@ import { animate, motion, AnimatePresence, useMotionValue } from "framer-motion"
 import { X, CornerDownRight, RotateCcw } from "lucide-react";
 
 const emptySubscribe = () => () => {};
-import { smoothScrollTo, smoothScrollToId } from "../../lib/smoothScroll";
+import {
+  isProgrammaticScrolling,
+  smoothScrollTo,
+  smoothScrollToId,
+} from "../../lib/smoothScroll";
 import {
   getSessionTotalUserClaps,
   trackOncePerSession,
@@ -636,6 +640,7 @@ export function CloudCompanion({
       let fastScrolled = false;
       if (
         !tourOpenRef.current &&
+        !isProgrammaticScrolling() &&
         dt > 0 &&
         dt < 100 &&
         dy / dt > 3.5 &&
