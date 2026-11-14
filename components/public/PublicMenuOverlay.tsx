@@ -8,6 +8,7 @@ type PublicMenuOverlayProps = {
   isOpen: boolean;
   highlightsCount: number;
   servicesCount: number;
+  currentPage?: "home" | "galeri";
   focusRing: string;
   onClose: () => void;
   onNavigate: (id: string) => void;
@@ -17,6 +18,7 @@ export function PublicMenuOverlay({
   isOpen,
   highlightsCount,
   servicesCount,
+  currentPage = "home",
   focusRing,
   onClose,
   onNavigate,
@@ -42,11 +44,11 @@ export function PublicMenuOverlay({
 
   const menuItems = [
     { id: "home", label: "Profil" },
-    ...(highlightsCount > 0
+    ...(highlightsCount > 0 || currentPage === "galeri"
       ? [{ id: "track-record", label: "Track Record" }]
       : []),
-    { id: "portfolio", label: "Karya" },
-    ...(servicesCount > 0
+    { id: "galeri", label: "Galeri" },
+    ...(servicesCount > 0 || currentPage === "galeri"
       ? [{ id: "services", label: "Layanan" }]
       : []),
   ];
@@ -68,7 +70,7 @@ export function PublicMenuOverlay({
           }}
           className="fixed inset-0 z-50 flex flex-col justify-center items-center bg-[#0b0d0e]/85 backdrop-blur-2xl px-6 py-16"
         >
-          {/* Close button — fixed at top-right with safe-area spacing to prevent overlap with the menu card */}
+          {/* Close button fixed at top-right with safe-area spacing to prevent overlap with the menu card */}
           <button
             type="button"
             onClick={onClose}

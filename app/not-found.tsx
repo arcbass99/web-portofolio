@@ -31,10 +31,10 @@ const quickLinks = [
     color: "from-violet-500/15 to-purple-500/5",
   },
   {
-    title: "Karya",
-    desc: "Lihat portofolio & proyek kreatif",
+    title: "Galeri",
+    desc: "Lihat arsip karya, proyek kreatif & dokumentasi",
     icon: FolderGit2,
-    href: "/#portfolio",
+    href: "/galeri",
     color: "from-amber-500/15 to-orange-500/5",
   },
   {
@@ -196,7 +196,7 @@ export default function NotFound() {
       {/* Footer */}
       <footer className="relative z-10 w-full py-5 text-center border-t border-white/10">
         <p className="text-xs font-body text-white/50 leading-relaxed">
-          &copy; {new Date().getFullYear()} — I&apos;m Nafis. Dibuat dengan presisi.
+          &copy; {new Date().getFullYear()} I&apos;m Nafis. Dibuat dengan presisi.
         </p>
       </footer>
     </div>

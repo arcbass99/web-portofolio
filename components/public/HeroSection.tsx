@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { ArrowUpRight, Play } from "lucide-react";
 import type { AboutMe, SocialLink } from "../../types/content";
-import { formatMediaUrl } from "../../lib/media";
+import { formatMediaUrl, isGoogleDriveMediaUrl } from "../../lib/media";
 import { smoothScrollToId } from "../../lib/smoothScroll";
 import { BlurText } from "./BlurText";
 import { LiquidShaderBackground } from "../ui/LiquidShaderBackground";
@@ -81,8 +81,8 @@ export function HeroSection({
   isExternalContact,
   focusRing,
 }: HeroSectionProps) {
-  const scrollToPortfolio = () => {
-    smoothScrollToId("portfolio");
+  const scrollToGaleri = () => {
+    smoothScrollToId("galeri");
   };
 
   void _portfolioCount;
@@ -151,11 +151,11 @@ export function HeroSection({
               <ArrowUpRight className="h-4 w-4" />
             </GoogleCtaButton>
             <GoogleCtaButton
-              onClick={scrollToPortfolio}
+              onClick={scrollToGaleri}
               focusRing={focusRing}
               variant="glass"
             >
-              <span>Lihat Karya</span>
+              <span>Lihat Galeri</span>
               <Play className="h-3.5 w-3.5" fill="currentColor" />
             </GoogleCtaButton>
           </motion.div>
@@ -168,23 +168,28 @@ export function HeroSection({
             {...blurFadeIn(0.45)}
             className="w-[210px] sm:w-[240px] lg:w-[260px] aspect-[4/5]"
           >
-            {about?.banner_url && (
-              <TiltCard>
-                <div className="relative w-full h-full rounded-[1.75rem] bg-gradient-to-tr from-blue-500/30 via-violet-500/30 to-emerald-400/30 p-[2px] shadow-[0_16px_50px_-10px_rgba(0,0,0,0.7),0_0_40px_8px_rgba(66,133,244,0.12)] group transition-all duration-700 hover:from-blue-400 hover:via-violet-400 hover:to-emerald-300">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-500 via-violet-500 to-emerald-400 blur-xl opacity-20 transition-opacity duration-700 group-hover:opacity-40 rounded-[1.75rem]" />
+            {about?.banner_url && (() => {
+              const bannerSrc = formatMediaUrl(about.banner_url, 600);
+              return (
+                <TiltCard>
+                  <div className="relative w-full h-full rounded-[1.75rem] bg-gradient-to-tr from-blue-500/30 via-violet-500/30 to-emerald-400/30 p-[2px] shadow-[0_16px_50px_-10px_rgba(0,0,0,0.7),0_0_40px_8px_rgba(66,133,244,0.12)] group transition-all duration-700 hover:from-blue-400 hover:via-violet-400 hover:to-emerald-300">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-blue-500 via-violet-500 to-emerald-400 blur-xl opacity-20 transition-opacity duration-700 group-hover:opacity-40 rounded-[1.75rem]" />
 
-                  <div className="liquid-glass relative z-10 w-full h-full rounded-[1.65rem] border border-white/10 overflow-hidden bg-black/80 backdrop-blur-xl">
-                    <Image
-                      src={formatMediaUrl(about.banner_url, 600)}
-                      alt="Foto profil Nafis"
-                      fill
-                      priority
-                      className="object-cover rounded-[1.65rem] transition-transform duration-700 group-hover:scale-105"
-                    />
+                    <div className="liquid-glass relative z-10 w-full h-full rounded-[1.65rem] border border-white/10 overflow-hidden bg-black/80 backdrop-blur-xl">
+                      <Image
+                        src={bannerSrc}
+                        alt="Foto profil Nafis"
+                        fill
+                        priority
+                        sizes="(max-width: 640px) 210px, (max-width: 1024px) 240px, 260px"
+                        unoptimized={isGoogleDriveMediaUrl(bannerSrc)}
+                        className="object-cover rounded-[1.65rem] transition-transform duration-700 group-hover:scale-105"
+                      />
+                    </div>
                   </div>
-                </div>
-              </TiltCard>
-            )}
+                </TiltCard>
+              );
+            })()}
           </motion.div>
 
           {/* Social Links */}

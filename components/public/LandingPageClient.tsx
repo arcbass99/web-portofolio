@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { PUBLIC_FOCUS_RING } from "../../lib/constants";
+import { resolvePrimaryContact } from "../../lib/contact";
+import { trackOncePerSession } from "../../lib/metrics-client";
 import { smoothScrollToId, smoothScrollTo } from "../../lib/smoothScroll";
 import type {
   AboutMe,
@@ -25,6 +27,8 @@ type LandingPageClientProps = {
   about: AboutMe | null;
   socials: SocialLink[];
   portfolios: PortfolioItem[];
+  totalGalleryCount: number;
+  initialClaps: Record<string, number>;
   services: ServiceItem[];
   highlights: ProfileHighlight[];
   publicError: string | null;
@@ -34,11 +38,17 @@ export function LandingPageClient({
   about,
   socials,
   portfolios,
+  totalGalleryCount,
+  initialClaps,
   services,
   highlights,
   publicError,
 }: LandingPageClientProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    trackOncePerSession("pv_home", { type: "pageview", page: "home" });
+  }, []);
 
   useEffect(() => {
     const mediaTags = new Set(["IMG", "VIDEO", "CANVAS", "IFRAME"]);
@@ -63,10 +73,11 @@ export function LandingPageClient({
     };
   }, []);
 
-  // Handle URL hash navigation on mount
+  // Handle URL hash navigation on mount (including legacy #portfolio alias)
   useEffect(() => {
     if (typeof window !== "undefined" && window.location.hash) {
-      const hashId = window.location.hash.replace("#", "");
+      const rawHash = window.location.hash.replace("#", "");
+      const hashId = rawHash === "portfolio" ? "galeri" : rawHash;
       if (hashId) {
         const timer = setTimeout(() => {
           smoothScrollToId(hashId);
@@ -90,65 +101,29 @@ export function LandingPageClient({
     }, 100);
   };
 
-  const getContactPriority = (social: SocialLink) => {
-    const title = social.title?.toLowerCase() || "";
-    const url = social.url?.toLowerCase() || "";
+  const {
+    href: contactHref,
+    label: contactLabel,
+    isExternal: isExternalContact,
+  } = resolvePrimaryContact(socials, "#track-record");
 
-    if (
-      title.includes("whatsapp") ||
-      title.includes("wa") ||
-      url.includes("wa.me")
-    ) {
-      return 1;
-    }
-
-    if (
-      title.includes("email") ||
-      title.includes("mail") ||
-      url.includes("mailto:")
-    ) {
-      return 2;
-    }
-
-    if (title.includes("instagram") || title.includes("ig")) {
-      return 3;
-    }
-
-    return 10;
-  };
-
-  const primaryContact =
-    [...socials]
-      .filter((social) => Boolean(social.url))
-      .sort(
-        (first, second) =>
-          getContactPriority(first) - getContactPriority(second),
-      )[0] || null;
-
-  const contactTitle = primaryContact?.title?.toLowerCase() || "";
-  const contactUrl = primaryContact?.url?.toLowerCase() || "";
-  const isWhatsappContact =
-    contactTitle.includes("whatsapp") ||
-    contactTitle.includes("wa") ||
-    contactUrl.includes("wa.me");
-  const isEmailContact =
-    contactTitle.includes("email") ||
-    contactTitle.includes("mail") ||
-    contactUrl.includes("mailto:");
-  const isInstagramContact =
-    contactTitle.includes("instagram") || contactTitle.includes("ig");
-
-  const contactHref = primaryContact?.url || "#track-record";
-  const isExternalContact = Boolean(primaryContact?.url);
-  const contactLabel = primaryContact
-    ? isWhatsappContact
-      ? "Hubungi via WhatsApp"
-      : isEmailContact
-        ? "Kirim Email"
-        : isInstagramContact
-          ? "Hubungi via Instagram"
-          : "Hubungi Saya"
-    : "Jelajahi Profil";
+  const sifanContext = useMemo(
+    () => ({
+      page: "home" as const,
+      aboutHeadline: about?.headline || undefined,
+      highlightsCount: highlights.length,
+      featuredTitles: portfolios
+        .slice(0, 3)
+        .map((p) => p.title)
+        .filter((t): t is string => Boolean(t)),
+      totalGalleryCount,
+      servicesTitles: services
+        .slice(0, 3)
+        .map((s) => s.title)
+        .filter((t): t is string => Boolean(t)),
+    }),
+    [about?.headline, highlights.length, portfolios, totalGalleryCount, services],
+  );
 
   return (
     <div className="relative min-h-screen bg-[#0b0d0e] text-white font-body overflow-x-clip">
@@ -157,6 +132,7 @@ export function LandingPageClient({
         bannerUrl={about?.banner_url || ""}
         highlightsCount={highlights.length}
         servicesCount={services.length}
+        currentPage="home"
         onOpenMenu={() => setIsMenuOpen(true)}
       />
 
@@ -164,13 +140,14 @@ export function LandingPageClient({
         isOpen={isMenuOpen}
         highlightsCount={highlights.length}
         servicesCount={services.length}
+        currentPage="home"
         focusRing={focusRing}
         onClose={() => setIsMenuOpen(false)}
         onNavigate={scrollToSection}
       />
 
-      {/* Interactive Expressive Cloud Companion */}
-      <CloudCompanion />
+      {/* Interactive Expressive Cloud Companion (Sifan 2.0) */}
+      <CloudCompanion context={sifanContext} />
 
       <main id="main-content" className="relative z-10">
         {publicError && (
@@ -184,7 +161,7 @@ export function LandingPageClient({
           <HeroSection
             about={about}
             socials={socials}
-            portfolioCount={portfolios.length}
+            portfolioCount={totalGalleryCount}
             contactHref={contactHref}
             contactLabel={contactLabel}
             isExternalContact={isExternalContact}
@@ -206,7 +183,11 @@ export function LandingPageClient({
             <TrackRecordSection highlights={highlights} />
           )}
 
-          <PortfolioSection portfolios={portfolios} />
+          <PortfolioSection
+            portfolios={portfolios}
+            totalCount={totalGalleryCount}
+            initialClaps={initialClaps}
+          />
 
           {services.length > 0 && (
             <ServicesSection services={services} focusRing={focusRing} />

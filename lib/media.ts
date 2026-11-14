@@ -20,6 +20,9 @@ export const extractGoogleDriveId = (idOrUrl?: string | null): string | null => 
   return trimmed;
 };
 
+export const isGoogleDriveMediaUrl = (url?: string | null): boolean =>
+  Boolean(url && url.startsWith("https://drive.google.com/"));
+
 export const formatMediaUrl = (idOrUrl?: string | null, width = 1200): string => {
   if (!idOrUrl) return "";
   const trimmed = idOrUrl.trim();

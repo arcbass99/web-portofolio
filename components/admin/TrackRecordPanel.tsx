@@ -245,7 +245,7 @@ export function TrackRecordPanel({
                   value={hPeriod}
                   disabled={saving}
                   onChange={(event) => setHPeriod(event.target.value)}
-                  placeholder="2024–2026"
+                  placeholder="2024-2026"
                   className="w-full bg-[#0b0d0e] border border-white/15 text-white px-3 py-2 rounded-xl text-xs sm:text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60 transition-all"
                 />
               </div>

@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { ReactNode } from "react";
 import { Award, GraduationCap, Users, Maximize2, X } from "lucide-react";
-import { formatMediaUrl } from "../../lib/media";
+import { formatMediaUrl, isGoogleDriveMediaUrl } from "../../lib/media";
 import type {
   ProfileHighlight,
   ProfileHighlightCategory,
@@ -59,6 +59,21 @@ const categoryConfig: Record<
     bg: "bg-violet-400",
     text: "text-violet-400",
     title: "Leadership",
+  },
+};
+
+const categoryGlowGradient: Record<CatType, { top: string; bottom: string }> = {
+  education: {
+    top: "radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%)",
+    bottom: "radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)",
+  },
+  achievement: {
+    top: "radial-gradient(circle, rgba(251,191,36,0.18) 0%, transparent 70%)",
+    bottom: "radial-gradient(circle, rgba(244,63,94,0.18) 0%, transparent 70%)",
+  },
+  leadership: {
+    top: "radial-gradient(circle, rgba(167,139,250,0.18) 0%, transparent 70%)",
+    bottom: "radial-gradient(circle, rgba(16,185,129,0.18) 0%, transparent 70%)",
   },
 };
 
@@ -173,8 +188,8 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
           </h2>
 
           <p className="mt-2.5 max-w-[60ch] text-xs sm:text-sm font-body leading-relaxed text-white/70 text-justify md:text-left">
-            Ringkasan perjalanan yang membentuk cara saya berpikir, memimpin,
-            dan membuat karya digital.
+            Ringkasan riwayat pendidikan, pencapaian, serta pengalaman
+            organisasi.
           </p>
         </div>
       </div>
@@ -183,8 +198,7 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
       {activeCategories.length > 0 && (
         <>
           <div
-            className="relative flex h-[340px] w-full items-center justify-center overflow-hidden perspective-[1000px] mt-4"
-            style={{ perspective: "1000px" }}
+            className="relative flex h-[340px] w-full items-center justify-center overflow-hidden mt-4"
             onTouchStart={(e) => {
               if (e.touches[0]) {
                 touchStartRef.current = {
@@ -217,33 +231,36 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
               const topItem = grouped[cat][0];
               if (!topItem) return null;
 
-              let scale = 1;
-              let filter = "brightness(1)";
-              let zIndex = 10;
-              let rotateY = 0;
-
-              if (distance !== 0) {
-                scale = 0.88;
-                filter = "brightness(0.35) saturate(0.7)";
-                zIndex = 5 - Math.abs(distance);
-                rotateY = distance < 0 ? 12 : -12;
-              }
+              const scale = isActive ? 1 : 0.88;
+              const zIndex = isActive ? 10 : 5 - Math.abs(distance);
+              const rotateY = distance === 0 ? 0 : distance < 0 ? 12 : -12;
 
               return (
                 <div
                   key={cat}
-                  className="absolute left-1/2 top-1/2 w-[250px] sm:w-[280px] h-[280px] transition-all duration-500 ease-in-out"
-                  style={{
-                    transformOrigin: "center center",
-                    backfaceVisibility: "hidden",
-                    transform: `translate3d(calc(-50% + ${distance * 125}px), -50%, ${isActive ? "0px" : "-90px"}) rotateY(${rotateY}deg) scale(${scale})`,
-                    zIndex,
-                    filter,
-                  }}
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] sm:w-[280px] h-[280px]"
+                  style={{ zIndex }}
                 >
-                  {/* Solid Frost Card */}
+                  {/* Solid Frost Card: GPU-composited spring motion (no CSS filter or transition-all conflict) */}
                   <motion.div
-                    layoutId={`category-card-${cat}`}
+                    initial={false}
+                    animate={{
+                      x: distance * 125,
+                      y: isActive ? 0 : 4,
+                      scale,
+                      rotateY,
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 28,
+                      mass: 0.9,
+                    }}
+                    style={{
+                      transformPerspective: 1000,
+                      transformOrigin: "center center",
+                      willChange: "transform",
+                    }}
                     onClick={() => {
                       if (isActive) {
                         setExpandedCategory(cat);
@@ -253,12 +270,25 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                     }}
                     className="solid-frost relative w-full h-full rounded-[1.6rem] p-5 flex flex-col justify-between overflow-hidden cursor-pointer shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-white/12 bg-[#141619] group"
                   >
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                    {/* Opacity dimming scrim replaces expensive animated CSS filter */}
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-0 z-20 bg-[#090b0d] transition-opacity duration-300 ease-out"
+                      style={{ opacity: isActive ? 0 : 0.62 }}
+                    />
+
+                    {/* Soft radial hover glow */}
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out pointer-events-none"
+                    >
                       <div
-                        className={`absolute -top-20 -right-20 w-40 h-40 blur-[45px] rounded-full ${cat === "education" ? "bg-blue-500/15" : cat === "achievement" ? "bg-amber-400/15" : "bg-violet-400/15"}`}
+                        className="absolute -top-16 -right-16 w-48 h-48 rounded-full"
+                        style={{ background: categoryGlowGradient[cat].top }}
                       />
                       <div
-                        className={`absolute -bottom-20 -left-20 w-40 h-40 blur-[45px] rounded-full ${cat === "education" ? "bg-violet-500/15" : cat === "achievement" ? "bg-rose-500/15" : "bg-emerald-500/15"}`}
+                        className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full"
+                        style={{ background: categoryGlowGradient[cat].bottom }}
                       />
                     </div>
 
@@ -274,7 +304,13 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                       </h3>
                     </div>
 
-                    <div className="mt-3 flex-1 flex flex-col gap-2.5 relative z-10 overflow-y-auto pr-1.5 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+                    <div
+                      className={`mt-3 flex-1 flex flex-col gap-2.5 relative z-10 pr-1.5 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent ${
+                        isActive
+                          ? "overflow-y-auto overscroll-contain"
+                          : "overflow-hidden pointer-events-none"
+                      }`}
+                    >
                       {grouped[cat].map((item) => (
                         <div key={item.id} className="flex flex-col">
                           {item.period && (
@@ -300,7 +336,7 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                           setExpandedCategory(cat);
                         }}
                         aria-label={`Buka detail kategori ${categoryConfig[cat].title}`}
-                        className="absolute bottom-5 right-5 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors text-white backdrop-blur-md z-20"
+                        className="absolute bottom-5 right-5 p-2 bg-white/12 rounded-full hover:bg-white/22 transition-colors text-white z-30 cursor-pointer"
                       >
                         <Maximize2 size={15} />
                       </button>
@@ -318,7 +354,7 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                 type="button"
                 key={`dot-${cat}`}
                 onClick={() => setActiveIndex(idx)}
-                className={`rounded-full transition-all duration-300 ${
+                className={`rounded-full transition-[width,background-color] duration-300 ease-out cursor-pointer ${
                   idx === activeIndex
                     ? `w-6 h-1.5 ${categoryConfig[cat].bg}`
                     : "w-1.5 h-1.5 bg-white/20 hover:bg-white/40"
@@ -330,20 +366,27 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
         </>
       )}
 
-      {/* Modal Morphing (Solid Frost Elevated) */}
+      {/* Modal (GPU entrance/exit without 3D layoutId distortion) */}
       <AnimatePresence>
         {expandedCategory && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6"
+          >
+            <div
+              aria-hidden="true"
               className="absolute inset-0 bg-black/80 backdrop-blur-md"
               onClick={() => setExpandedCategory(null)}
             />
             <motion.div
-              layoutId={`category-card-${expandedCategory}`}
-              className="solid-frost bg-[#141619] border border-white/12 w-full max-w-3xl max-h-[82vh] rounded-[1.6rem] p-5 md:p-7 relative z-10 shadow-2xl flex flex-col"
+              initial={{ opacity: 0, scale: 0.95, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 8 }}
+              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+              className="solid-frost bg-[#141619] border border-white/12 w-full max-w-3xl max-h-[82vh] rounded-[1.6rem] p-5 md:p-7 relative z-10 shadow-2xl flex flex-col will-change-transform"
             >
               <button
                 type="button"
@@ -371,17 +414,21 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                     key={item.id}
                     className="flex flex-col md:flex-row gap-4 border-b border-white/10 pb-5 last:border-0 last:pb-0"
                   >
-                    {item.image_url && (
-                      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white/5">
-                        <Image
-                          src={formatMediaUrl(item.image_url, 200)}
-                          alt={item.title || "Timeline image"}
-                          fill
-                          sizes="64px"
-                          className="object-cover"
-                        />
-                      </div>
-                    )}
+                    {item.image_url && (() => {
+                      const hlSrc = formatMediaUrl(item.image_url, 200);
+                      return (
+                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white/5">
+                          <Image
+                            src={hlSrc}
+                            alt={item.title || "Timeline image"}
+                            fill
+                            sizes="64px"
+                            unoptimized={isGoogleDriveMediaUrl(hlSrc)}
+                            className="object-cover"
+                          />
+                        </div>
+                      );
+                    })()}
                     <div className="flex-1">
                       {item.period && (
                         <p
@@ -403,7 +450,7 @@ export function TrackRecordSection({ highlights }: TrackRecordSectionProps) {
                 ))}
               </div>
             </motion.div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
 

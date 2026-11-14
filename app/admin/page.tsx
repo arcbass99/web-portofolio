@@ -9,11 +9,12 @@ import {
   type SetStateAction,
 } from "react";
 import { useRouter } from "next/navigation";
-import { Award, Briefcase, Link as LinkIcon, User, Wrench } from "lucide-react";
+import { Award, BarChart3, Briefcase, Link as LinkIcon, User, Wrench } from "lucide-react";
 import { AboutPanel } from "../../components/admin/AboutPanel";
 import { AdminLoadingScreen } from "../../components/admin/AdminLoadingScreen";
 import { AdminNotice } from "../../components/admin/AdminNotice";
 import { AdminSidebar } from "../../components/admin/AdminSidebar";
+import { AnalyticsPanel } from "../../components/admin/AnalyticsPanel";
 import { PortfolioPanel } from "../../components/admin/PortfolioPanel";
 import { ServicesPanel } from "../../components/admin/ServicesPanel";
 import { SocialsPanel } from "../../components/admin/SocialsPanel";
@@ -26,9 +27,11 @@ import {
   createService,
   createSocial,
   deleteAdminItem,
+  fetchAdminAnalytics,
   fetchAdminData,
   getAdminSession,
   saveAbout,
+  setPortfolioFeatured,
   signOutGlobally,
   updatePortfolio,
   updateProfileHighlight,
@@ -40,6 +43,7 @@ import { getErrorMessage } from "../../lib/errors";
 import { isValidExternalUrl, normalizeExternalUrl } from "../../lib/url";
 import type {
   ActiveTab,
+  AdminAnalyticsData,
   EditableTable,
   ItemWithId,
   MenuItem,
@@ -78,9 +82,13 @@ export default function AdminDashboard() {
   const [pDriveId, setPDriveId] = useState("");
   const [pSortOrder, setPSortOrder] = useState("100");
   const [pMediaType, setPMediaType] = useState<PortfolioMediaType>("image");
+  const [pIsFeatured, setPIsFeatured] = useState(false);
   const [editingPortfolioId, setEditingPortfolioId] = useState<number | null>(
     null,
   );
+
+  const [analytics, setAnalytics] = useState<AdminAnalyticsData | null>(null);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
 
   const [sTitle, setSTitle] = useState("");
   const [sDescription, setSDescription] = useState("");
@@ -138,10 +146,11 @@ export default function AdminDashboard() {
       setServices(adminData.services);
       setHighlights(adminData.highlights);
     } catch (error) {
-      showNotice(
-        "error",
-        `Gagal memuat data admin: ${getErrorMessage(error)}`,
-      );
+      const msg = getErrorMessage(error);
+      const friendlyMessage = msg.toLowerCase().includes("issued at future")
+        ? "Waktu token sesi Supabase belum sinkron dengan server (JWT issued at future). Pastikan jam sistem Windows Anda sinkron secara otomatis lalu muat ulang halaman."
+        : `Gagal memuat data admin: ${msg}`;
+      showNotice("error", friendlyMessage);
     } finally {
       setLoading(false);
     }
@@ -172,7 +181,7 @@ export default function AdminDashboard() {
       },
       {
         id: "portfolio",
-        label: "Karya",
+        label: "Galeri",
         icon: <Briefcase size={15} />,
         count: portfolios.length,
       },
@@ -182,12 +191,42 @@ export default function AdminDashboard() {
         icon: <Wrench size={15} />,
         count: services.length,
       },
+      {
+        id: "analytics",
+        label: "Statistik",
+        icon: <BarChart3 size={15} />,
+      },
     ],
     [socials.length, highlights.length, portfolios.length, services.length],
   );
 
+  const loadAnalytics = useCallback(async () => {
+    if (loadingAnalytics) return;
+    setLoadingAnalytics(true);
+
+    try {
+      const session = await getAdminSession();
+      if (!session?.access_token) {
+        router.replace("/admin/login");
+        return;
+      }
+      const data = await fetchAdminAnalytics(session.access_token);
+      setAnalytics(data);
+    } catch (error) {
+      showNotice(
+        "error",
+        `Gagal memuat statistik: ${getErrorMessage(error)}`,
+      );
+    } finally {
+      setLoadingAnalytics(false);
+    }
+  }, [loadingAnalytics, router, showNotice]);
+
   const changeTab = (tab: ActiveTab) => {
     setActiveTab(tab);
+    if (tab === "analytics" && analytics === null) {
+      void loadAnalytics();
+    }
   };
 
   const sortPortfoliosByOrder = (items: PortfolioItem[]) => {
@@ -256,6 +295,7 @@ export default function AdminDashboard() {
     setPDriveId("");
     setPSortOrder("100");
     setPMediaType("image");
+    setPIsFeatured(false);
     setEditingPortfolioId(null);
   };
 
@@ -382,14 +422,14 @@ export default function AdminDashboard() {
     if (saving) return;
 
     if (!pTitle.trim() || !pDriveId.trim()) {
-      showNotice("error", "Judul karya dan ID media wajib diisi.");
+      showNotice("error", "Judul dan ID media galeri wajib diisi.");
       return;
     }
 
     const parsedSortOrder = Number.parseInt(pSortOrder, 10);
 
     if (!pSortOrder.trim() || Number.isNaN(parsedSortOrder)) {
-      showNotice("error", "Urutan tampil karya harus berupa angka.");
+      showNotice("error", "Urutan tampil galeri harus berupa angka.");
       return;
     }
 
@@ -400,16 +440,15 @@ export default function AdminDashboard() {
       media_url: pDriveId.trim(),
       media_type: pMediaType,
       sort_order: parsedSortOrder,
+      is_featured: pIsFeatured,
     };
 
     setSaving(true);
 
     try {
       if (editingPortfolioId !== null) {
-        const updatedPortfolio = await updatePortfolio(
-          editingPortfolioId,
-          payload,
-        );
+        const { item: updatedPortfolio, missingFeaturedColumn } =
+          await updatePortfolio(editingPortfolioId, payload);
 
         setPortfolios((current) =>
           sortPortfoliosByOrder(
@@ -421,19 +460,57 @@ export default function AdminDashboard() {
           ),
         );
         resetPortfolioForm();
-        showNotice("success", "Karya berhasil diperbarui.");
+        showNotice(
+          "success",
+          missingFeaturedColumn
+            ? "Item galeri diperbarui (jalankan SQL kolom is_featured di Supabase agar sakelar Beranda tersimpan)."
+            : "Item galeri berhasil diperbarui.",
+        );
         return;
       }
 
-      const newPortfolio = await createPortfolio(payload);
+      const { item: newPortfolio, missingFeaturedColumn } =
+        await createPortfolio(payload);
 
       setPortfolios((current) =>
         sortPortfoliosByOrder([...current, newPortfolio]),
       );
       resetPortfolioForm();
-      showNotice("success", "Karya berhasil ditambahkan.");
+      showNotice(
+        "success",
+        missingFeaturedColumn
+          ? "Item galeri ditambahkan (jalankan SQL kolom is_featured di Supabase agar sakelar Beranda tersimpan)."
+          : "Item galeri berhasil ditambahkan.",
+      );
     } catch (error) {
-      showNotice("error", `Gagal menyimpan karya: ${getErrorMessage(error)}`);
+      showNotice("error", `Gagal menyimpan item galeri: ${getErrorMessage(error)}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleTogglePortfolioFeatured = async (portfolio: PortfolioItem) => {
+    if (saving) return;
+
+    const nextState = !portfolio.is_featured;
+    setSaving(true);
+
+    try {
+      const updated = await setPortfolioFeatured(portfolio.id, nextState);
+      setPortfolios((current) =>
+        current.map((item) => (item.id === updated.id ? updated : item)),
+      );
+      if (editingPortfolioId === portfolio.id) {
+        setPIsFeatured(Boolean(updated.is_featured));
+      }
+      showNotice(
+        "success",
+        nextState
+          ? `"${portfolio.title || "Item"}" ditandai tampil di Beranda.`
+          : `"${portfolio.title || "Item"}" dilepas dari perwakilan Beranda.`,
+      );
+    } catch (error) {
+      showNotice("error", getErrorMessage(error));
     } finally {
       setSaving(false);
     }
@@ -447,6 +524,7 @@ export default function AdminDashboard() {
     setPDriveId(portfolio.media_url || "");
     setPSortOrder(String(portfolio.sort_order ?? 100));
     setPMediaType(portfolio.media_type === "video" ? "video" : "image");
+    setPIsFeatured(Boolean(portfolio.is_featured));
     setNotice(null);
   };
 
@@ -748,6 +826,7 @@ export default function AdminDashboard() {
               focusRing={focusRing}
               pDesc={pDesc}
               pDriveId={pDriveId}
+              pIsFeatured={pIsFeatured}
               pMediaType={pMediaType}
               portfolios={portfolios}
               pSortOrder={pSortOrder}
@@ -756,6 +835,7 @@ export default function AdminDashboard() {
               saving={saving}
               setPDesc={setPDesc}
               setPDriveId={setPDriveId}
+              setPIsFeatured={setPIsFeatured}
               setPMediaType={setPMediaType}
               setPSortOrder={setPSortOrder}
               setPTags={setPTags}
@@ -766,7 +846,7 @@ export default function AdminDashboard() {
                   "portfolio",
                   portfolio.id,
                   setPortfolios,
-                  portfolio.title || "karya ini",
+                  portfolio.title || "item galeri ini",
                   editingPortfolioId === portfolio.id
                     ? resetPortfolioForm
                     : undefined,
@@ -774,6 +854,9 @@ export default function AdminDashboard() {
               }}
               onEditPortfolio={handleEditPortfolio}
               onSavePortfolio={handleSavePortfolio}
+              onToggleFeatured={(portfolio) => {
+                void handleTogglePortfolioFeatured(portfolio);
+              }}
             />
           )}
 
@@ -805,6 +888,19 @@ export default function AdminDashboard() {
               }}
               onEditService={handleEditService}
               onSaveService={handleSaveService}
+            />
+          )}
+
+          {activeTab === "analytics" && (
+            <AnalyticsPanel
+              analytics={analytics}
+              loading={loadingAnalytics}
+              portfolios={portfolios}
+              services={services}
+              focusRing={focusRing}
+              onRefresh={() => {
+                void loadAnalytics();
+              }}
             />
           )}
         </main>

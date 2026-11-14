@@ -59,7 +59,7 @@ export function PublicFooter({
 
         <div className="mt-12 md:mt-16 flex flex-col items-center justify-center gap-1.5">
           <p className="text-xs font-body text-white/50 leading-relaxed">
-            © {new Date().getFullYear()} — I&apos;m Nafis. Dibuat dengan presisi.
+            © {new Date().getFullYear()} I&apos;m Nafis. Dibuat dengan presisi.
           </p>
           <Link
             href="/admin/login"

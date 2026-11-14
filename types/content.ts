@@ -5,7 +5,8 @@ export type ActiveTab =
   | "socials"
   | "track_record"
   | "portfolio"
-  | "services";
+  | "services"
+  | "analytics";
 
 export type PortfolioMediaType = "image" | "video";
 
@@ -43,6 +44,21 @@ export type PortfolioItem = {
   media_url: string | null;
   media_type: string | null;
   sort_order: number | null;
+  is_featured?: boolean | null;
+};
+
+export type AnalyticsSiteStats = {
+  home_views: number;
+  galeri_page_views: number;
+  sifan_tours: number;
+};
+
+export type AdminAnalyticsData = {
+  redisConfigured: boolean;
+  siteStats: AnalyticsSiteStats;
+  claps: Record<string, number>;
+  views: Record<string, number>;
+  serviceClicks: Record<string, number>;
 };
 
 export type ServiceItem = {

@@ -15,7 +15,7 @@ export function PublicLoadingScreen() {
         Memuat I&apos;m Nafis
       </p>
       <p className="mt-1.5 max-w-xs text-xs leading-relaxed text-white/50">
-        Menyiapkan profil, track record, karya, dan layanan digital.
+        Menyiapkan profil, track record, galeri, dan layanan digital.
       </p>
     </div>
   );

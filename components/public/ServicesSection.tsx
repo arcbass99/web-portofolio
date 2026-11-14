@@ -3,7 +3,8 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { formatMediaUrl } from "../../lib/media";
+import { formatMediaUrl, isGoogleDriveMediaUrl } from "../../lib/media";
+import { notifySifan, trackOncePerSession } from "../../lib/metrics-client";
 import type { ServiceItem } from "../../types/content";
 import { AmbientAuroraOrb } from "../ui/AmbientAuroraOrb";
 
@@ -43,8 +44,7 @@ export function ServicesSection({
             </h2>
           </div>
           <p className="max-w-[42ch] text-xs sm:text-sm font-body leading-relaxed text-white/70 text-justify md:text-right">
-            Akses langsung ke berbagai produk dan layanan digital yang saya
-            sediakan.
+            Daftar tautan produk dan layanan digital yang tersedia.
           </p>
         </div>
 
@@ -76,29 +76,59 @@ export function ServicesSection({
                   href={service.target_url || "#"}
                   target={isExternal && !isProtocolLink ? "_blank" : undefined}
                   rel={isExternal && !isProtocolLink ? "noopener noreferrer" : undefined}
+                  onClick={() => {
+                    trackOncePerSession(
+                      `service_${service.id}`,
+                      { type: "service_click", serviceId: service.id },
+                      true,
+                    );
+                    notifySifan({
+                      kind: "service",
+                      label: service.title || undefined,
+                    });
+                  }}
                   aria-label={`Kunjungi ${service.title || "produk"}`}
-                  className={`group relative h-full solid-frost rounded-[1.6rem] p-5 flex flex-col justify-between gap-5 items-start overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_45px_rgba(0,0,0,0.85)] border border-white/12 bg-[#141619] active:scale-[0.98] ${focusRing}`}
+                  className={`group relative h-full solid-frost rounded-[1.6rem] p-5 flex flex-col justify-between gap-5 items-start overflow-hidden transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:border-white/22 hover:shadow-[0_20px_45px_rgba(0,0,0,0.85)] border border-white/12 bg-[#141619] active:scale-[0.98] will-change-transform ${focusRing}`}
                 >
                 {/* Subtle Aurora Glow Effect */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-                  <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/15 blur-[45px] rounded-full" />
-                  <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-violet-500/15 blur-[45px] rounded-full" />
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out pointer-events-none"
+                >
+                  <div
+                    className="absolute -top-16 -right-16 w-48 h-48 rounded-full"
+                    style={{
+                      background:
+                        "radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%)",
+                    }}
+                  />
+                  <div
+                    className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full"
+                    style={{
+                      background:
+                        "radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)",
+                    }}
+                  />
                 </div>
 
                 {/* Icon */}
                 <div className="relative z-10 rounded-xl h-11 w-11 flex items-center justify-center border border-white/10 bg-white/5 shadow-md transition-transform duration-500 group-hover:scale-105">
-                  {service.image_url ? (
-                    <div className="relative h-6 w-6">
-                      <Image
-                        src={formatMediaUrl(service.image_url, 128)}
-                        alt={service.title || "Service icon"}
-                        fill
-                        sizes="24px"
-                        quality={72}
-                        className="object-contain"
-                      />
-                    </div>
-                  ) : (
+                  {service.image_url ? (() => {
+                    const iconSrc = formatMediaUrl(service.image_url, 128);
+                    return (
+                      <div className="relative h-6 w-6">
+                        <Image
+                          src={iconSrc}
+                          alt={service.title || "Service icon"}
+                          fill
+                          sizes="24px"
+                          quality={72}
+                          unoptimized={isGoogleDriveMediaUrl(iconSrc)}
+                          className="object-contain"
+                        />
+                      </div>
+                    );
+                  })() : (
                     <ArrowRight className="text-white/80" size={18} />
                   )}
                 </div>

@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Menu, ArrowUpRight } from "lucide-react";
 import { smoothScrollToId, smoothScrollTo, smoothScrollToElement } from "../../lib/smoothScroll";
-import { formatMediaUrl } from "../../lib/media";
+import { formatMediaUrl, isGoogleDriveMediaUrl } from "../../lib/media";
 import { GoogleCtaButton } from "../ui/GoogleCtaButton";
 
 type PublicNavbarProps = {
@@ -13,6 +14,7 @@ type PublicNavbarProps = {
   bannerUrl?: string;
   highlightsCount?: number;
   servicesCount?: number;
+  currentPage?: "home" | "galeri";
   onOpenMenu: () => void;
 };
 
@@ -21,18 +23,20 @@ export function PublicNavbar({
   bannerUrl,
   highlightsCount = 0,
   servicesCount = 0,
+  currentPage = "home",
   onOpenMenu,
 }: PublicNavbarProps) {
+  const router = useRouter();
   const [showPhoto, setShowPhoto] = useState(false);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
 
   const navLinks = [
     { label: "Profil", id: "home" },
-    ...(highlightsCount > 0
+    ...(highlightsCount > 0 || currentPage === "galeri"
       ? [{ label: "Track Record", id: "track-record" }]
       : []),
-    { label: "Karya", id: "portfolio" },
-    ...(servicesCount > 0
+    { label: "Galeri", id: "galeri" },
+    ...(servicesCount > 0 || currentPage === "galeri"
       ? [{ label: "Layanan", id: "services" }]
       : []),
   ];
@@ -42,11 +46,15 @@ export function PublicNavbar({
     if (!bannerUrl) return;
 
     const handleScroll = () => {
+      if (currentPage === "galeri") {
+        setShowPhoto(window.scrollY > 100);
+        return;
+      }
       const trackRecordEl = document.getElementById("track-record");
       if (!trackRecordEl) {
-        const portfolioEl = document.getElementById("portfolio");
-        if (portfolioEl) {
-          setShowPhoto(portfolioEl.getBoundingClientRect().top <= 80);
+        const galeriEl = document.getElementById("galeri");
+        if (galeriEl) {
+          setShowPhoto(galeriEl.getBoundingClientRect().top <= 80);
         }
         return;
       }
@@ -56,9 +64,20 @@ export function PublicNavbar({
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [bannerUrl]);
+  }, [bannerUrl, currentPage]);
 
   const scrollTo = (id: string) => {
+    if (currentPage === "galeri") {
+      if (id === "galeri") {
+        smoothScrollTo(0);
+      } else if (id === "home") {
+        router.push("/");
+      } else {
+        router.push(`/#${id}`);
+      }
+      return;
+    }
+
     if (id === "home") {
       smoothScrollTo(0);
     } else {
@@ -109,14 +128,14 @@ export function PublicNavbar({
         style={{ top: "max(0.75rem, env(safe-area-inset-top, 0.75rem))" }}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between">
-          {/* Logo — Apple liquid-glass circle → transitions to profile photo */}
+          {/* Logo: Apple liquid-glass circle transitioning to profile photo */}
           <button
             type="button"
             onClick={() => scrollTo("home")}
             className={`apple-liquid-glass relative flex h-10 w-10 items-center justify-center rounded-full cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95 ${focusRing}`}
-            aria-label="I'm Nafis — kembali ke profil utama"
+            aria-label="I'm Nafis - kembali ke profil utama"
           >
-            {/* "N" text — fades out when photo appears */}
+            {/* "N" text fading out when photo appears */}
             <span
               className={`font-heading font-semibold text-base text-white absolute inset-0 flex items-center justify-center transition-all duration-500 ${
                 showPhoto ? "opacity-0 scale-75" : "opacity-100 scale-100"
@@ -125,7 +144,7 @@ export function PublicNavbar({
               N
             </span>
 
-            {/* Profile photo — fades in when entering track-record zone */}
+            {/* Profile photo fading in when entering track-record zone */}
             {profileImageUrl && (
               <span
                 className={`absolute inset-0 rounded-full overflow-hidden transition-all duration-500 ${
@@ -137,13 +156,14 @@ export function PublicNavbar({
                   alt="Foto profil"
                   fill
                   sizes="40px"
+                  unoptimized={isGoogleDriveMediaUrl(profileImageUrl)}
                   className="object-cover rounded-full"
                 />
               </span>
             )}
           </button>
 
-          {/* Center navigation — Apple Liquid Blur Pill */}
+          {/* Center navigation: Apple Liquid Blur Pill */}
           <div className="hidden lg:flex items-center">
             <div
               onMouseLeave={() => setHoveredNav(null)}
@@ -198,7 +218,7 @@ export function PublicNavbar({
             </div>
           </div>
 
-          {/* Mobile menu button — Apple Liquid Blur */}
+          {/* Mobile menu button: Apple Liquid Blur */}
           <button
             type="button"
             onClick={onOpenMenu}

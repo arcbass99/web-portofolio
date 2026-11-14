@@ -3,9 +3,9 @@ import "./globals.css";
 
 const siteUrl = "https://im-nafis.vercel.app";
 const siteName = "I'm Nafis";
-const siteTitle = "I'm Nafis — Profil, Track Record & Karya Digital";
+const siteTitle = "I'm Nafis - Profil, Track Record & Galeri Digital";
 const siteDescription =
-  "Profil digital Nafis yang menampilkan perjalanan akademik, track record, karya pilihan, produk digital, dan ruang kolaborasi kreatif.";
+  "Profil digital Nafis yang menampilkan perjalanan akademik, track record, galeri karya & dokumentasi kegiatan, produk digital, dan ruang kolaborasi kreatif.";
 const ogImage = "/og-image.png";
 
 export const metadata: Metadata = {
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
         url: ogImage,
         width: 1200,
         height: 630,
-        alt: "I'm Nafis — Profil, Track Record, dan Karya Digital",
+        alt: "I'm Nafis - Profil, Track Record, dan Karya Digital",
       },
     ],
   },
@@ -73,7 +73,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className="scroll-smooth">
+    <html lang="id" className="scroll-smooth" data-scroll-behavior="smooth">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
